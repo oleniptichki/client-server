@@ -16,18 +16,18 @@ def connect_db():
     error_string=None
  
     # print the connection string we will use to connect
-    print "Connecting to database\n	->%s" % (conn_string)
+    print("Connecting to database\n	->%s" % (conn_string))
 
     try: 
         # get a connection, if a connect cannot be made an exception will be raised here
         conn = psycopg2.connect(conn_string)
     except psycopg2.OperationalError:
         error_string="failed to connect"
-        print error_string
+        print(error_string)
     else:
         # conn.cursor will return a cursor object, you can use this cursor to perform queries
         cursor = conn.cursor()
-        print "Connected!\n"
+        print("Connected!\n")
     return error_string
 
 
@@ -60,12 +60,12 @@ except:
 
 try:
     result=hello_client.service.progress(int(calc_id), token, int(ppid))
-    print result
+    print(result)
 except WebFault, err:
-    print unicode(err)
+    print(unicode(err))
 except:
     err = sys.exc_info()[1]
-    print 'Other error: ' + str(err)
+    print('Other error: ' + str(err))
 
 # processing of the result in case of error
 connect_db()

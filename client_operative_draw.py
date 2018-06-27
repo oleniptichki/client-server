@@ -15,47 +15,47 @@ def connect_db():
     error_string=None
  
     # print the connection string we will use to connect
-    print "Connecting to database\n	->%s" % (conn_string)
+    print("Connecting to database\n	->%s" % (conn_string))
 
     try: 
         # get a connection, if a connect cannot be made an exception will be raised here
         conn = psycopg2.connect(conn_string)
     except psycopg2.OperationalError:
         error_string="failed to connect"
-        print error_string
+        print(error_string)
     else:
         # conn.cursor will return a cursor object, you can use this cursor to perform queries
         cursor = conn.cursor()
-        print "Connected!\n"
+        print("Connected!\n")
     return error_string
 
 
 class draw_class:
     def __init__(self, dt):
-    '''
-     Parameters of graphical output:
-     calc_id - identifier of calculation (FK from table "user_calculation");
-     plot_type - String, enum: 'tt', 'ss', 'vv', 'eta'
-     depth - depth of plot 
-     crosssection - boolean 
-     cs_type - String, enum: 'LAT', 'LON'
-     cs_value - Double, LAT or LON in degrees
-     cs_limits_min - Double, LAT or LON in degrees
-     cs_limits_max - Double, LAT or LON in degrees
-     output_time_date - datetime.datetime
-     scale - boolean
-     scale_min - Double, min value in scale
-     scale_max - Double, max value in scale
-     scale_step - Double
-     zoom - Boolean
-     zoom_lon_min - min longitude
-     zoom_lon_max - max longitude
-     zoom_lat_min - min latitude
-     zoom_lat_max - max latitude
-     duration - Integer, duration of calculation in days
-     record - Integer, frequency of XY and XYZ output in hours
+        '''
+        Parameters of graphical output:
+        calc_id - identifier of calculation (FK from table "user_calculation");
+        plot_type - String, enum: 'tt', 'ss', 'vv', 'eta'
+        depth - depth of plot
+        crosssection - boolean
+        cs_type - String, enum: 'LAT', 'LON'
+        cs_value - Double, LAT or LON in degrees
+        cs_limits_min - Double, LAT or LON in degrees
+        cs_limits_max - Double, LAT or LON in degrees
+        output_time_date - datetime.datetime
+        scale - boolean
+        scale_min - Double, min value in scale
+        scale_max - Double, max value in scale
+        scale_step - Double
+        zoom - Boolean
+        zoom_lon_min - min longitude
+        zoom_lon_max - max longitude
+        zoom_lat_min - min latitude
+        zoom_lat_max - max latitude
+        duration - Integer, duration of calculation in days
+        record - Integer, frequency of XY and XYZ output in hours
 
-	'''
+        '''
         self.calc_id=dt[0]
         self.plot_type=dt[1]
         self.depth=dt[2]
@@ -146,7 +146,7 @@ if (calc_type==1):
         raise Inconsistent_data_exception()
 
 # calculate number of record 
-    start_date=start_date-delta_days    
+    start_date=start_date-delta_days
     start_time=datetime(start_date.year, start_date.month, start_date.day, 0, 0, 0, 0)
     delta=(draw.output_time_date-start_time).total_seconds()
     num_of_record=int(delta/(3600*draw.record))   # number of record
@@ -162,32 +162,32 @@ hello_client = Client(url)
 
 
 try :
-    result=hello_client.service.draw(draw.calc_id, \
-        path_to_calc, \
-        draw.plot_type, \
-	    draw.depth, \
-        draw.crosssection, \
-        draw.cs_type, \
-        draw.cs_value, \
-        draw.cs_limits_min, \
-	    draw.cs_limits_max, \
-        num_of_record, \
-        draw.scale, \
-        draw.scale_min, \
-        draw.scale_max, \
-	    draw.scale_step, \
-        draw.zoom, \
-        draw.zoom_lon_min, \
-        draw.zoom_lon_max, \
-	    draw.zoom_lat_min, \
-        draw.zoom_lat_max, \
-	    draw.duration, \
+    result=hello_client.service.draw(draw.calc_id,
+        path_to_calc,
+        draw.plot_type,
+        draw.depth,
+        draw.crosssection,
+        draw.cs_type,
+        draw.cs_value,
+        draw.cs_limits_min,
+        draw.cs_limits_max,
+        num_of_record,
+        draw.scale,
+        draw.scale_min,
+        draw.scale_max,
+        draw.scale_step,
+        draw.zoom,
+        draw.zoom_lon_min,
+        draw.zoom_lon_max,
+        draw.zoom_lat_min,
+        draw.zoom_lat_max,
+        draw.duration,
         draw.record)
-    print result
+    print(result)
 
 except WebFault, err:
-    print unicode(err)
+    print(unicode(err))
 except:
     err = sys.exc_info()[1]
-    print 'Other error: ' + str(err)
+    print('Other error: ' + str(err))
 
