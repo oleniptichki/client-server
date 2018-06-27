@@ -11,36 +11,36 @@ class draw_class:
 #    homepath='/home/tatiana/Tanya/ICS-ADEQ/Py/'
 #    cppath='/media/tatiana/TOSHIBA/CP_normal/'
     err=''
-    def __init__(self, calc_id, path_to_calc, plot_type, depth, crosssection, cs_type, \
-        cs_value, cs_limits_min, cs_limits_max, num_of_record, \
-        scale, scale_min, scale_max, scale_step, \
-        zoom, zoom_lon_min, zoom_lon_max, zoom_lat_min, zoom_lat_max, \
-	    duration, record):
-    '''
-     Parameters of graphical output:
-     calc_id - Integer, identifier of calculation (FK from table "user_calculation");
-     path_to_calc - String, e.g. admin/OPirat/1;
-     plot_type - String, enum: 'tt', 'ss', 'vv', 'eta'
-     depth - depth of plot 
-     crosssection - boolean 
-     cs_type - String, enum: 'LAT', 'LON'
-     cs_value - Double, LAT or LON in degrees
-     cs_limits_min - Double, LAT or LON in degrees
-     cs_limits_max - Double, LAT or LON in degrees
-     num_of_record - number of record displayed
-     scale - boolean
-     scale_min - Double, min value in scale
-     scale_max - Double, max value in scale
-     scale_step - Double
-     zoom - Boolean
-     zoom_lon_min - min longitude
-     zoom_lon_max - max longitude
-     zoom_lat_min - min latitude
-     zoom_lat_max - max latitude
-     duration - Integer, duration of calculation in days
-     record - Integer, frequency of XY and XYZ output in hours
+    def __init__(self, calc_id, path_to_calc, plot_type, depth, crosssection, cs_type,
+        cs_value, cs_limits_min, cs_limits_max, num_of_record,
+        scale, scale_min, scale_max, scale_step,
+        zoom, zoom_lon_min, zoom_lon_max, zoom_lat_min, zoom_lat_max,
+        duration, record):
+        '''
+        Parameters of graphical output:
+        calc_id - Integer, identifier of calculation (FK from table "user_calculation");
+        path_to_calc - String, e.g. admin/OPirat/1;
+        plot_type - String, enum: 'tt', 'ss', 'vv', 'eta'
+        depth - depth of plot
+        crosssection - boolean
+        cs_type - String, enum: 'LAT', 'LON'
+        cs_value - Double, LAT or LON in degrees
+        cs_limits_min - Double, LAT or LON in degrees
+        cs_limits_max - Double, LAT or LON in degrees
+        num_of_record - number of record displayed
+        scale - boolean
+        scale_min - Double, min value in scale
+        scale_max - Double, max value in scale
+        scale_step - Double
+        zoom - Boolean
+        zoom_lon_min - min longitude
+        zoom_lon_max - max longitude
+        zoom_lat_min - min latitude
+        zoom_lat_max - max latitude
+        duration - Integer, duration of calculation in days
+        record - Integer, frequency of XY and XYZ output in hours
 
-	'''
+        '''
         self.calc_id=calc_id
         self.plot_type=plot_type
         self.depth=depth
@@ -115,11 +115,11 @@ class draw_class:
                 clevsStr=clevsStr+str(scale_var)
                 scale_var=scale_var+scale_step
         else:
-            strClevs = "scale(auto)";
+            strClevs = "scale(auto)"
             if (self.plot_type=='ss'):
                 clevsStr = " 0 1 2 3 4 5 6 7 8 9 10 11 12"
 
-        if (!self.crosssection) :
+        if (not self.crosssection) :
             nameOfImage = self.plot_type + "_t" + str(num_of_record) + "_" + strLev + "_" + strClevs
             if (self.zoom) :
                 nameOfImage = nameOfImage+"_lat"+str(zoom_lat_min)+str(zoom_lat_max) + "_lon"+str(self.zoom_lon_min)+str(self.zoom_lon_max)

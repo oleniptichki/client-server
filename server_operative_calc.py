@@ -36,15 +36,15 @@ class HelloWorldService(DefinitionBase):
 # My functions. Begin
     @soap(Integer,String,Integer,Double,Integer,_returns=Integer)
     def operatcalc_exstrt(self, calc_id, token, duration, record_d, assim_numb):
-    '''
-	Input parameters:
-	calc_id - Integer;
-	token - string :username
-    duration - duration of forecast in days, DEFAULT=3 (total duration of calculation=duration+3)
-    record_d - output in days
-    assim_numb - type of assimilation - 1 or 2
+        '''
+        Input parameters:
+        calc_id - Integer;
+        token - string :username
+        duration - duration of forecast in days, DEFAULT=3 (total duration of calculation=duration+3)
+        record_d - output in days
+        assim_numb - type of assimilation - 1 or 2
 
-	'''
+        '''
         calc=operative_calc(calc_id, token, duration, record_d, assim_numb)
         if calc.userinit()==0:
             ret=calc.initializer()
@@ -63,13 +63,13 @@ class HelloWorldService(DefinitionBase):
 
     @soap(Integer,String,Integer,_returns=Integer)
     def progress(self, calc_id, token, ppid):
-    '''
-	Input parameters:
-	calc_id - Integer
-	token - string :username
-    ppid - parent PID
+        '''
+        Input parameters:
+        calc_id - Integer
+        token - string :username
+        ppid - parent PID
 
-	'''
+        '''
         # check existence of the process
         pid=None
         os.chdir('/home/ftpuser/Py/')
@@ -135,13 +135,13 @@ class HelloWorldService(DefinitionBase):
 
     @soap(Integer,String,Integer,_returns=Integer)
     def killer(self, calc_id, token, ppid):
-	'''
-	Input parameters:
-	calc_id - Integer
-	token - string :username
+        '''
+        Input parameters:
+        calc_id - Integer
+        token - string :username
         ppid - parent PID
 
-	'''
+        '''
         # receive PID of the process
         pid=None
         os.chdir('/home/ftpuser/Py/')
@@ -179,17 +179,17 @@ class HelloWorldService(DefinitionBase):
 
         if pid is not None:      # if process exist
             try:
-	        ret=subprocess.call('kill -9 '+str(pid), shell=True)
+                ret=subprocess.call('kill -9 '+str(pid), shell=True)
                 if ret !=0 :
                     return -8
             except:
                 return -6
         try:
-	    os.chdir('/home/ftpuser/model/'+token+'/OPirat/')
-	    fin=open('progress.txt', 'rt')  
+            os.chdir('/home/ftpuser/model/'+token+'/OPirat/')
+            fin=open('progress.txt', 'rt')
             progrs=float(fin.read())
             fin.close()      
-	    if ((progrs>0) and (progrs<1)):   #?????????????????
+            if ((progrs>0) and (progrs<1)):   #?????????????????
                 ret=subprocess.call('rm -r '+str(calc_id), shell=True)
                 os.remove('progress.txt')
         except:
@@ -197,17 +197,17 @@ class HelloWorldService(DefinitionBase):
         return 0  
 
 
-    @soap(Integer,String,String,Integer,Boolean,String,\
-        Double,Double,Double,Integer,\
-        Boolean,Double,Double,Double,\
-        Boolean,Double,Double,Double,Double,\
+    @soap(Integer,String,String,Integer,Boolean,String,
+        Double,Double,Double,Integer,
+        Boolean,Double,Double,Double,
+        Boolean,Double,Double,Double,Double,
         Integer,Integer,_returns=String)
-    def draw(self, calc_id, path_to_calc, plot_type, depth, crosssection, cs_type, \
-        cs_value, cs_limits_min, cs_limits_max, num_of_record, \
-        scale, scale_min, scale_max, scale_step, \
-        zoom, zoom_lon_min, zoom_lon_max, zoom_lat_min, zoom_lat_max, \
-	    duration, record):
-    '''
+    def draw(self, calc_id, path_to_calc, plot_type, depth, crosssection, cs_type,
+        cs_value, cs_limits_min, cs_limits_max, num_of_record,
+        scale, scale_min, scale_max, scale_step,
+        zoom, zoom_lon_min, zoom_lon_max, zoom_lat_min, zoom_lat_max,
+        duration, record):
+        '''
         Parameters of graphical output:
         calc_id - Integer, identifier of calculation (FK from table "user_calculation");
         path_to_calc - String, e.g. admin/OPirat/1;
@@ -231,13 +231,13 @@ class HelloWorldService(DefinitionBase):
         duration - Integer, duration of calculation in days
         record - Integer, frequency of XY and XYZ output in hours
 
-	'''
+        '''
 
-        draw=draw_class(calc_id, path_to_calc, plot_type, depth, crosssection, cs_type, \
-            cs_value, cs_limits_min, cs_limits_max, num_of_record, \
-            scale, scale_min, scale_max, scale_step, \
-            zoom, zoom_lon_min, zoom_lon_max, zoom_lat_min, zoom_lat_max, \
-	        duration, record)
+        draw=draw_class(calc_id, path_to_calc, plot_type, depth, crosssection, cs_type,
+            cs_value, cs_limits_min, cs_limits_max, num_of_record,
+            scale, scale_min, scale_max, scale_step,
+            zoom, zoom_lon_min, zoom_lon_max, zoom_lat_min, zoom_lat_max,
+            duration, record)
         ret=draw.file_creator()
         if ret>0:
             draw.errlogwriter()
@@ -263,4 +263,4 @@ if __name__=='__main__':
         server = make_server('192.168.88.243', 7889, wsgi_application)
         server.serve_forever()
     except ImportError:
-        print "Error: example server code requires Python >= 2.5"
+        print("Error: example server code requires Python >= 2.5")

@@ -10,15 +10,15 @@ class operative_calc():
 #    cppath='/media/tatiana/TOSHIBA/CP_normal/'
     err=''
     def __init__(self, calc_id, token, duration, record_d, assim_numb):
-	'''
-	Input parameters:
-	calc_id - Integer;
-	token - string :username
+        '''
+        Input parameters:
+        calc_id - Integer;
+        token - string :username
         duration - duration of forecast in days, DEFAULT=3 (total duration of calculation=duration+3)
         record_d - output in days
         assim_numb - type of assimilation - 1 or 2
 
-	'''
+        '''
         self.calc_id=calc_id
         self.token=token
         self.duration=duration
@@ -30,47 +30,47 @@ class operative_calc():
 
 
     def userinit(self):
-	os.chdir(operative_calc.path)
-	if os.path.exists(self.token):
-	    return 0
-	else:
-	    try:
-	        os.mkdir(self.token)
+        os.chdir(operative_calc.path)
+        if os.path.exists(self.token):
+            return 0
+        else:
+            try:
+                os.mkdir(self.token)
                 os.chdir(self.token)
                 os.mkdir('OPirat')
                 os.chdir('..')
-	    except:
-		operative_calc.err=operative_calc.err+'Error in directory creation, p1 \n'
-		return 1
+            except:
+                operative_calc.err=operative_calc.err+'Error in directory creation, p1 \n'
+                return 1
 # Copy files, necessary and sufficient for simulations:
 # dsom, dsomomp  -- executables
 # assim.par, oceanmodel.par, octask.par -- files with parameters
 # start.sh -- scripts
-	    ret=subprocess.call('cp ./OPirat/*.par ./'+self.token+'/OPirat',shell=True)
-	    if ret>0:
-		operative_calc.err=operative_calc.err+'Error in copying *.par: '+str(ret)+' \n'
-		return 1
-	    ret=subprocess.call('cp ./OPirat/dsom ./'+self.token+'/OPirat',shell=True)
-	    if ret>0:
-		operative_calc.err=operative_calc.err+'Error in copying dsom: '+ str(ret)+' \n'
-		return 1
-	    ret=subprocess.call('cp ./OPirat/start.sh ./'+self.token+'/OPirat',shell=True)
-	    if ret>0:
-		operative_calc.err=operative_calc.err+'Error in copying *.sh: '+str(ret)+' \n'
-		return 1
-	    return 0
-	    	
+        ret=subprocess.call('cp ./OPirat/*.par ./'+self.token+'/OPirat',shell=True)
+        if ret>0:
+            operative_calc.err=operative_calc.err+'Error in copying *.par: '+str(ret)+' \n'
+            return 1
+        ret=subprocess.call('cp ./OPirat/dsom ./'+self.token+'/OPirat',shell=True)
+        if ret>0:
+            operative_calc.err=operative_calc.err+'Error in copying dsom: '+ str(ret)+' \n'
+            return 1
+        ret=subprocess.call('cp ./OPirat/start.sh ./'+self.token+'/OPirat',shell=True)
+        if ret>0:
+            operative_calc.err=operative_calc.err+'Error in copying *.sh: '+str(ret)+' \n'
+            return 1
+        return 0
+
 
     def initializer(self):
-	os.chdir(operative_calc.path+self.token+'/OPirat')
-	if not os.path.exists(str(self.calc_id)):
-	    try:
-	        os.mkdir(str(self.calc_id))
-	        os.mkdir(str(self.calc_id)+'/XYZ')
-	        os.mkdir(str(self.calc_id)+'/XY')
-	        os.mkdir(str(self.calc_id)+'/YZ')
-	    except:
-	        operative_calc.err=operative_calc.err+'Error in directory creation, p2 \n'
+        os.chdir(operative_calc.path+self.token+'/OPirat')
+        if not os.path.exists(str(self.calc_id)):
+            try:
+                os.mkdir(str(self.calc_id))
+                os.mkdir(str(self.calc_id)+'/XYZ')
+                os.mkdir(str(self.calc_id)+'/XY')
+                os.mkdir(str(self.calc_id)+'/YZ')
+            except:
+                operative_calc.err=operative_calc.err+'Error in directory creation, p2 \n'
                 return 1
 
         #calculating date and time (preparation)
@@ -168,7 +168,7 @@ class operative_calc():
 
     def abspath(self):
         abs_path=operative_calc.path+self.token+'/OPirat/start.sh'
-	return abs_path
+        return abs_path
 
 #    def progress(self): 
 #        if self.proc.poll() is None:      
@@ -196,12 +196,10 @@ class operative_calc():
 
 #--------------
     def errlogwriter(self):
-	os.chdir(operative_calc.path+self.token)
-	fout=open('error.log', 'wt')
-	fout.write(operative_calc.err)
-	fout.close()
+        os.chdir(operative_calc.path+self.token)
+        out=open('error.log', 'wt')
+        fout.write(operative_calc.err)
+        fout.close()
 	
 		
-	
-	
-        
+
