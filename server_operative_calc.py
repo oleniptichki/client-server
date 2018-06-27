@@ -8,7 +8,7 @@
 #   b) /usr/lib/pymodules/python2.7 -- soaplib-0.8.1
 # 2) server-old.py is configured for soaplib-0.8.1
 #    server.py -- for soaplib-2.0.0-beta
-#============================================================
+#===========================================================
 
 import os
 import sys
