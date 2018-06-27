@@ -76,7 +76,7 @@ class draw_class:
     def file_creator(self):
 
 #========================== Part1 =========================
-# defining variables
+# defining variables  
 
         if (self.plot_type=='tt') :
             titleOfScript = "Temperature"
