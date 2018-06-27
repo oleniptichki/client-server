@@ -179,7 +179,7 @@ class HelloWorldService(DefinitionBase):
 
         if pid is not None:      # if process exist
             try:
-	        ret=subprocess.call('kill '+str(pid), shell=True)
+	        ret=subprocess.call('kill -9 '+str(pid), shell=True)
                 if ret !=0 :
                     return -8
             except:
