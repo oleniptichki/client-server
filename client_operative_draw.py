@@ -190,8 +190,8 @@ try :
         draw.record)
     print(result)
 
-except WebFault, err:
-    print(unicode(err))
+except WebFault:
+    print("WebFault")
 except:
     err = sys.exc_info()[1]
     print('Other error: ' + str(err))

@@ -128,8 +128,8 @@ try:
 #        f=open(str(calc.calc_id)+'.txt',"wt")
 #        f.write(str(ppid))
 #        f.close()
-except WebFault, err:
-    print(unicode(err))
+except WebFault:
+    print("WebFault")
 except:
     err = sys.exc_info()[1]
     print('Other error: ' + str(err))
