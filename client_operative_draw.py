@@ -130,6 +130,9 @@ calc_type=dt[1]
 continued_from=dt[2]
 
 if (calc_type==1):
+
+    print("=== Stage 1 ===")
+
     cursor.execute("SELECT duration, record FROM operative_calc WHERE calc_id="+str(draw.calc_id)+";")
     dt=cursor.fetchone()
     draw.duration=dt[0]
@@ -153,8 +156,9 @@ if (calc_type==1):
     print(num_of_record)
 
 # path to the results
-    path_to_calc=token+'/OPirat/'+str(calc_id)
+    path_to_calc=token+'/OPirat/'+str(draw.calc_id)
 
+    print("=== Stage 2 ===")
 
 
 url = 'http://192.168.88.243:7889/?wsdl'
