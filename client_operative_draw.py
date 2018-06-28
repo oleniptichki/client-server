@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import sys
 from suds.client import Client
 from suds import WebFault
@@ -137,6 +137,7 @@ if (calc_type==1):
     dt=cursor.fetchone()
     draw.duration=dt[0]
     draw.record=dt[1]
+    print("duration=%f, record=%f" %(draw.duration, draw.record))
 
 # check if output_time_date<launch_time_date+duration
     cursor.execute("SELECT launch_time_date FROM user_calculation WHERE calc_id="+str(draw.calc_id)+";")
@@ -153,7 +154,7 @@ if (calc_type==1):
     start_time=datetime(start_date.year, start_date.month, start_date.day, 0, 0, 0, 0)
     delta=(draw.output_time_date-start_time).total_seconds()
     num_of_record=int(delta/(3600*draw.record))   # number of record
-    print(num_of_record)
+    print("num_of_record=%i" %(num_of_record))
 
 # path to the results
     path_to_calc=token+'/OPirat/'+str(draw.calc_id)
