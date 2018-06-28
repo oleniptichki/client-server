@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 import sys
 from suds.client import Client
 from suds import WebFault
