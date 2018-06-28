@@ -164,7 +164,7 @@ if (calc_type==1):
 
 url = 'http://192.168.88.243:7889/?wsdl'
 hello_client = Client(url)
-
+print("===Connected===")
 
 try :
     result=hello_client.service.draw(draw.calc_id,
@@ -191,7 +191,8 @@ try :
     print(result)
 
 except WebFault:
-    print("WebFault")
+    err = sys.exc_info()[1]
+    print("WebFault: " + str(err))
 except:
     err = sys.exc_info()[1]
     print('Other error: ' + str(err))
