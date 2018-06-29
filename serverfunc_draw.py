@@ -108,15 +108,15 @@ class draw_class:
         # strClevs - string to name the file
         # clevsStr - in the script
         if (self.scale) :
-            strClevs = "scale(" + str(self.scale_min) + "," + str(self.scale_max) + "," + \
-                str(self.scale_step) + ")"
+            strClevs = "scale" + str(self.scale_min) + "," + str(self.scale_max) + "," + \
+                str(self.scale_step) + ""
             clevsStr=''
             scale_var=self.scale_min
             while (scale_var<scale_max):
                 clevsStr=clevsStr+str(scale_var)
                 scale_var=scale_var+scale_step
         else:
-            strClevs = "scale(auto)"
+            strClevs = "scaleauto"
             if (self.plot_type=='ss'):
                 clevsStr = " 0 1 2 3 4 5 6 7 8 9 10 11 12"
 
