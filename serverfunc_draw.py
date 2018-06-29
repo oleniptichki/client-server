@@ -202,7 +202,7 @@ class draw_class:
                 if ret == 0:
                     try:
                         os.remove('temporary.gmf')
-                        os.remove('tt.eps')
+ #                       os.remove('tt.eps')
                     except:
                         draw_class.err = draw_class.err + 'Error in removing temporary graphic files \n'
                         return 1
