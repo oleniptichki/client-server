@@ -71,6 +71,7 @@ class draw_class:
             self.path_to_res=path_to_calc+'/XYZ/'
         self.full_name_of_png=draw_class.ftppath+self.path_to_res  #to download the result via ftp
         self.path_to_res=draw_class.path+self.path_to_res
+        self.nameOfImage=''
 
 
     def file_creator(self):
@@ -120,13 +121,13 @@ class draw_class:
                 clevsStr = " 0 1 2 3 4 5 6 7 8 9 10 11 12"
 
         if (not self.crosssection) :
-            nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + strLev + "_" + strClevs
+            self.nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + strLev + "_" + strClevs
             if (self.zoom) :
-                nameOfImage = nameOfImage+"_lat"+str(zoom_lat_min)+str(zoom_lat_max) + "_lon"+str(self.zoom_lon_min)+str(self.zoom_lon_max)
+                self.nameOfImage = self.nameOfImage+"_lat"+str(zoom_lat_min)+str(zoom_lat_max) + "_lon"+str(self.zoom_lon_min)+str(self.zoom_lon_max)
         else:
-            nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + self.cs_type +\
+            self.nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + self.cs_type +\
                 + str(self.cs_limits_min) + str(self.cs_limits_max) + strClevs
-        self.full_name_of_png=self.full_name_of_png+' '+nameOfImage+'.png'
+        self.full_name_of_png=self.full_name_of_png+' '+self.nameOfImage+'.png'
 
 #========================== Part2 =========================
 # writing gs file
@@ -177,7 +178,7 @@ class draw_class:
         fgs.write("'enable print temporary.gmf'\n")
         fgs.write("'print'\n")
         fgs.write("'disable'\n")
-#        fgs.write("'gxyat -x 500 " + nameOfImage + ".png'\n")
+#        fgs.write("'gxyat -x 500 " + self.nameOfImage + ".png'\n")
         fgs.write("'quit'\n")
         fgs.close()
         return 0
@@ -195,7 +196,7 @@ class draw_class:
         if ret == 0:
             ret = subprocess.call('gxeps -i temporary.gmf -o '+self.plot_type+'.eps', shell=True)
             if ret == 0:
-                ret = subprocess.call('convert '+self.plot_type+'.eps -background white '+nameOfImage +'.png', shell=True)
+                ret = subprocess.call('convert '+self.plot_type+'.eps -background white '+self.nameOfImage +'.png', shell=True)
                 if ret == 0:
                     try:
                         os.remove('temporary.gmf')
