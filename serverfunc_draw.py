@@ -150,7 +150,7 @@ class draw_class:
             fgs.write("'open vv.ctl'\n")
         fgs.write("'set grads off'\n")
         if (self.depth>1) :
-            fgs.write("'set lev"+lev+"'\n")
+            fgs.write("'set lev "+lev+"'\n")
         if (self.crosssection):
             cs_type_list=['LAT','LON']
             fgs.write("'set "+self.cs_type+" "+str(self.cs_value)+"'\n")
