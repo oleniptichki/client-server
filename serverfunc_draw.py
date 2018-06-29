@@ -120,11 +120,11 @@ class draw_class:
                 clevsStr = " 0 1 2 3 4 5 6 7 8 9 10 11 12"
 
         if (not self.crosssection) :
-            nameOfImage = self.plot_type + "_t" + str(num_of_record) + "_" + strLev + "_" + strClevs
+            nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + strLev + "_" + strClevs
             if (self.zoom) :
                 nameOfImage = nameOfImage+"_lat"+str(zoom_lat_min)+str(zoom_lat_max) + "_lon"+str(self.zoom_lon_min)+str(self.zoom_lon_max)
         else:
-            nameOfImage = self.plot_type + "_t" + str(num_of_record) + "_" + self.cs_type +\
+            nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + self.cs_type +\
                 + str(self.cs_limits_min) + str(self.cs_limits_max) + strClevs
         self.full_name_of_png=self.full_name_of_png+' '+nameOfImage+'.png'
 
