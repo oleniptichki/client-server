@@ -162,7 +162,7 @@ class draw_class:
         fgs.write("'set background 1'\n")
         if (self.scale or (self.plot_type == 'ss')):
             fgs.write("'set clevs " + clevsStr + "'\n") 
-        fgs.write("'set t "+  self.num_of_record + "'\n")     
+        fgs.write("'set t "+  str(self.num_of_record) + "'\n")
         if (self.plot_type == "tt"):
             fgs.write("'d "+  self.plot_type + "'\n") 
         if (self.plot_type == "ss"):
