@@ -43,6 +43,8 @@ class draw_class:
         '''
         self.calc_id=calc_id
         self.plot_type=plot_type
+        if plot_type=='eta':
+            self.plot_type='sl'   # because filenames are sl.ctl, sl.dat
         self.depth=depth
         self.crosssection=crosssection
         if crosssection:
@@ -88,7 +90,7 @@ class draw_class:
         if (self.plot_type=='uu') :
             titleOfScript = "Circulation"
 
-        if (self.plot_type=='eta') :
+        if (self.plot_type=='sl') :
             titleOfScript = "Sea_level"
 
         # surface
@@ -170,7 +172,7 @@ class draw_class:
             fgs.write("'d "+  self.plot_type  +"+35'\n") 
         if (self.plot_type == "uu"):
             fgs.write("'d skip(u.1,4,8); skip(v.2,4,8); mag(u.1,v.2)'\n") 
-        if (self.plot_type == "eta"):
+        if (self.plot_type == "sl"):
 #            fgs.write("'d -"+  self.plot_type  +"-14.69'\n")  # 14.69 - what?!!
             fgs.write("'d -"+  self.plot_type  +"-14.69'\n") 
         fgs.write("'cbarn'\n") 
