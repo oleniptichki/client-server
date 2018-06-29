@@ -142,16 +142,20 @@ if (calc_type==1):
 # check if output_time_date<launch_time_date+duration
     cursor.execute("SELECT launch_time_date FROM user_calculation WHERE calc_id="+str(draw.calc_id)+";")
     dt=cursor.fetchone()
-    start_date=dt[0]  
+    start_date=dt[0]
+    print(start_date)
     start_time=datetime(start_date.year, start_date.month, start_date.day, 0, 0, 0, 0)  
     delta_days = timedelta(days=3)
     finish_date=start_time+delta_days
+    print(finish_date)
     if (draw.output_time_date>finish_date):
         raise Inconsistent_data_exception()
 
 # calculate number of record 
     start_date=start_date-delta_days
+    print(start_date)
     start_time=datetime(start_date.year, start_date.month, start_date.day, 0, 0, 0, 0)
+    print(start_time)
     delta=(draw.output_time_date-start_time).total_seconds()
     num_of_record=int(delta/(3600*draw.record))   # number of record
     print("num_of_record=%i" %(num_of_record))
