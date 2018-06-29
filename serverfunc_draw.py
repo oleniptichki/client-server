@@ -186,6 +186,8 @@ class draw_class:
     def file_exec(self):
         try:
             os.chdir(self.path_to_res)
+            if not os.path.exists('cbarn.gs'):
+                ret=subprocess.call('cp '+draw.path+'SS/cbarn.gs ./')
         except:
             draw_class.err=draw_class.err+'Error in changing directory \n' 
             return 1
