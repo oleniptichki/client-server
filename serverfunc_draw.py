@@ -137,6 +137,7 @@ class draw_class:
             x_axes_name='longitude'
             y_axes_name='depth (meters)'
         self.full_name_of_png=self.full_name_of_png+' '+self.nameOfImage+'.png'
+        print(self.full_name_of_png)
 
 #========================== Part2 =========================
 # writing gs file
