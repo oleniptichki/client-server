@@ -105,7 +105,7 @@ class draw_class:
         elif (self.depth<100) and (self.depth>=10):
             strLev = "00"+lev
         # deepest
-        elif (self.depth<250) and (self.depth>=100):
+        elif (self.depth<=250) and (self.depth>=100):
             strLev = "0"+lev
         else:
             return 1
