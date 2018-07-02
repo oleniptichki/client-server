@@ -52,6 +52,10 @@ class draw_class:
             self.cs_value=cs_value
             self.cs_limits_min=cs_limits_min
             self.cs_limits_max=cs_limits_max
+            # <if depth>1 and crossection then set lev 1 depth>
+            # <if depth<=1 and crossection then set lev 1 250>
+            if depth<=1:
+                self.depth=250  #integer
         self.num_of_record=num_of_record
         self.scale=scale
         if scale:
@@ -124,13 +128,14 @@ class draw_class:
 
         if (not self.crosssection) :
             self.nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + strLev + "_" + strClevs
+            x_axes_name='longitude'
+            y_axes_name='latitude'
             if (self.zoom) :
                 self.nameOfImage = self.nameOfImage+"_lat"+str(zoom_lat_min)+str(zoom_lat_max) + "_lon"+str(self.zoom_lon_min)+str(self.zoom_lon_max)
         else:
-            print(type(self.cs_limits_max))
-            print(type(self.cs_type))
             self.nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + self.cs_type + str(self.cs_limits_min) + str(self.cs_limits_max) + strClevs
-            print(self.nameOfImage)
+            x_axes_name='longitude'
+            y_axes_name='depth (meters)'
         self.full_name_of_png=self.full_name_of_png+' '+self.nameOfImage+'.png'
 
 #========================== Part2 =========================
@@ -151,20 +156,22 @@ class draw_class:
         if (self.plot_type=='uu') :
             fgs.write("'open vv.ctl'\n")
         fgs.write("'set grads off'\n")
-        if (self.depth>1) :
+        if ((self.depth>1) and (not self.crosssection)) :
             fgs.write("'set lev "+lev+"'\n")
         if (self.crosssection):
             cs_type_list=['LAT','LON']
             fgs.write("'set "+self.cs_type+" "+str(self.cs_value)+"'\n")
             not_cs_type_index=1-cs_type_list.index(self.cs_type)
-            fgs.write("'set "+cs_type_list[not_cs_type_index]+" "+str(self.cs_limits_min)+ \
-                " "+str(self.cs_limits_max)+"'\n")
-            # 'set z 1' - don't know for what
+            fgs.write("'set "+cs_type_list[not_cs_type_index]+" "+str(self.cs_limits_min)+" "+str(self.cs_limits_max)+"'\n")
             fgs.write("'set yflip on'\n")
-        if (self.plot_type!='uu') :
+            fgs.write("'set lev 1 " + lev + "'\n")
+            if not (self.plot_type == 'uu'):
+                fgs.write("'set gxout shaded'\n")
+        if (not (self.plot_type=='uu')) and (not self.crosssection):
             fgs.write("'set gxout grfill'\n")
+        if not (self.plot_type=='uu'):
             fgs.write("'set mpdset hires'\n")
-        fgs.write("'set background 1'\n")
+#        fgs.write("'set background 1'\n")  don`t know whether it is important
         if (self.scale or (self.plot_type == 'ss')):
             fgs.write("'set clevs " + clevsStr + "'\n") 
         fgs.write("'set t "+  str(self.num_of_record) + "'\n")
@@ -176,7 +183,9 @@ class draw_class:
             fgs.write("'d skip(u.1,4,8); skip(v.2,4,8); mag(u.1,v.2)'\n") 
         if (self.plot_type == "sl"):
 #            fgs.write("'d -"+  self.plot_type  +"-14.69'\n")  # 14.69 - what?!!
-            fgs.write("'d -"+  self.plot_type  +"-14.69'\n") 
+            fgs.write("'d -"+  self.plot_type  +"-14.69'\n")
+        fgs.write("'draw xlab "+x_axes_name+"'\n")
+        fgs.write("'draw ylab "+y_axes_name+"'\n")
         fgs.write("'cbarn'\n") 
         fgs.write("'draw title "+titleOfScript+"'\n")
         fgs.write("'enable print temporary.gmf'\n")

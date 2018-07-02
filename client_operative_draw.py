@@ -113,9 +113,11 @@ draw=draw_class(dt)
 if (draw.crosssection and draw.zoom) :
     print("There couldn't be a crossection and surface zoom simultaneously")
     raise Inconsistent_data_exception()
-if ((draw.depth>1) and draw.crosssection) :
-    print("There couldn't be a crossection at the deep levels of the sea")
-    raise Inconsistent_data_exception()
+# <if depth>1 and crossection then set lev 1 depth>
+# <if depth<=1 and crossection then set lev 1 250>
+#if ((draw.depth>1) and draw.crosssection) :
+#    print("There couldn't be a crossection at the deep levels of the sea")
+#    raise Inconsistent_data_exception()
 if ((draw.plot_type=='eta') and draw.crosssection) :
     print("Sea level is a surface plot")
     raise Inconsistent_data_exception()
