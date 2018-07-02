@@ -108,7 +108,7 @@ class draw_class:
         elif (self.depth<250) and (self.depth>=100):
             strLev = "0"+lev
         else:
-            return -1
+            return 1
 
         # set scale (clevs) 
         # strClevs - string to name the file
