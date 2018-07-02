@@ -128,14 +128,10 @@ class draw_class:
 
         if (not self.crosssection) :
             self.nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + strLev + "_" + strClevs
-            x_axes_name='longitude'
-            y_axes_name='latitude'
             if (self.zoom) :
                 self.nameOfImage = self.nameOfImage+"_lat"+str(zoom_lat_min)+str(zoom_lat_max) + "_lon"+str(self.zoom_lon_min)+str(self.zoom_lon_max)
         else:
             self.nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + self.cs_type + str(self.cs_limits_min) + str(self.cs_limits_max) + strClevs
-            x_axes_name='longitude'
-            y_axes_name='depth (meters)'
         self.full_name_of_png=self.full_name_of_png+' '+self.nameOfImage+'.png'
         print(self.full_name_of_png)
 
@@ -185,9 +181,9 @@ class draw_class:
         if (self.plot_type == "sl"):
 #            fgs.write("'d -"+  self.plot_type  +"-14.69'\n")  # 14.69 - what?!!
             fgs.write("'d -"+  self.plot_type  +"-14.69'\n")
-        fgs.write("'draw xlab "+x_axes_name+"'\n")
-        fgs.write("'draw ylab "+y_axes_name+"'\n")
-        fgs.write("'cbarn'\n") 
+        if self.crosssection:
+            fgs.write("'draw ylab depth (meters)'\n")
+        fgs.write("'cbarn 0.8'\n")
         fgs.write("'draw title "+titleOfScript+"'\n")
         fgs.write("'enable print temporary.gmf'\n")
         fgs.write("'print'\n")
