@@ -129,9 +129,8 @@ class draw_class:
         else:
             print(type(self.cs_limits_max))
             print(type(self.cs_type))
-            self.nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + self.cs_type +\
-                + str(self.cs_limits_min) + str(self.cs_limits_max) + strClevs
-            print(self.self.nameOfImage)
+            self.nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + self.cs_type + str(self.cs_limits_min) + str(self.cs_limits_max) + strClevs
+            print(self.nameOfImage)
         self.full_name_of_png=self.full_name_of_png+' '+self.nameOfImage+'.png'
 
 #========================== Part2 =========================
