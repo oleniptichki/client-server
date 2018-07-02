@@ -128,6 +128,7 @@ class draw_class:
                 self.nameOfImage = self.nameOfImage+"_lat"+str(zoom_lat_min)+str(zoom_lat_max) + "_lon"+str(self.zoom_lon_min)+str(self.zoom_lon_max)
         else:
             print(type(self.cs_limits_max))
+            print(type(self.cs_type))
             self.nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + self.cs_type +\
                 + str(self.cs_limits_min) + str(self.cs_limits_max) + strClevs
             print(self.self.nameOfImage)
