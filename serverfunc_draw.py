@@ -157,7 +157,7 @@ class draw_class:
             fgs.write("'set lev "+lev+"'\n")
         if (self.crosssection):
             cs_type_list=['LAT','LON']
-            fgs.write("'set "+self.cs_type+" "+str(self.cs_value)+"'\n")
+            fgs.write("'set "+self.cs_type+" %.2f '\n" %(self.cs_value))
             not_cs_type_index=1-cs_type_list.index(self.cs_type)
             fgs.write("'set "+cs_type_list[not_cs_type_index]+" "+str(self.cs_limits_min)+" "+str(self.cs_limits_max)+"'\n")
             fgs.write("'set yflip on'\n")
@@ -173,8 +173,8 @@ class draw_class:
         fgs.write("'set t "+  str(self.num_of_record) + "'\n")
         # ZOOM
         if self.zoom:
-            fgs.write("'set LAT "+self.zoom_lat_min+" "+self.zoom_lat_max+"'\n")
-            fgs.write("'set LON "+self.zoom_lon_min+" "+self.zoom_lon_max+"'\n")
+            fgs.write("'set LAT %.2f %.2f '\n" %(self.zoom_lat_min) %(self.zoom_lat_max+"'\n"))
+            fgs.write("'set LON %.2f %.2f '\n" %(self.zoom_lon_min) %(self.zoom_lon_max+"'\n"))
         if (self.plot_type == "tt"):
             fgs.write("'d "+  self.plot_type + "'\n") 
         if (self.plot_type == "ss"):
