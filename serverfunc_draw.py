@@ -153,8 +153,10 @@ class draw_class:
         if (self.plot_type=='uu') :
             fgs.write("'open vv.ctl'\n")
         fgs.write("'set grads off'\n")
+        # deep levels
         if ((self.depth>1) and (not self.crosssection)) :
             fgs.write("'set lev "+lev+"'\n")
+        # cross section
         if (self.crosssection):
             cs_type_list=['LAT','LON']
             fgs.write("'set "+self.cs_type+" %.2f '\n" %(self.cs_value))
@@ -167,6 +169,10 @@ class draw_class:
             fgs.write("'set gxout grfill'\n")
         if not (self.crosssection):
             fgs.write("'set mpdset hires'\n")
+        # circulation
+        if (self.plot_type=='uu'):
+            fgs.write("'set gxout stream'\n")
+            fgs.write("'set strmden 5'\n")
 #        fgs.write("'set background 1'\n")  don`t know whether it is important
         if (self.scale or (self.plot_type == 'ss')):
             fgs.write("'set clevs " + clevsStr + "'\n") 
@@ -180,7 +186,7 @@ class draw_class:
         if (self.plot_type == "ss"):
             fgs.write("'d "+  self.plot_type  +"+35'\n") 
         if (self.plot_type == "uu"):
-            fgs.write("'d skip(u.1,4,8); skip(v.2,4,8); mag(u.1,v.2)'\n") 
+            fgs.write("'d u.1;v.2;mag(u.1,v.2)'\n")
         if (self.plot_type == "sl"):
 #            fgs.write("'d -"+  self.plot_type  +"-14.69'\n")  # 14.69 - what?!!
             fgs.write("'d -"+  self.plot_type  +"-14.69'\n")
