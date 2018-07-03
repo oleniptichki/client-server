@@ -173,8 +173,8 @@ class draw_class:
         fgs.write("'set t "+  str(self.num_of_record) + "'\n")
         # ZOOM
         if self.zoom:
-            fgs.write("'set LAT %.2f %.2f '\n" %(self.zoom_lat_min) %(self.zoom_lat_max))
-            fgs.write("'set LON %.2f %.2f '\n" %(self.zoom_lon_min) %(self.zoom_lon_max))
+            fgs.write("'set LAT %.2f %.2f '\n" %((self.zoom_lat_min), (self.zoom_lat_max)))
+            fgs.write("'set LON %.2f %.2f '\n" %((self.zoom_lon_min), (self.zoom_lon_max)))
         if (self.plot_type == "tt"):
             fgs.write("'d "+  self.plot_type + "'\n") 
         if (self.plot_type == "ss"):
