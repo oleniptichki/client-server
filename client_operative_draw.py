@@ -102,7 +102,6 @@ class draw_class:
             if (self.zoom_lon_min<9.45):
                 self.zoom_lon_min=9.45
             if (self.zoom_lon_max>30.34):
-                print(self.zoom_lon_max)
                 self.zoom_lon_max=30.34
             if (self.zoom_lat_min < 53.64):
                 self.zoom_lat_min = 53.64
@@ -129,7 +128,9 @@ connect_db()
 
 cursor.execute("SELECT calc_id, plot_type, depth, crosssection, cs_type, cs_value, cs_limits_min, cs_limits_max, output_time_date, scale, scale_min, scale_max, scale_step, zoom, zoom_lon_min, zoom_lon_max, zoom_lat_min, zoom_lat_max FROM pictures WHERE pictures_pk="+pictures_pk+";")
 dt=cursor.fetchone()
+print(dt)
 draw=draw_class(dt)
+print(draw.zoom_lon_max)
 # check if data are consistent
 if (draw.crosssection and draw.zoom) :
     print("There couldn't be a crossection and surface zoom simultaneously")
