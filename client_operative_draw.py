@@ -176,7 +176,6 @@ if (calc_type==1):
 url = 'http://192.168.88.243:7889/?wsdl'
 hello_client = Client(url)
 print("===Connected===")
-print(type(draw.cs_limits_min))
 
 try :
     result=hello_client.service.draw(draw.calc_id,

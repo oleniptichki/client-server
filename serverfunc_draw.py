@@ -129,7 +129,7 @@ class draw_class:
         if (not self.crosssection) :
             self.nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + strLev + "_" + strClevs
             if (self.zoom) :
-                self.nameOfImage = self.nameOfImage+"_lat"+str(zoom_lat_min)+str(zoom_lat_max) + "_lon"+str(self.zoom_lon_min)+str(self.zoom_lon_max)
+                self.nameOfImage = self.nameOfImage+"_lat"+str(self.zoom_lat_min)+str(self.zoom_lat_max) + "_lon"+str(self.zoom_lon_min)+str(self.zoom_lon_max)
         else:
             self.nameOfImage = self.plot_type + "_t" + str(self.num_of_record) + "_" + self.cs_type + str(self.cs_limits_min) + str(self.cs_limits_max) + strClevs
         self.full_name_of_png=self.full_name_of_png+' '+self.nameOfImage+'.png'
