@@ -171,6 +171,7 @@ if (calc_type==1):
     path_to_calc=token+'/OPirat/'+str(draw.calc_id)
 
     print("=== Stage 2 ===")
+    print(draw.scale)
 
 
 url = 'http://192.168.88.243:7889/?wsdl'
