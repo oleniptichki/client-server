@@ -165,12 +165,16 @@ class draw_class:
             fgs.write("'set gxout shaded'\n")
         if (not (self.plot_type=='uu')) and (not self.crosssection):
             fgs.write("'set gxout grfill'\n")
-        if not (self.plot_type=='uu'):
+        if not (self.crosssection):
             fgs.write("'set mpdset hires'\n")
 #        fgs.write("'set background 1'\n")  don`t know whether it is important
         if (self.scale or (self.plot_type == 'ss')):
             fgs.write("'set clevs " + clevsStr + "'\n") 
         fgs.write("'set t "+  str(self.num_of_record) + "'\n")
+        # ZOOM
+        if self.zoom:
+            fgs.write("'set LAT "+self.zoom_lat_min+" "+self.zoom_lat_max+"'\n")
+            fgs.write("'set LON "+self.zoom_lon_min+" "+self.zoom_lon_max+"'\n")
         if (self.plot_type == "tt"):
             fgs.write("'d "+  self.plot_type + "'\n") 
         if (self.plot_type == "ss"):
