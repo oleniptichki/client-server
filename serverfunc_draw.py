@@ -162,8 +162,7 @@ class draw_class:
             fgs.write("'set "+cs_type_list[not_cs_type_index]+" "+str(self.cs_limits_min)+" "+str(self.cs_limits_max)+"'\n")
             fgs.write("'set yflip on'\n")
             fgs.write("'set lev 1 " + lev + "'\n")
-            if not (self.plot_type == 'uu'):
-                fgs.write("'set gxout shaded'\n")
+            fgs.write("'set gxout shaded'\n")
         if (not (self.plot_type=='uu')) and (not self.crosssection):
             fgs.write("'set gxout grfill'\n")
         if not (self.plot_type=='uu'):

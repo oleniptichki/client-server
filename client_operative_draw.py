@@ -118,6 +118,11 @@ if (draw.crosssection and draw.zoom) :
 #if ((draw.depth>1) and draw.crosssection) :
 #    print("There couldn't be a crossection at the deep levels of the sea")
 #    raise Inconsistent_data_exception()
+
+# NEW there couldn't be a crossection in the velocity/streamline plot
+if (draw.crosssection and (draw.plot_type=='uu')):
+    print("no data on the vertical component of the velocity")
+    raise Inconsistent_data_exception()
 if ((draw.plot_type=='eta') and draw.crosssection) :
     print("Sea level is a surface plot")
     raise Inconsistent_data_exception()
