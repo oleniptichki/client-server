@@ -102,6 +102,7 @@ class draw_class:
             if (self.zoom_lon_min<9.45):
                 self.zoom_lon_min=9.45
             if (self.zoom_lon_max>30.34):
+                print(self.zoom_lon_max)
                 self.zoom_lon_max=30.34
             if (self.zoom_lat_min < 53.64):
                 self.zoom_lat_min = 53.64
