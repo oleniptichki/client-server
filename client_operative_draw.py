@@ -65,6 +65,17 @@ class draw_class:
             self.cs_value=dt[5]
             self.cs_limits_min=dt[6]
             self.cs_limits_max=dt[7]
+            # limitation of the area
+            if (self.cs_type == 'LAT'):
+                if (self.cs_limits_min<9.45):
+                    self.cs_limits_min=9.45
+                if (self.cs_limits_max>30.34):
+                    self.cs_limits_max=30.34
+            if (self.cs_type == 'LON'):
+                if (self.cs_limits_min < 53.64):
+                    self.cs_limits_min = 53.64
+                if (self.cs_limits_max > 65.92):
+                    self.cs_limits_max = 65.92
         else:   # if DB contains values different from None they are lost
             self.cs_type=None
             self.cs_value=None
@@ -87,6 +98,15 @@ class draw_class:
             self.zoom_lon_max=dt[15]
             self.zoom_lat_min=dt[16]
             self.zoom_lat_max=dt[17]
+            # limitation of the area
+            if (self.zoom_lon_min<9.45):
+                self.zoom_lon_min=9.45
+            if (self.zoom_lon_max>30.34):
+                self.zoom_lon_max=30.34
+            if (self.zoom_lat_min < 53.64):
+                self.zoom_lat_min = 53.64
+            if (self.zoom_lat_max > 65.92):
+                self.zoom_lat_max = 65.92
         else:  # if DB contains values different from None they are lost
             self.zoom_lon_min=None
             self.zoom_lon_max=None
@@ -129,6 +149,35 @@ if ((draw.plot_type=='eta') and draw.crosssection) :
 if ((draw.depth>1) and (draw.plot_type=='eta')) :
     print("There couldn't be a SSH plot at the deep levels of the sea")
     raise Inconsistent_data_exception()
+if ((draw.scale) and (draw.scale_step<=0)):
+    print("less than zero scale step is prohibited")
+    raise Inconsistent_data_exception()
+if ((draw.scale) and ((draw.scale_max-draw.scale_min)/draw.scale_step>13)):
+    print("Need to increase scale_step")
+    raise Inconsistent_data_exception()
+
+# check of latitude and longitude
+error_flag=0
+if (draw.crosssection):
+    if (draw.cs_type=='LAT'):
+        if (draw.cs_value<53.65) or (draw.cs_value>65.92):
+            error_flag = 1
+        elif (draw.cs_limits_max<draw.cs_limits_min):
+            error_flag = 1
+    if (draw.cs_type == 'LON'):
+        if (draw.cs_value < 9.45) or (draw.cs_value > 30.35):
+            error_flag = 1
+        elif (draw.cs_limits_max<draw.cs_limits_min):
+            error_flag = 1
+if (draw.zoom):
+    if (draw.zoom_lon_max<draw.zoom_lon_min):
+        error_flag = 1
+    if (draw.zoom_lat_max<draw.zoom_lat_min):
+        error_flag = 1
+
+if (error_flag>0):
+    print('request to data outside coordinate limits, LAT/LON values wrong')
+    raise Inconsistent_data_exception
 
 cursor.execute("SELECT token, calc_type, continued_from FROM user_calculation WHERE calc_id="+str(draw.calc_id)+";")
 dt=cursor.fetchone()
