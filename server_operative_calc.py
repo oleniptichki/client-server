@@ -120,6 +120,7 @@ class HelloWorldService(DefinitionBase):
         else:
 # SOMETHING WRONG THERE!!
             try:
+                print('im here!!!!')
                 os.chdir('/home/ftpuser/model/'+token+'/OPirat/')
                 fin=open('progress.txt', 'rt')
                 progrs=int(fin.read())
