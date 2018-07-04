@@ -78,8 +78,6 @@ connect_db()
 # check if there more then 3 calculations launched
 cursor.execute("SELECT calc_id FROM user_calculation WHERE status='STARTED';")
 res=cursor.fetchall()
-print(res)
-print(len(res))
 if len(res)>2 :
     print("There is more than 3 calculations launched. In queue")
     raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
