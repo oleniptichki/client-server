@@ -118,9 +118,7 @@ class HelloWorldService(DefinitionBase):
             except:
                 return -1
         else:
-# SOMETHING WRONG THERE!!
             try:
-                print('im here!!!!')
                 os.chdir('/home/ftpuser/model/'+token+'/OPirat/')
                 fin=open('progress.txt', 'rt')
                 progrs=float(fin.read())
@@ -128,13 +126,13 @@ class HelloWorldService(DefinitionBase):
                 if (progrs==1):
                     return 101
                 else:
-                    print('rm -r '+str(calc_id))
-                    ret=subprocess.call('rm -r '+str(calc_id), shell=True)
-                    print('ret=%i' %(ret))
-                    return 102
+                    if os.path.exists('./'+str(calc_id)):
+                        ret=subprocess.call('rm -r '+str(calc_id), shell=True)
+                        return 102
+                    else:
+                        print('oops')
             except:
-                return -6   
-# END OF PART WITH MISTAKE
+                return -6
 
     @soap(Integer,String,Integer,_returns=Integer)
     def killer(self, calc_id, token, ppid):
@@ -192,9 +190,10 @@ class HelloWorldService(DefinitionBase):
             fin=open('progress.txt', 'rt')
             progrs=float(fin.read())
             fin.close()      
-            if ((progrs>0) and (progrs<1)):   #?????????????????
-                ret=subprocess.call('rm -r '+str(calc_id), shell=True)
-                os.remove('progress.txt')
+            if (progrs<1):   #?????????????????
+                if os.path.exists('./'+str(calc_id)):
+                    ret=subprocess.call('rm -r '+str(calc_id), shell=True)
+                    os.remove('progress.txt')
         except:
             return -7  
         return 0  
