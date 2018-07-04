@@ -134,6 +134,7 @@ class HelloWorldService(DefinitionBase):
                         return 102
                     else:
                         print('oops')
+                        return 102
             except:
                 return -6
 
