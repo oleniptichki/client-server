@@ -120,9 +120,12 @@ class HelloWorldService(DefinitionBase):
         else:
             try:
                 os.chdir('/home/ftpuser/model/'+token+'/OPirat/')
-                fin=open('progress.txt', 'rt')
-                progrs=float(fin.read())
-                fin.close()      
+                if os.path.exists('progress.txt'):
+                    fin=open('progress.txt', 'rt')
+                    progrs=float(fin.read())
+                    fin.close()
+                else:
+                    progrs=0
                 if (progrs==1):
                     return 101
                 else:
@@ -187,9 +190,12 @@ class HelloWorldService(DefinitionBase):
                 return -6
         try:
             os.chdir('/home/ftpuser/model/'+token+'/OPirat/')
-            fin=open('progress.txt', 'rt')
-            progrs=float(fin.read())
-            fin.close()      
+            if os.path.exists('progress.txt'):
+                fin=open('progress.txt', 'rt')
+                progrs=float(fin.read())
+                fin.close()
+            else:
+                progrs=0
             if (progrs<1):   #?????????????????
                 if os.path.exists('./'+str(calc_id)):
                     ret=subprocess.call('rm -r '+str(calc_id), shell=True)
