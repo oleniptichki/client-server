@@ -127,7 +127,9 @@ class HelloWorldService(DefinitionBase):
                 if (progrs==1):
                     return 101
                 else:
+                    print('rm -r '+str(calc_id))
                     ret=subprocess.call('rm -r '+str(calc_id), shell=True)
+                    print('ret=%i' %(ret))
                     return 102
             except:
                 return -6   
