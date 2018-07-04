@@ -118,6 +118,8 @@ class draw_class:
 
 class Inconsistent_data_exception(Exception):
     pass
+class Not_finished_calc_exception(Exception):
+    pass
 
 
 # pictures_pk is the argument - got it
@@ -181,8 +183,12 @@ if (error_flag>0):
     print('request to data outside coordinate limits, LAT/LON values wrong')
     raise Inconsistent_data_exception
 
-cursor.execute("SELECT token, calc_type, continued_from FROM user_calculation WHERE calc_id="+str(draw.calc_id)+";")
+cursor.execute("SELECT token, calc_type, continued_from, status FROM user_calculation WHERE calc_id="+str(draw.calc_id)+";")
 dt=cursor.fetchone()
+# if the simulation hasn't finished yet or finished with error, we cannot plot anything!
+if dt[3]!='FINISHED':
+    raise Not_finished_calc_exception
+
 token=dt[0]
 calc_type=dt[1]
 continued_from=dt[2]
