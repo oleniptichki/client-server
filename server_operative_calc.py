@@ -123,7 +123,7 @@ class HelloWorldService(DefinitionBase):
                 print('im here!!!!')
                 os.chdir('/home/ftpuser/model/'+token+'/OPirat/')
                 fin=open('progress.txt', 'rt')
-                progrs=int(fin.read())
+                progrs=float(fin.read())
                 fin.close()      
                 if (progrs==1):
                     return 101
