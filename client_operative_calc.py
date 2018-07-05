@@ -15,19 +15,19 @@ def connect_db():
     error_string=None
  
     # print the connection string we will use to connect
-    print("Connecting to database\n	->%s" % (conn_string))
+    # print("Connecting to database\n	->%s" % (conn_string))
 
     try: 
         # get a connection, if a connect cannot be made an exception will be raised here
         conn = psycopg2.connect(conn_string)
     except psycopg2.OperationalError:
-        error_string="failed to connect"
-        print(error_string)
+        error_string="failed to connect to database"
+        # print(error_string)
     else:
         # conn.cursor will return a cursor object, you can use this cursor to perform queries
         cursor = conn.cursor()
-        print("Connected!\n")
-    return error_string
+        # print("Connected!\n")
+    return error_string   # if it is not NONE, i will return it to adeq.inm.ras.ru
 
 def timestamp():
     now=datetime.today()
@@ -65,15 +65,11 @@ class Server_is_overloaded_exception(Exception):
     pass
 
 
-
 # calc_id is the argument - got it
 calc_id=sys.argv[1]
 
     
 connect_db()
-
-#cursor.execute("""INSERT INTO operative_calc (calc_id, duration, record, assim_type, parallel_version) VALUES (1, 3, 3, DEFAULT, true);""")
-#conn.commit()
 
 # check if there more then 3 calculations launched
 cursor.execute("SELECT calc_id FROM user_calculation WHERE status='STARTED';")

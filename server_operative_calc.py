@@ -150,19 +150,20 @@ class HelloWorldService(DefinitionBase):
         # receive PID of the process
         pid=None
         os.chdir('/home/ftpuser/Py/')
-        # step 1. receive group id (PGID)
-        ret=subprocess.call('ps -j -p '+str(ppid)+' > 1.txt', shell=True)
-        try:
-            f=open('1.txt','rt')
-            output=f.read()
-            f.close()
-            os.remove('1.txt')
-        except:
-            return -2
-        ret=output.split()
-        if len(ret)>7 :  # if not, the process does not exist
-            pgid=ret[7]
-            ret=subprocess.call('ps -afj | grep '+str(pgid)+' | grep dsom > 1.txt', shell=True)
+        # step 1. receive group id (PGID)  #for what ?
+ #       ret=subprocess.call('ps -j -p '+str(ppid)+' > 1.txt', shell=True)
+ #       try:
+ #           f=open('1.txt','rt')
+ #           output=f.read()
+ #           f.close()
+ #           os.remove('1.txt')
+ #       except:
+ #           return -2
+ #       ret=output.split()
+ #       if len(ret)>7 :  # if not, the process does not exist
+        if 2>1:
+#            pgid=ret[7]
+            ret=subprocess.call('ps -afj | grep '+str(ppid)+' | grep dsom > 1.txt', shell=True)
             if ret>0 :
                 return -3
             try:
@@ -174,7 +175,7 @@ class HelloWorldService(DefinitionBase):
                 return -4
             ret=output.split()
             if len(ret)>9 :
-                if (ret[9]=='./dsom') and (ret[3]==str(pgid)):
+                if (ret[9]=='./dsom') and (ret[2]==str(ppid)):
                     pid=ret[1]
                 else:
                     return ret[1]
