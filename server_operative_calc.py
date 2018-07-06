@@ -48,9 +48,9 @@ class HelloWorldService(DefinitionBase):
         calc=operative_calc(calc_id, token, duration, record_d, assim_numb)
         if calc.userinit()==0:
             ret=calc.initializer()
-            if ret>0:
+            if ret<0:
                 calc.errlogwriter()
-                return 1
+                return ret
             else:
                 # start calculation
                 os.chdir('/home/ftpuser/model/'+token+'/OPirat/')
@@ -59,7 +59,7 @@ class HelloWorldService(DefinitionBase):
                 return pid
         else:
             calc.errlogwriter()
-            return 1
+            return 1  # error in creation of new user
 
     @soap(Integer,String,Integer,_returns=Integer)
     def progress(self, calc_id, token, ppid):

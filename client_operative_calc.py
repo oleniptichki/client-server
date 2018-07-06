@@ -7,6 +7,7 @@ import psycopg2
 import sys
 from datetime import datetime
 from datetime import timedelta
+import traceback
 def connect_db():
     global cursor
     global conn
@@ -68,18 +69,22 @@ class Server_is_overloaded_exception(Exception):
 # calc_id is the argument - got it
 calc_id=sys.argv[1]
 
-    
-connect_db()
+# connect to database
+error_db_connection=connect_db()
+# if no connection to DB
+if error_db_connection:
+    sys.exit(1)
 
 # check if there more then 3 calculations launched
 cursor.execute("SELECT calc_id FROM user_calculation WHERE status='STARTED';")
 res=cursor.fetchall()
-if len(res)>2 :
-    print("There is more than 3 calculations launched. In queue")
-    raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
+if len(res)>2 : # not 3 (don't know why, but len(res)<=2 is true and it allows 3 calc to be launched)
+#    print("There is more than 3 calculations launched. In queue")
+#    raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
+    sys.exit(2)
 
 
-
+# extract values of calculation parameters
 cursor.execute("SELECT duration, record, assim_type, parallel_version FROM operative_calc WHERE calc_id="+calc_id+";")
 dt=cursor.fetchone()
 calc=operative_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3])
@@ -89,42 +94,47 @@ calc=operative_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3])
 cursor.execute("SELECT token FROM user_calculation WHERE calc_id="+calc_id+";")
 dt=cursor.fetchone()
 token=dt[0]
-print("user name: ", token)
 
+# connect to server
 url = 'http://192.168.88.243:7889/?wsdl'
 hello_client = Client(url)
 
 try:
     result=hello_client.service.operatcalc_exstrt(calc.calc_id, token, calc.duration, calc.h_to_days(), calc.assim_numb())
-    print(result)
+    # result is a parent PID of a process ./dsom
     if result>1 : # modelling is successfully launched 
         # set status='STARTED' and launch_time_date
-        cursor.execute("UPDATE user_calculation SET status='STARTED' WHERE calc_id="+calc_id+";")
-        cursor.execute("UPDATE user_calculation SET launch_time_date='"+timestamp()+"' WHERE calc_id="+calc_id+";")
+        cursor.execute("UPDATE user_calculation SET status='STARTED', launch_time_date='"+timestamp()+"' WHERE calc_id="+calc_id+";")
         conn.commit()
         ppid=result
         # put PPID in the table Process controller
         cursor.execute("SELECT pid FROM process_controller WHERE calc_id="+calc_id+";")
         dt=cursor.fetchone()
-        print(dt)
         if dt : # string exists
-            print ("update") 
-            cursor.execute("UPDATE process_controller SET pid="+str(ppid)+" WHERE calc_id="+calc_id+";") 
-            cursor.execute("UPDATE process_controller SET error_message='running' WHERE calc_id="+calc_id+";")
+            cursor.execute("UPDATE process_controller SET pid="+str(ppid)+", error_message='running' WHERE calc_id="+calc_id+";")
             conn.commit() 
-        else :  
-            print ("insert")       
+        else :
             cursor.execute("INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES ("+calc_id+", 'operative_calc',"+str(ppid)+",'running') ;")
             conn.commit()
-        conn.close()
-
-#        old version
-#        f=open(str(calc.calc_id)+'.txt',"wt")
-#        f.write(str(ppid))
-#        f.close()
+    else:
+        # processing of server errors - put it to DB table - Process controller
+        # create dictonary of errors
+        errors={1:"Error in creation new user",
+                -2:"Error in directory creation",
+                -3:"New year",
+                -4:"CP copy failed",
+                -5:"assim.par writing failed",
+                -6:"octask.par writing failed"}
+        cursor.execute(
+            "INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'operative_calc', '0','"+errors[result]+"') ;")
+        conn.commit()
+        sys.exit(5)
+    conn.close()
 except WebFault:
-    print("WebFault")
-except:
-    err = sys.exc_info()[1]
-    print('Other error: ' + str(err))
+    # print(traceback.format_exc())
+    sys.exit(3)
+
+except Exception as other:
+    str=traceback.format_exc(limit=1)
+    sys.exit(4)
 
