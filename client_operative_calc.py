@@ -94,7 +94,7 @@ calc=operative_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3])
 cursor.execute("SELECT token FROM user_calculation WHERE calc_id="+calc_id+";")
 dt=cursor.fetchone()
 token=dt[0]
-
+sys.exit(0)
 # connect to server
 #url = 'http://192.168.88.243:7889/?wsdl'
 #hello_client = Client(url)
