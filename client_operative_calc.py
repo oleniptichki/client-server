@@ -122,12 +122,12 @@ try:
     else:
         # processing of server errors - put it to DB table - Process controller
         # create dictonary of errors
-        errors={1:"Error in creation new user",
-                -2:"Error in directory creation",
-                -3:"New year",
-                -4:"CP copy failed",
-                -5:"assim.par writing failed",
-                -6:"octask.par writing failed"}
+        errors={1:"'Error in creation new user'",
+                -2:"'Error in directory creation'",
+                -3:"'New year'",
+                -4:"'CP copy failed'",
+                -5:"'assim.par writing failed'",
+                -6:"'octask.par writing failed'"}
         cursor.execute(
             "INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'operative_calc', '0','"+errors[result]+"') ;")
         conn.commit()

@@ -70,42 +70,30 @@ class HelloWorldService(DefinitionBase):
         ppid - parent PID
 
         '''
-        # check existence of the process
-        pid=None
+        # check existence of the process:
+        # receive PID of the process
+        pid = None
         os.chdir('/home/ftpuser/Py/')
-        # step 1. receive group id (PGID)
-        ret=subprocess.call('ps -j -p '+str(ppid)+' > 1.txt', shell=True)
+
+        ret = subprocess.call('ps -afj | grep ' + str(ppid) + ' | grep dsom > 1.txt', shell=True)
+        if ret > 0:
+            return -3
         try:
-            f=open('1.txt','rt')
-            output=f.read()
+            f = open('1.txt', 'rt')
+            output = f.read()
             f.close()
             os.remove('1.txt')
         except:
-            return -2
-        ret=output.split()
-        if len(ret)>7 :  # if not, the process does not exist
-            pgid=ret[7]
-            ret=subprocess.call('ps -afj | grep '+str(pgid)+' | grep dsom > 1.txt', shell=True)
-            if ret>0 :
-                return -3
-            try:
-                f=open('1.txt','rt')
-                output=f.read()
-                f.close()
-#                os.remove('1.txt')
-            except:
-                return -4
-            ret=output.split()
-            if len(ret)>9 :
-                if (ret[9]=='./dsom') and (ret[3]==str(pgid)):
-                    pid=ret[1]
-                else:
-                    return -7
-            else: 
-                return -5
-        print("PID of dsom: "+str(pid))    
-
-        # step 2. check existence of the process
+            return -4
+        ret = output.split()
+        if len(ret) > 9:
+            if (ret[9] == './dsom') and (ret[2] == str(ppid)):
+                pid = ret[1]
+            else:
+                return -2
+        #        else:
+        #            return -5
+        print("PID of dsom: " + str(pid))
 
 
         if pid is not None:      # if process exist
@@ -133,7 +121,6 @@ class HelloWorldService(DefinitionBase):
                         ret=subprocess.call('rm -r '+str(calc_id), shell=True)
                         return 102
                     else:
-                        print('oops')
                         return 102
             except:
                 return -6
@@ -150,37 +137,25 @@ class HelloWorldService(DefinitionBase):
         # receive PID of the process
         pid=None
         os.chdir('/home/ftpuser/Py/')
-        # step 1. receive group id (PGID)  #for what ?
- #       ret=subprocess.call('ps -j -p '+str(ppid)+' > 1.txt', shell=True)
- #       try:
- #           f=open('1.txt','rt')
- #           output=f.read()
- #           f.close()
- #           os.remove('1.txt')
- #       except:
- #           return -2
- #       ret=output.split()
- #       if len(ret)>7 :  # if not, the process does not exist
-        if 2>1:
-#            pgid=ret[7]
-            ret=subprocess.call('ps -afj | grep '+str(ppid)+' | grep dsom > 1.txt', shell=True)
-            if ret>0 :
-                return -3
-            try:
-                f=open('1.txt','rt')
-                output=f.read()
-                f.close()
-#                os.remove('1.txt')
-            except:
-                return -4
-            ret=output.split()
-            if len(ret)>9 :
-                if (ret[9]=='./dsom') and (ret[2]==str(ppid)):
-                    pid=ret[1]
-                else:
-                    return ret[1]
-            else: 
-                return -5
+
+        ret=subprocess.call('ps -afj | grep '+str(ppid)+' | grep dsom > 1.txt', shell=True)
+        if ret>0 :
+            return -3
+        try:
+            f=open('1.txt','rt')
+            output=f.read()
+            f.close()
+            os.remove('1.txt')
+        except:
+            return -4
+        ret=output.split()
+        if len(ret)>9 :
+            if (ret[9]=='./dsom') and (ret[2]==str(ppid)):
+                pid=ret[1]
+            else:
+                return -2
+#        else:
+#            return -5
         print("PID of dsom: "+str(pid))    
 
         if pid is not None:      # if process exist
