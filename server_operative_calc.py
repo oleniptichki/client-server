@@ -74,7 +74,7 @@ class HelloWorldService(DefinitionBase):
         # receive PID of the process
         pid = None
         os.chdir('/home/ftpuser/Py/')
-        print(pid)
+        print(ppid)
 
         ret = subprocess.call('ps -afj | grep ' + str(ppid) + ' | grep dsom > 1.txt', shell=True)
         if ret > 0:
@@ -83,11 +83,12 @@ class HelloWorldService(DefinitionBase):
             f = open('1.txt', 'rt')
             output = f.read()
             f.close()
-            os.remove('1.txt')
+     #       os.remove('1.txt')
         except:
             return -4
         ret = output.split()
         print(len(ret))
+        print(output)
         if len(ret) > 9:
             if (ret[9] == './dsom') and (ret[2] == str(ppid)):
                 pid = ret[1]
