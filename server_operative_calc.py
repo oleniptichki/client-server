@@ -70,6 +70,7 @@ class HelloWorldService(DefinitionBase):
         ppid - parent PID
 
         '''
+
         # check existence of the process:
         # receive PID of the process
         pid = None

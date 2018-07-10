@@ -100,7 +100,7 @@ class operative_calc():
 
         #writing 'assim.par'
         step1=delta*288
-        step2=(delta+self.duration)*288
+        step2=(delta+3)*288
         try:
             fout=open('assim.par', 'wt')
             fout.write('ST \n')
