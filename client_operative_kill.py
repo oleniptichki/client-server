@@ -65,7 +65,7 @@ except:
 
 try:
     result=hello_client.service.killer(int(calc_id), token, int(ppid))
-#    print(result)
+    print(result)
 
     connect_db()
     if result<0:

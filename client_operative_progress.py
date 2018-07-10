@@ -66,6 +66,7 @@ except:
 
 try:
     result=hello_client.service.progress(int(calc_id), token, int(ppid))
+    print(result)
     # processing of the result in case of error
     connect_db()
     if result<0:
