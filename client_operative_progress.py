@@ -39,12 +39,20 @@ error_db_connection=connect_db()
 if error_db_connection:
     sys.exit(201)        # exit code > 200 because progress returns the number from 0 to 100 - completeness of the calculation in percents
 
+# check whether the process was interrupted
+try:
+    cursor.execute("SELECT error_message FROM process_controller WHERE calc_id="+calc_id+";")
+    dt=cursor.fetchone()
+    if dt[0]=='calculation interrupted':
+        sys.exit(103)
+except:
+    sys.exit(202)
+
 # extract user_name (token)
 try:
     cursor.execute("SELECT token FROM user_calculation WHERE calc_id="+calc_id+";")
     dt=cursor.fetchone()
     token=dt[0]
-    #print("user name: ", token)
 except:
     sys.exit(202)
 

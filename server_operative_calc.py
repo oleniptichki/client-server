@@ -190,7 +190,7 @@ class HelloWorldService(DefinitionBase):
 
         print("PID of dsom: " + str(pid))
 
-       
+
         if pid is not None:      # if process exist
             try:
                 ret=subprocess.call('kill -9 '+str(pid), shell=True)

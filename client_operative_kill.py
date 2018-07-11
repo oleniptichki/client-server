@@ -41,11 +41,23 @@ error_db_connection=connect_db()
 if error_db_connection:
     sys.exit(1)
 
+# check whether the process crashed
+try:
+    cursor.execute("SELECT error_message FROM process_controller WHERE calc_id="+calc_id+";")
+    dt=cursor.fetchone()
+    if dt[0]=='model crashed':
+        sys.exit(0)
+except:
+    sys.exit(7)
+
 # extract user_name (token)
-cursor.execute("SELECT token FROM user_calculation WHERE calc_id="+calc_id+";")
-dt=cursor.fetchone()
-token=dt[0]
-#print("user name: ", token)
+try:
+    cursor.execute("SELECT token FROM user_calculation WHERE calc_id="+calc_id+";")
+    dt=cursor.fetchone()
+    token=dt[0]
+except:
+    sys.exit(7)
+
 
 # connect to server
 try:
