@@ -77,7 +77,7 @@ class HelloWorldService(DefinitionBase):
         os.chdir('/home/ftpuser/Py/')
         print(ppid)
 
-        ret = subprocess.call('ps -afj | grep ' + str(ppid) + ' | grep dsom > 1.txt', shell=True)
+        ret = subprocess.call('ps -fj --ppid ' + str(ppid) + ' | grep dsom > 1.txt', shell=True)
         if ret > 0:
             return -3
         try:
