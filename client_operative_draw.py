@@ -8,6 +8,7 @@ import sys
 from datetime import datetime
 from datetime import timedelta
 from ftplib import FTP
+import traceback
 
 
 def connect_db():
