@@ -49,7 +49,8 @@ class draw_class:
         cs_limits_max - Double, LAT or LON in degrees
         output_time_date - datetime.datetime
         scale - boolean
-        scale_min - Double, min value in scale
+        scale_min - Double, min value in scalels
+
         scale_max - Double, max value in scale
         scale_step - Double
         zoom - Boolean
@@ -269,19 +270,19 @@ try :
 #    print(result)
     if result:
         path_name=result.split(' ')
-    #    try:
-        ftp=FTP("192.168.88.243")
-        ftp.login('ftpuser','o3NDz95Q')
-        ftp.cwd('.'+path_name[0])
-        os.chdir("PNG")
-        png_file_local=open(str(draw.calc_id)+'_'+path_name[1],"wb")
-        ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
-        png_file_local.close()
-        os.chdir("..")
-    #    except:
-    #        sys.exit(11)
+        try:
+            ftp=FTP("192.168.88.243")
+            ftp.login('ftpuser','o3NDz95Q')
+            ftp.cwd('.'+path_name[0])
+            os.chdir("PNG")
+            png_file_local=open(str(draw.calc_id)+'_'+path_name[1],"wb")
+            ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
+            png_file_local.close()
+            os.chdir("..")
+        except:
+            sys.exit(11)
 
-        cursor.execute("UPDATE pictures SET picture=" + str(draw.calc_id)+'_'+path_name[1] + " WHERE pictures_pk=" + pictures_pk + ";")
+        cursor.execute("UPDATE pictures SET picture='" + str(draw.calc_id)+'_'+path_name[1] + "' WHERE pictures_pk=" + pictures_pk + ";")
         conn.commit()
     else:
         sys.exit(12)
