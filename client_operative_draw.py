@@ -268,15 +268,15 @@ try :
 #    print(result)
     if result:
         path_name=result.split(' ')
-        try:
-            ftp=FTP("192.168.88.243")
-            ftp.login('ftpuser','o3NDz95Q')
-            ftp.cwd('.'+path_name[0])
-            png_file_local=open('./PNG/'+str(draw.calc_id)+'_'+path_name[1])
-            ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
-            png_file_local.close()
-        except:
-            sys.exit(11)
+    #    try:
+        ftp=FTP("192.168.88.243")
+        ftp.login('ftpuser','o3NDz95Q')
+        ftp.cwd('.'+path_name[0])
+        png_file_local=open('./PNG/'+str(draw.calc_id)+'_'+path_name[1])
+        ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
+        png_file_local.close()
+    #    except:
+    #        sys.exit(11)
 
         cursor.execute("UPDATE pictures SET picture=" + str(draw.calc_id)+'_'+path_name[1] + " WHERE pictures_pk=" + pictures_pk + ";")
         conn.commit()
