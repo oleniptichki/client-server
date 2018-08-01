@@ -272,9 +272,11 @@ try :
         ftp=FTP("192.168.88.243")
         ftp.login('ftpuser','o3NDz95Q')
         ftp.cwd('.'+path_name[0])
-        png_file_local=open('./PNG/'+str(draw.calc_id)+'_'+path_name[1])
+        os.chdir("PNG")
+        png_file_local=open(str(draw.calc_id)+'_'+path_name[1],"wb")
         ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
         png_file_local.close()
+        os.chdir("..")
     #    except:
     #        sys.exit(11)
 
