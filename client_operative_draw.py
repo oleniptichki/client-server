@@ -267,7 +267,7 @@ try :
         draw.record)
 #    print(result)
     if result:
-        path_name=result.split('')
+        path_name=result.split(' ')
         try:
             ftp=FTP("192.168.88.243")
             ftp.login('ftpuser','o3NDz95Q')
@@ -289,6 +289,7 @@ except WebFault:
 
 except Exception as other:
     str=traceback.format_exc(limit=1)
+    print(str)
     sys.exit(14)
 
 sys.exit(0)
