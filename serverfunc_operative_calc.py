@@ -127,7 +127,7 @@ class operative_calc():
             fout.write('1461.  30.  :EXTERNAL&INTERNAL PERIODS IN DAYS TO WRITE PASSIVE TRACER ARRAYS \n')
             fout.write('1461.  '+str(self.record_d)+'  :EXTERNAL&INTERNAL PERIODS IN DAYS TO WRITE  XY ARRAYS \n')
             fout.write('1461.  30.  :EXTERNAL&INTERNAL PERIODS IN DAYS TO WRITE  YZ ARRAYS \n')
-            fout.write('  3   3   3 :TYPES OF SS CONDITION FOR T,S,WIND(IGT,IGS =1,2,3),IGWS=(1,2,3,4)(3I4) \n')
+            fout.write('  5   3   3 :TYPES OF SS CONDITION FOR T,S,WIND(IGT,IGS =1,2,3),IGWS=(1,2,3,4)(3I4) \n')
             fout.write('  1   1     :USAGE OF ICE BLOCK IN OCEAN MODEL(0-DO NOT USE,1-USE) \n')
             fout.write('  1   1     :1-DO NOT 2- REMOVE SPACE AVARAGING HEAT & FRESH WATER FLUXES(2I4) \n')
             fout.write('1.0E-03   1.0E-03                  :COEFFICIENT OF RELAXATION FOR SST & SSS[CM/S](*22C) \n')
@@ -157,7 +157,8 @@ class operative_calc():
             fout.write('NONE                               :SEA-LAND MASK FOR ATMPSPHERE^M \n')
             fout.write('0     :treating liquid (open) boundaries - assimilation(=0=>no assim. procedure included; =1=>assim. during whole period of time) \n')
             fout.write('0     :=0=>new calc. (current .dat files in XYZ will be rewrited);>0=>continuing calc. \n')
-            fout.write(str(self.assim_numb)+'     :=0-no assimilation, =1-type1, =2-type2 \n')
+#            fout.write(str(self.assim_numb)+'     :=0-no assimilation, =1-type1, =2-type2 \n')   #when there will be two methods working
+            fout.write('2     :=0-no assimilation, =1-type1, =2-type2 \n')
             fout.write('72    :=0-if no assimilation, =period (int, in steps) of assimilation otherwise \n')
             fout.write('0     :=0-no ddm, =1-ddm \n')
             fout.write('1     :=0-no tides, =1-tides included \n')
