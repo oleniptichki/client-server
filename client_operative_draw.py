@@ -7,27 +7,30 @@ import psycopg2
 import sys
 from datetime import datetime
 from datetime import timedelta
+from ftplib import FTP
+
+
 def connect_db():
     global cursor
     global conn
     # Define our connection string
     conn_string = "host='localhost' dbname='ivs' user='ivs' password='o3NDz95Q'"
-    error_string=None
- 
-    # print the connection string we will use to connect
-    print("Connecting to database\n	->%s" % (conn_string))
+    error_string = None
 
-    try: 
+    # print the connection string we will use to connect
+    # print("Connecting to database\n	->%s" % (conn_string))
+
+    try:
         # get a connection, if a connect cannot be made an exception will be raised here
         conn = psycopg2.connect(conn_string)
     except psycopg2.OperationalError:
-        error_string="failed to connect"
-        print(error_string)
+        error_string = "failed to connect to database"
+        # print(error_string)
     else:
         # conn.cursor will return a cursor object, you can use this cursor to perform queries
         cursor = conn.cursor()
-        print("Connected!\n")
-    return error_string
+        # print("Connected!\n")
+    return error_string  # if it is not NONE, i will return it to adeq.inm.ras.ru
 
 
 class draw_class:
@@ -125,18 +128,21 @@ class Not_finished_calc_exception(Exception):
 # pictures_pk is the argument - got it
 pictures_pk=sys.argv[1]
 
-    
-connect_db()
+# connect to database
+error_db_connection=connect_db()
+# if no connection to DB
+if error_db_connection:
+    sys.exit(1)
 
 cursor.execute("SELECT calc_id, plot_type, depth, crosssection, cs_type, cs_value, cs_limits_min, cs_limits_max, output_time_date, scale, scale_min, scale_max, scale_step, zoom, zoom_lon_min, zoom_lon_max, zoom_lat_min, zoom_lat_max FROM pictures WHERE pictures_pk="+pictures_pk+";")
 dt=cursor.fetchone()
-print(dt)
 draw=draw_class(dt)
-print(draw.zoom_lon_max)
+
 # check if data are consistent
 if (draw.crosssection and draw.zoom) :
-    print("There couldn't be a crossection and surface zoom simultaneously")
-    raise Inconsistent_data_exception()
+#    print("There couldn't be a crossection and surface zoom simultaneously")
+ #   raise Inconsistent_data_exception()
+    sys.exit(2)
 # <if depth>1 and crossection then set lev 1 depth>
 # <if depth<=1 and crossection then set lev 1 250>
 #if ((draw.depth>1) and draw.crosssection) :
@@ -145,20 +151,25 @@ if (draw.crosssection and draw.zoom) :
 
 # NEW there couldn't be a crossection in the velocity/streamline plot
 if (draw.crosssection and (draw.plot_type=='uu')):
-    print("no data on the vertical component of the velocity")
-    raise Inconsistent_data_exception()
+#    print("no data on the vertical component of the velocity")
+#    raise Inconsistent_data_exception()
+    sys.exit(3)
 if ((draw.plot_type=='eta') and draw.crosssection) :
-    print("Sea level is a surface plot")
-    raise Inconsistent_data_exception()
+#    print("Sea level is a surface plot")
+#    raise Inconsistent_data_exception()
+    sys.exit(4)
 if ((draw.depth>1) and (draw.plot_type=='eta')) :
-    print("There couldn't be a SSH plot at the deep levels of the sea")
-    raise Inconsistent_data_exception()
+#    print("There couldn't be a SSH plot at the deep levels of the sea")
+#    raise Inconsistent_data_exception()
+    sys.exit(5)
 if ((draw.scale) and (draw.scale_step<=0)):
-    print("less than zero scale step is prohibited")
-    raise Inconsistent_data_exception()
+#    print("less than zero scale step is prohibited")
+#    raise Inconsistent_data_exception()
+    sys.exit(6)
 if ((draw.scale) and ((draw.scale_max-draw.scale_min)/draw.scale_step>13)):
-    print("Need to increase scale_step")
-    raise Inconsistent_data_exception()
+#    print("Need to increase scale_step")
+#    raise Inconsistent_data_exception()
+    sys.exit(7)
 
 # check of latitude and longitude
 error_flag=0
@@ -180,14 +191,16 @@ if (draw.zoom):
         error_flag = 1
 
 if (error_flag>0):
-    print('request to data outside coordinate limits, LAT/LON values wrong')
-    raise Inconsistent_data_exception
+#    print('request to data outside coordinate limits, LAT/LON values wrong')
+#    raise Inconsistent_data_exception
+    sys.exit(8)
 
 cursor.execute("SELECT token, calc_type, continued_from, status FROM user_calculation WHERE calc_id="+str(draw.calc_id)+";")
 dt=cursor.fetchone()
 # if the simulation hasn't finished yet or finished with error, we cannot plot anything!
 if dt[3]!='FINISHED':
-    raise Not_finished_calc_exception
+#    raise Not_finished_calc_exception
+    sys.exit(9)
 
 token=dt[0]
 calc_type=dt[1]
@@ -195,45 +208,39 @@ continued_from=dt[2]
 
 if (calc_type==1):
 
-    print("=== Stage 1 ===")
+# === Stage 1 ===
 
     cursor.execute("SELECT duration, record FROM operative_calc WHERE calc_id="+str(draw.calc_id)+";")
     dt=cursor.fetchone()
     draw.duration=dt[0]
     draw.record=dt[1]
-    print("duration=%f, record=%f" %(draw.duration, draw.record))
 
 # check if output_time_date<launch_time_date+duration
     cursor.execute("SELECT launch_time_date FROM user_calculation WHERE calc_id="+str(draw.calc_id)+";")
     dt=cursor.fetchone()
     start_date=dt[0]
-    print(start_date)
     start_time=datetime(start_date.year, start_date.month, start_date.day, 0, 0, 0, 0)  
     delta_days = timedelta(days=3)
     finish_date=start_time+delta_days
-    print(finish_date)
     if (draw.output_time_date>finish_date):
-        raise Inconsistent_data_exception()
+#        raise Inconsistent_data_exception()
+        sys.exit(10)
 
 # calculate number of record 
     start_date=start_date-delta_days
-    print(start_date)
     start_time=datetime(start_date.year, start_date.month, start_date.day, 0, 0, 0, 0)
-    print(start_time)
     delta=(draw.output_time_date-start_time).total_seconds()
     num_of_record=int(delta/(3600*draw.record))   # number of record
-    print("num_of_record=%i" %(num_of_record))
 
 # path to the results
     path_to_calc=token+'/OPirat/'+str(draw.calc_id)
 
-    print("=== Stage 2 ===")
-    print(draw.scale)
+# === Stage 2 ===
 
 
 url = 'http://192.168.88.243:7889/?wsdl'
 hello_client = Client(url)
-print("===Connected===")
+# ===Connected===
 
 try :
     result=hello_client.service.draw(draw.calc_id,
@@ -257,12 +264,30 @@ try :
         draw.zoom_lat_max,
         draw.duration,
         draw.record)
-    print(result)
+#    print(result)
+    if result:
+        path_name=result.split('')
+        try:
+            ftp=FTP("192.168.88.243")
+            ftp.login('ftpuser','o3NDz95Q')
+            ftp.cwd('.'+path_name[0])
+            png_file_local=open('./PNG/'+str(draw.calc_id)+'_'+path_name[1])
+            ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
+            png_file_local.close()
+        except:
+            sys.exit(11)
+
+        cursor.execute("UPDATE pictures SET picture=" + str(draw.calc_id)+'_'+path_name[1] + " WHERE pictures_pk=" + pictures_pk + ";")
+        conn.commit()
+    else:
+        sys.exit(12)
 
 except WebFault:
-    err = sys.exc_info()[1]
-    print("WebFault: " + str(err))
-except:
-    err = sys.exc_info()[1]
-    print('Other error: ' + str(err))
+    # print(traceback.format_exc())
+    sys.exit(13)
 
+except Exception as other:
+    str=traceback.format_exc(limit=1)
+    sys.exit(14)
+
+sys.exit(0)
