@@ -153,16 +153,20 @@ if len(res)>2 : # not 3 (don't know why, but len(res)<=2 is true and it allows 3
 
 
 # extract values of calculation parameters
-cursor.execute("SELECT start_time_date, end_time_date, record, tides, domain_decomposition, num_subdomains, liquid_boundaries, assimilation, assim_type, parallel_version, token FROM normal_pole, user_calculation WHERE calc_id="
+cursor.execute("SELECT normal_pole.start_time_date, normal_pole.end_time_date, normal_pole.record, normal_pole.tides,"
+    + " normal_pole.domain_decomposition, normal_pole.num_subdomains, normal_pole.liquid_boundaries,"
+    + " normal_pole.assimilation, normal_pole.assim_type, normal_pole.parallel_version, user_calculation.token FROM normal_pole, user_calculation WHERE user_calculation.calc_id="
                +calc_id+";")
-dt=cursor.fetchone()
+#dt=cursor.fetchone()
+dt=cursor.fetchall()
+print(dt)
 # calc_id, start_td, end_td, record, tides, dd, num_subd, lb, assim, assim_type, parallel,assim_begin,assim_end
-calc=Normal_pole_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8], dt[9], td[10])
-if calc.assim:
+#calc=Normal_pole_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8], dt[9], td[10])
+#if calc.assim:
     # read assimilation periods
-    cursor.execute("SELECT start_time_date, end_time_date FROM assimilation_periods WHERE calc_id="+calc_id+";")
-    res=cursor.fetchall()
-    print(res[0])
+    #cursor.execute("SELECT start_time_date, end_time_date FROM assimilation_periods WHERE calc_id="+calc_id+";")
+    #res=cursor.fetchall()
+    #print(res[0])
 
 
 
