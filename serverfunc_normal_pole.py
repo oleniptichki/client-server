@@ -94,7 +94,7 @@ class normal_pole():
 
         #copying CP files
         path_to_cp=normal_pole.path+'CP/'
-        command='cp '+path_to_cp+str(CP_folder)+'/* ./'+str(self.calc_id)
+        command='cp '+path_to_cp+CP_folder+'/* ./'+str(self.calc_id)
         res=subprocess.call(command,shell=True)
         if (res==1):
             normal_pole.err=normal_pole.err+" CP copy failed"

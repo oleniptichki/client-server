@@ -63,7 +63,7 @@ class HelloWorldService(DefinitionBase):
             calc.errlogwriter()
             return 1  # error in creation of new user
 
-    @soap(Integer,String,_returns=Integer)
+    @soap(Integer,String,String,String,Integer,Integer,Integer,Double,Integer,Integer,Integer,Integer,_returns=Integer)
     def normpole_exstrt(self, calc_id, token, CP_folder, assim_str, num_of_days, ini_step,
                  ini_year, record_d, assim_flag, tides_flag, ddm_flag, lb_flag):
         '''
