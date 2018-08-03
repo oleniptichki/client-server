@@ -172,7 +172,11 @@ if calc.assim:
         assim_begin, assim_end = res[i]
         print(assim_begin)
         print(assim_end)
-
+print(calc.ini_step())
+print(calc.ini_CP())
+print(calc.num_of_days_octask())
+print(calc.h_to_days())
+print(calc.assim_flag())
 
 
 # connect to server
