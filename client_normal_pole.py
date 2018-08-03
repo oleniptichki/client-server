@@ -78,13 +78,13 @@ class Normal_pole_calc:
         default_start = datetime(self.start_td.year, 1, 1, 0, 0, 0, 0)
         delta = (self.start_td - default_start).total_seconds()
         result = delta / self.step
-        return result
+        return int(result)
 
     def ini_CP(self):
         default_start = datetime(self.start_td.year, 1, 1, 0, 0, 0, 0)
         delta = (self.start_td - default_start).total_seconds()
         result = delta / (3600*24)
-        return result
+        return int(result)
 
     def num_of_days_octask(self):
         default_start = datetime(self.start_td.year, 1, 1, 0, 0, 0, 0)
@@ -92,7 +92,7 @@ class Normal_pole_calc:
         result = ((self.end_td - default_start).total_seconds() // (3600 * 24))
         if delta>0:
             result=result +1
-        return result
+        return int(result)
 
 #    def time_days(self):
 #        delta = (self.end_td - self.start_td).total_seconds()
