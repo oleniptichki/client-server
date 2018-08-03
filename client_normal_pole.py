@@ -160,7 +160,7 @@ cursor.execute("SELECT normal_pole.start_time_date, normal_pole.end_time_date, n
 #dt=cursor.fetchone()
 dt=cursor.fetchone()
 # calc_id, start_td, end_td, record, tides, dd, num_subd, lb, assim, assim_type, parallel,assim_begin,assim_end
-calc=Normal_pole_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8], dt[9], td[10])
+calc=Normal_pole_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8], dt[9], dt[10])
 if calc.assim:
     # read assimilation periods
     cursor.execute("SELECT start_time_date, end_time_date FROM assimilation_periods WHERE calc_id="+calc_id+";")
