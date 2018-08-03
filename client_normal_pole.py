@@ -51,9 +51,7 @@ class Normal_pole_calc:
         # parallel - on/off openMP (boolean)
         # token - name of the user
         self.calc_id = calc_id
-        start_td.second=0   # number of seconds must be 0!
-        start_td.microsecond=0  # number of ms must be 0!
-        self.start_td =
+        self.start_td =second_to_zero(start_td)
         self.end_td = end_td
         self.record = record
         self.tides = tides
