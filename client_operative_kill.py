@@ -52,9 +52,16 @@ except:
 
 # extract user_name (token)
 try:
-    cursor.execute("SELECT token FROM user_calculation WHERE calc_id="+calc_id+";")
+    cursor.execute("SELECT token, calc_type FROM user_calculation WHERE calc_id="+calc_id+";")
     dt=cursor.fetchone()
     token=dt[0]
+    calc_type=dt[1]
+    if calc_type==1:
+        folder='OPirat'
+    elif calc_type==2:
+        folder='NormPole'
+    else:
+        folder='RotPole'
 except:
     sys.exit(7)
 
@@ -76,7 +83,7 @@ except:
     sys.exit(3)
 
 try:
-    result=hello_client.service.killer(int(calc_id), token, int(ppid))
+    result=hello_client.service.killer(int(calc_id), token, int(ppid), folder)
 #    print(result)
 
     connect_db()

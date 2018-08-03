@@ -21,6 +21,8 @@ from soaplib.core.server import wsgi
 from soaplib.core.model.clazz import Array
 import serverfunc_operative_calc
 from serverfunc_operative_calc import operative_calc
+import serverfunc_normal_pole
+from serverfunc_normal_pole import normal_pole
 import serverfunc_draw
 from serverfunc_draw import draw_class
 
@@ -61,13 +63,52 @@ class HelloWorldService(DefinitionBase):
             calc.errlogwriter()
             return 1  # error in creation of new user
 
-    @soap(Integer,String,Integer,_returns=Integer)
-    def progress(self, calc_id, token, ppid):
+    @soap(Integer,String,_returns=Integer)
+    def normpole_exstrt(self, calc_id, token, CP_folder, assim_str, num_of_days, ini_step,
+                 ini_year, record_d, assim_flag, tides_flag, ddm_flag, lb_flag):
+        '''
+        Input parameters:
+        calc_id - Integer;
+        token - string :username
+        CP_folder - string, number of folder with CP, e.g. 188
+        assim_str - string to put into assim.par
+        num_of_days - duration of run in day, integer
+        ini_step - integer : initial step
+        ini_year - integer : initial year
+        record_d - real : period of recording output
+        assim_flag - flag of assimilation, 0, 1 or 2
+        tides_flag - 1 if tides are included, 0 otherwise
+        ddm_flag - 1 if DDM, 0 otherwise
+        lb_flag - 1 if assimilation on liquid boundaries is included
+
+
+        '''
+        calc=normal_pole(calc_id, token, CP_folder, assim_str, num_of_days, ini_step,
+                 ini_year, record_d, assim_flag, tides_flag, ddm_flag, lb_flag)
+        if calc.userinit()==0:
+            ret=calc.initializer()
+            if ret<0:
+                calc.errlogwriter()
+                return ret
+            else:
+                # start calculation
+                os.chdir('/home/ftpuser/model/'+token+'/NormPole/')
+#                self.proc=subprocess.Popen('./start.sh',shell=True)
+#                pid=self.proc.pid
+#                return pid
+                return 0
+        else:
+            calc.errlogwriter()
+            return 1  # error in creation of new user
+
+    @soap(Integer,String,Integer,String,_returns=Integer)
+    def progress(self, calc_id, token, ppid, folder):
         '''
         Input parameters:
         calc_id - Integer
         token - string :username
         ppid - parent PID
+        folder = OPirat, NormPole or RotPole
 
         '''
 
@@ -115,7 +156,7 @@ class HelloWorldService(DefinitionBase):
 
         if pid is not None:      # if process exist
             try:
-                os.chdir('/home/ftpuser/model/'+token+'/OPirat/')
+                os.chdir('/home/ftpuser/model/'+token+'/'+folder+'/')
                 fin=open('progress.txt', 'rt')
                 progrs=float(fin.read())
                 fin.close()      
@@ -124,7 +165,7 @@ class HelloWorldService(DefinitionBase):
                 return -1
         else:
             try:
-                os.chdir('/home/ftpuser/model/'+token+'/OPirat/')
+                os.chdir('/home/ftpuser/model/'+token+'/'+folder+'/')
                 if os.path.exists('progress.txt'):
                     fin=open('progress.txt', 'rt')
                     progrs=float(fin.read())
@@ -142,13 +183,14 @@ class HelloWorldService(DefinitionBase):
             except:
                 return -6
 
-    @soap(Integer,String,Integer,_returns=Integer)
-    def killer(self, calc_id, token, ppid):
+    @soap(Integer,String,Integer,String,_returns=Integer)
+    def killer(self, calc_id, token, ppid, folder):
         '''
         Input parameters:
         calc_id - Integer
         token - string :username
         ppid - parent PID
+        folder = OPirat, NormPole or RotPole
 
         '''
         # receive PID of the process
@@ -199,7 +241,7 @@ class HelloWorldService(DefinitionBase):
             except:
                 return -6
         try:
-            os.chdir('/home/ftpuser/model/'+token+'/OPirat/')
+            os.chdir('/home/ftpuser/model/'+token+'/'+folder+'/')
             if os.path.exists('progress.txt'):
                 fin=open('progress.txt', 'rt')
                 progrs=float(fin.read())

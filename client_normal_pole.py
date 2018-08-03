@@ -5,7 +5,7 @@ from suds import WebFault
 import test
 import psycopg2
 import sys
-from datetime import datetime
+from datetime import datetime, date, time
 from datetime import timedelta
 import traceback
 def connect_db():
@@ -54,9 +54,15 @@ class Normal_pole_calc:
         self.start_td =second_to_zero(start_td)
         self.end_td = end_td
         self.record = record
+        if record>24:
+            self.record=24
+        if record<1:
+            self.record=1
         self.tides = tides
         self.dd = dd
-        self.num_subd = num_subd
+#        self.num_subd = num_subd
+# now only 2 subdomains are supported:
+        self.num_subd = 2
         self.lb = lb
         self.assim = assim
         if assim:
@@ -110,7 +116,9 @@ class Normal_pole_calc:
     def assim_flag(self):
         if self.assim:
             if self.assim_type == 'type1':
-                tt = 1
+#                tt = 1
+# now only the second type is working well:
+                tt = 2
             else:
                 tt = 2
         else:
@@ -138,6 +146,12 @@ def assim_date_to_step(year,dt,step):
 class Server_is_overloaded_exception(Exception):
     pass
 
+class Wrong_parameters_exception(Exception):
+    pass
+
+class Wrong_type_of_calculation_exception(Exception):
+    pass
+
 
 # calc_id is the argument - got it
 calc_id=sys.argv[1]
@@ -163,12 +177,34 @@ if len(res)>2 : # not 3 (don't know why, but len(res)<=2 is true and it allows 3
 # extract values of calculation parameters
 cursor.execute("SELECT normal_pole.start_time_date, normal_pole.end_time_date, normal_pole.record, normal_pole.tides,"
     + " normal_pole.domain_decomposition, normal_pole.num_subdomains, normal_pole.liquid_boundaries,"
-    + " normal_pole.assimilation, normal_pole.assim_type, normal_pole.parallel_version, user_calculation.token FROM normal_pole, user_calculation WHERE user_calculation.calc_id="
+    + " normal_pole.assimilation, normal_pole.assim_type, normal_pole.parallel_version, user_calculation.token, user_calculation.calc_type"
+    + " FROM normal_pole, user_calculation WHERE user_calculation.calc_id="
                +calc_id+";")
-#dt=cursor.fetchone()
 dt=cursor.fetchone()
-# calc_id, start_td, end_td, record, tides, dd, num_subd, lb, assim, assim_type, parallel,assim_begin,assim_end
+if dt[11]!=2:
+    print("You call wrong script! Check type of the calculation!")
+    raise Wrong_type_of_calculation_exception()
+# calc_id, start_td, end_td, record, tides, dd, num_subd, lb, assim, assim_type, parallel
 calc=Normal_pole_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8], dt[9], dt[10])
+
+# Checkings
+# It must be checked and modified if needed before release
+default_start_date=datetime(2007,1,1,0,0,0,0)
+if calc.start_td<default_start_date:
+    print("Wrong start date")
+this_day=date.today()
+midnight=time(0,0,0)
+today=datetime.combine(this_day,midnight)
+if calc.end_td>today:
+    print("Error: Wrong dates")
+    raise Wrong_parameters_exception()
+if calc.start_td>calc.end_td:
+    print("Error: Wrong dates")
+    raise Wrong_parameters_exception()
+if calc.lb and calc.dd and calc.assim:
+    print("Cannot calculate LB+DDM+ASSIM")
+    raise Wrong_parameters_exception()
+
 if calc.assim:
     # read assimilation periods
     assim_str=''
@@ -176,6 +212,18 @@ if calc.assim:
     res=cursor.fetchall()
     for i in range(0,len(res)):
         assim_begin, assim_end = res[i]
+        if assim_end<assim_begin:
+            print("Error: Assimilation periods wrong")
+            raise Wrong_parameters_exception()
+        if assim_begin<calc.start_td:
+            assim_begin=calc.start_td
+        if assim_end>calc.end_td:
+            assim_end=calc.end_td
+        if len(res)>i+1:
+            next_step_begin, next_step_end = res[i+1]
+            if next_step_begin<assim_end:
+                print("Wrong assimilation periods")
+                raise Wrong_parameters_exception()
         step1=assim_date_to_step(calc.start_td.year, assim_begin, calc.step)
         step2=assim_date_to_step(calc.start_td.year, assim_end, calc.step)
         assim_str=assim_str+str(step1)+' '+str(step2)+'\n'
@@ -193,10 +241,28 @@ print(assim_str)
 try:
     url = 'http://192.168.88.243:7889/?wsdl'
     hello_client = Client(url)
+#    normpole_exstrt(self, calc_id, token, CP_folder, assim_str, num_of_days, ini_step,
+#                    ini_year, record_d, assim_flag, tides_flag, ddm_flag, lb_flag)
 except:
-    print("error connectiong to server")
+    print("error connecting to server")
+    raise Server_is_overloaded_exception()
 #    sys.exit(6)
 
+try:
+    result=hello_client.service.normpole_exstrt(calc.calc_id, calc.token, str(calc.ini_CP()), assim_str,
+                                                calc.num_of_days_octask(), calc.ini_step(), calc.start_td.year,
+                                                calc.h_to_days(), calc.assim_flag(), int(calc.tides),
+                                                int(calc.dd), int(calc.lb))
+    print(result)
+
+except WebFault:
+     print(traceback.format_exc())
+#    sys.exit(3)
+
+except Exception as other:
+    str=traceback.format_exc(limit=1)
+    print(str)
+#    sys.exit(4)
 
 #sys.exit(0)
 

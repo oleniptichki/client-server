@@ -48,11 +48,18 @@ try:
 except:
     sys.exit(202)
 
-# extract user_name (token)
+# extract user_name (token) and type of calculation
 try:
-    cursor.execute("SELECT token FROM user_calculation WHERE calc_id="+calc_id+";")
+    cursor.execute("SELECT token, calc_type FROM user_calculation WHERE calc_id="+calc_id+";")
     dt=cursor.fetchone()
     token=dt[0]
+    calc_type=dt[1]
+    if calc_type==1:
+        folder='OPirat'
+    elif calc_type==2:
+        folder='NormPole'
+    else:
+        folder='RotPole'
 except:
     sys.exit(202)
 
@@ -73,7 +80,7 @@ except:
     sys.exit(204)
 
 try:
-    result=hello_client.service.progress(int(calc_id), token, int(ppid))
+    result=hello_client.service.progress(int(calc_id), token, int(ppid), folder)
 #    print(result)
     # processing of the result in case of error
     connect_db()
