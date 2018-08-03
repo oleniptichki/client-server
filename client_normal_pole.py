@@ -167,7 +167,9 @@ if calc.assim:
     # read assimilation periods
     cursor.execute("SELECT start_time_date, end_time_date FROM assimilation_periods WHERE calc_id="+calc_id+";")
     res=cursor.fetchall()
-    print(res[0])
+    print(type(res))
+    for i in range(0,len(res)):
+        print(type(res[i]))
 
 
 
