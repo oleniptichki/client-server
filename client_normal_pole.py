@@ -138,14 +138,15 @@ calc_id=sys.argv[1]
 error_db_connection=connect_db()
 # if no connection to DB
 if error_db_connection:
+    print("error in DB connection")
 #    sys.exit(1)
 
 # check if there more then 3 calculations launched
 cursor.execute("SELECT calc_id FROM user_calculation WHERE status='STARTED';")
 res=cursor.fetchall()
 if len(res)>2 : # not 3 (don't know why, but len(res)<=2 is true and it allows 3 calc to be launched)
-#    print("There is more than 3 calculations launched. In queue")
-#    raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
+    print("There is more than 3 calculations launched. In queue")
+    raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
  #   sys.exit(2)
 
 
@@ -170,6 +171,7 @@ try:
     url = 'http://192.168.88.243:7889/?wsdl'
     hello_client = Client(url)
 except:
+    print("error connectiong to DB")
 #    sys.exit(6)
 
 
