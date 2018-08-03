@@ -38,6 +38,8 @@ class operative_calc():
                 os.mkdir(self.token)
                 os.chdir(self.token)
                 os.mkdir('OPirat')
+                os.mkdir('NormPole')     # in order to perform normal pole calculations too
+                os.mkdir('RotPole')     # in order to perform rotated pole calculations too
                 os.chdir('..')
             except:
                 operative_calc.err=operative_calc.err+'Error in directory creation, p1 \n'
