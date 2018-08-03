@@ -169,7 +169,9 @@ if calc.assim:
     res=cursor.fetchall()
     print(type(res))
     for i in range(0,len(res)):
-        print(type(res[i]))
+        assim_begin, assim_end = res[i]
+        print(assim_begin)
+        print(assim_end)
 
 
 
