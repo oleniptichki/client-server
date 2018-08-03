@@ -127,6 +127,12 @@ class Normal_pole_calc:
             period.append(int(temp))
             return period
 
+def assim_date_to_step(year,dt,step):
+    ini_date=datetime(year,1,1,0,0,0,0)
+    delta=(dt-ini_date).total_seconds()
+    assim_step=delta / step
+    return int(assim_step)
+
 
 
 class Server_is_overloaded_exception(Exception):
@@ -165,18 +171,22 @@ dt=cursor.fetchone()
 calc=Normal_pole_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8], dt[9], dt[10])
 if calc.assim:
     # read assimilation periods
+    assim_str=''
     cursor.execute("SELECT start_time_date, end_time_date FROM assimilation_periods WHERE calc_id="+calc_id+";")
     res=cursor.fetchall()
-    print(type(res))
     for i in range(0,len(res)):
         assim_begin, assim_end = res[i]
-        print(assim_begin)
-        print(assim_end)
+        step1=assim_date_to_step(calc.start_td.year, assim_begin, calc.step)
+        step2=assim_date_to_step(calc.start_td.year, assim_end, calc.step)
+        assim_str=assim_str+str(step1)+' '+str(step2)+'\n'
+
+
 print(calc.ini_step())
 print(calc.ini_CP())
 print(calc.num_of_days_octask())
 print(calc.h_to_days())
 print(calc.assim_flag())
+print(assim_str)
 
 
 # connect to server
