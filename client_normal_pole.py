@@ -158,15 +158,14 @@ cursor.execute("SELECT normal_pole.start_time_date, normal_pole.end_time_date, n
     + " normal_pole.assimilation, normal_pole.assim_type, normal_pole.parallel_version, user_calculation.token FROM normal_pole, user_calculation WHERE user_calculation.calc_id="
                +calc_id+";")
 #dt=cursor.fetchone()
-dt=cursor.fetchall()
-print(dt)
+dt=cursor.fetchone()
 # calc_id, start_td, end_td, record, tides, dd, num_subd, lb, assim, assim_type, parallel,assim_begin,assim_end
-#calc=Normal_pole_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8], dt[9], td[10])
-#if calc.assim:
+calc=Normal_pole_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8], dt[9], td[10])
+if calc.assim:
     # read assimilation periods
-    #cursor.execute("SELECT start_time_date, end_time_date FROM assimilation_periods WHERE calc_id="+calc_id+";")
-    #res=cursor.fetchall()
-    #print(res[0])
+    cursor.execute("SELECT start_time_date, end_time_date FROM assimilation_periods WHERE calc_id="+calc_id+";")
+    res=cursor.fetchall()
+    print(res[0])
 
 
 
@@ -175,7 +174,7 @@ try:
     url = 'http://192.168.88.243:7889/?wsdl'
     hello_client = Client(url)
 except:
-    print("error connectiong to DB")
+    print("error connectiong to server")
 #    sys.exit(6)
 
 
