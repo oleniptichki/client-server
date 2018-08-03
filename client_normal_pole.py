@@ -30,6 +30,10 @@ def connect_db():
         # print("Connected!\n")
     return error_string   # if it is not NONE, i will return it to adeq.inm.ras.ru
 
+def second_to_zero(datetime_object):
+    res=datetime(datetime_object.year, datetime_object.month, datetime_object.day, datetime_object.hour, datetime_object.minute, 0, 0)
+    return res
+
 
 class Normal_pole_calc:
     def __init__(self, calc_id, start_td, end_td, record, tides, dd, num_subd, lb, assim, assim_type, parallel, token):
@@ -49,7 +53,7 @@ class Normal_pole_calc:
         self.calc_id = calc_id
         start_td.second=0   # number of seconds must be 0!
         start_td.microsecond=0  # number of ms must be 0!
-        self.start_td = start_td
+        self.start_td =
         self.end_td = end_td
         self.record = record
         self.tides = tides
