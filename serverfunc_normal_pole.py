@@ -163,7 +163,7 @@ class normal_pole():
             fout.write(str(self.assim_flag)+'     :=0-no assimilation, =1-type1, =2-type2 \n')
             fout.write('72    :=0-if no assimilation, =period (int, in steps) of assimilation otherwise \n')
             fout.write(str(self.ddm_flag)+'     :=0-no ddm, =1-ddm \n')
-            fout.write(str.tides_flag+'     :=0-no tides, =1-tides included \n')
+            fout.write(str(self.tides_flag)+'     :=0-no tides, =1-tides included \n')
             fout.close()
         except:
             normal_pole.err = normal_pole.err + " octask.par writing failed"
