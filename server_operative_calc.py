@@ -118,18 +118,19 @@ class HelloWorldService(DefinitionBase):
         lb_flag - 1 if assimilation on liquid boundaries is included
 
         '''
-        calc=normal_pole_continue(calc_id, token, continue_id, assim_str, num_of_days, assim_flag, tides_flag, ddm_flag, lb_flag)
+        return -1
+        #calc=normal_pole_continue(calc_id, token, continue_id, assim_str, num_of_days, assim_flag, tides_flag, ddm_flag, lb_flag)
 
-        ret=calc.initializer()
-        if ret<0:
-            calc.errlogwriter()
-            return ret
-        else:
+        #ret=calc.initializer()
+        #if ret<0:
+        #    calc.errlogwriter()
+        #    return ret
+        #else:
             # start calculation
-            os.chdir('/home/ftpuser/model/'+token+'/NormPole/')
-            self.proc=subprocess.Popen('./start.sh',shell=True)
-            pid=self.proc.pid
-            return pid
+        #    os.chdir('/home/ftpuser/model/'+token+'/NormPole/')
+        #    self.proc=subprocess.Popen('./start.sh',shell=True)
+        #    pid=self.proc.pid
+        #    return pid
 
     @soap(Integer,String,Integer,String,_returns=Integer)
     def progress(self, calc_id, token, ppid, folder):
