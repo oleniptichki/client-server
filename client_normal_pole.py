@@ -180,28 +180,21 @@ if len(res)>2 : # not 3 (don't know why, but len(res)<=2 is true and it allows 3
 
 
 # extract values of calculation parameters
-cursor.execute("SELECT normal_pole.start_time_date, normal_pole.end_time_date, normal_pole.record, normal_pole.tides,"
-    + " normal_pole.domain_decomposition, normal_pole.num_subdomains, normal_pole.liquid_boundaries,"
-    + " normal_pole.assimilation, normal_pole.assim_type, normal_pole.parallel_version,"
-    + " user_calculation.token, user_calculation.calc_type, user_calculation.continued_from"
-    + " FROM normal_pole, user_calculation WHERE user_calculation.calc_id="+calc_id+";")
-cursor.execute("SELECT normal_pole.start_time_date, user_calculation.continued_from"
-               + " FROM normal_pole, user_calculation WHERE user_calculation.calc_id=" + calc_id + ";")
-dt=cursor.fetchall()
-print(len(dt))
-#dt=cursor.fetchone()
-print(dt)
-if dt[11]!=2:
+cursor.execute("SELECT start_time_date, end_time_date, record, tides,"
+    + " domain_decomposition, num_subdomains, liquid_boundaries,"
+    + " assimilation, assim_type, parallel_version FROM normal_pole WHERE calc_id="+calc_id+";")
+dt=cursor.fetchone()
+cursor.execute("SELECT token, calc_type, continued_from FROM user_calculation WHERE calc_id="+calc_id+";")
+dv=cursor.fetchone()
+if dv[1]!=2:
     print("You call wrong script! Check type of the calculation!")
     raise Wrong_type_of_calculation_exception()
 # calc_id, start_td, end_td, record, tides, dd, num_subd, lb, assim, assim_type, parallel
-calc=Normal_pole_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8], dt[9], dt[10])
-print(calc)
-print(calc.start_td)
+calc=Normal_pole_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8], dt[9], dv[0])
 # continued calculation - different options!
 continued_from_id=None
-if dt[12]>0:
-    continued_from_id=dt[12]
+if dv[2]>0:
+    continued_from_id=dv[2]
     # check if loading calculation is finished
     cursor.execute("SELECT status FROM user_calculation WHERE calc_id="+str(continued_from_id)+";")
     dt=cursor.fetchone()
