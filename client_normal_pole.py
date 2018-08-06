@@ -184,9 +184,12 @@ cursor.execute("SELECT normal_pole.start_time_date, normal_pole.end_time_date, n
     + " normal_pole.domain_decomposition, normal_pole.num_subdomains, normal_pole.liquid_boundaries,"
     + " normal_pole.assimilation, normal_pole.assim_type, normal_pole.parallel_version,"
     + " user_calculation.token, user_calculation.calc_type, user_calculation.continued_from"
-    + " FROM normal_pole, user_calculation WHERE user_calculation.calc_id="
-               +calc_id+";")
-dt=cursor.fetchone()
+    + " FROM normal_pole, user_calculation WHERE user_calculation.calc_id="+calc_id+";")
+cursor.execute("SELECT normal_pole.start_time_date, user_calculation.continued_from"
+               + " FROM normal_pole, user_calculation WHERE user_calculation.calc_id=" + calc_id + ";")
+dt=cursor.fetchall()
+print(len(dt))
+#dt=cursor.fetchone()
 print(dt)
 if dt[11]!=2:
     print("You call wrong script! Check type of the calculation!")
