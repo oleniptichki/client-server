@@ -238,6 +238,26 @@ if (calc_type==1):
 # path to the results
     path_to_calc=token+'/OPirat/'+str(draw.calc_id)
 
+elif (calc_type==2):
+    cursor.execute("SELECT start_time_date, end_time_date, record FROM normal_pole WHERE calc_id="+str(draw.calc_id)+";")
+    dt=cursor.fetchone()
+    start_td=dt[0]
+    end_td=dt[1]
+    draw.record=dt[2]
+    # check if output_time_date<end_time_date
+   if (draw.output_time_date>end_td):
+#        raise Inconsistent_data_exception()
+        sys.exit(10)
+# calculate number of record
+    delta=(draw.output_time_date-start_td).total_seconds()
+    num_of_record=int(delta/(3600*draw.record))   # number of record
+
+# path to the results
+    path_to_calc=token+'/NormPole/'+str(draw.calc_id)
+
+else:
+    pass
+
 # === Stage 2 ===
 
 
