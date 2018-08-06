@@ -187,6 +187,7 @@ cursor.execute("SELECT normal_pole.start_time_date, normal_pole.end_time_date, n
     + " FROM normal_pole, user_calculation WHERE user_calculation.calc_id="
                +calc_id+";")
 dt=cursor.fetchone()
+print(dt)
 if dt[11]!=2:
     print("You call wrong script! Check type of the calculation!")
     raise Wrong_type_of_calculation_exception()
