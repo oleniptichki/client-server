@@ -271,7 +271,7 @@ try:
             cursor.execute("UPDATE process_controller SET pid="+str(ppid)+", error_message='running' WHERE calc_id="+calc_id+";")
             conn.commit()
         else :
-            cursor.execute("INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES ("+calc_id+", 'operative_calc',"+str(ppid)+",'running') ;")
+            cursor.execute("INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES ("+calc_id+", 'normal_pole',"+str(ppid)+",'running') ;")
             conn.commit()
     else:
         # processing of server errors - put it to DB table - Process controller
@@ -282,7 +282,7 @@ try:
                 -5:"'assim.par writing failed'",
                 -6:"'octask.par writing failed'"}
         cursor.execute(
-            "INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'operative_calc', '0','"+errors[result]+"') ;")
+            "INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'normal_pole', '0','"+errors[result]+"') ;")
         conn.commit()
  #       sys.exit(5)
     conn.close()
