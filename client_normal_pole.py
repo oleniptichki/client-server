@@ -254,6 +254,33 @@ try:
                                                 calc.h_to_days(), calc.assim_flag(), int(calc.tides),
                                                 int(calc.dd), int(calc.lb))
     print(result)
+    if result>1 : # modelling is successfully launched
+        # set status='STARTED' and launch_time_date
+        cursor.execute("UPDATE user_calculation SET status='STARTED', launch_time_date='"+timestamp()+"' WHERE calc_id="+calc_id+";")
+        conn.commit()
+        ppid=result
+        # put PPID in the table Process controller
+        cursor.execute("SELECT pid FROM process_controller WHERE calc_id="+calc_id+";")
+        dt=cursor.fetchone()
+        if dt : # string exists
+            cursor.execute("UPDATE process_controller SET pid="+str(ppid)+", error_message='running' WHERE calc_id="+calc_id+";")
+            conn.commit()
+        else :
+            cursor.execute("INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES ("+calc_id+", 'operative_calc',"+str(ppid)+",'running') ;")
+            conn.commit()
+    else:
+        # processing of server errors - put it to DB table - Process controller
+        # create dictonary of errors
+        errors={1:"'Error in creation new user'",
+                -2:"'Error in directory creation'",
+                -4:"'CP copy failed'",
+                -5:"'assim.par writing failed'",
+                -6:"'octask.par writing failed'"}
+        cursor.execute(
+            "INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'operative_calc', '0','"+errors[result]+"') ;")
+        conn.commit()
+ #       sys.exit(5)
+    conn.close()
 
 except WebFault:
      print(traceback.format_exc())

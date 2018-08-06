@@ -93,10 +93,9 @@ class HelloWorldService(DefinitionBase):
             else:
                 # start calculation
                 os.chdir('/home/ftpuser/model/'+token+'/NormPole/')
-#                self.proc=subprocess.Popen('./start.sh',shell=True)
-#                pid=self.proc.pid
-#                return pid
-                return 0
+                self.proc=subprocess.Popen('./start.sh',shell=True)
+                pid=self.proc.pid
+                return pid
         else:
             calc.errlogwriter()
             return 1  # error in creation of new user
