@@ -48,9 +48,7 @@ class normal_pole():
 
     def userinit(self):
         os.chdir(normal_pole.path)
-        if os.path.exists(self.token):
-            return 0
-        else:
+        if not os.path.exists(self.token):
             try:
                 os.mkdir(self.token)
                 os.chdir(self.token)
@@ -65,18 +63,19 @@ class normal_pole():
 # dsom, dsomomp  -- executables
 # assim.par, oceanmodel.par, octask.par -- files with parameters
 # start.sh -- scripts
-        ret=subprocess.call('cp ./NormPole/*.par ./'+self.token+'/NormPole',shell=True)
-        if ret>0:
-            normal_pole.err=normal_pole.err+'Error in copying *.par: '+str(ret)+' \n'
-            return 1
-        ret=subprocess.call('cp ./NormPole/dsom ./'+self.token+'/NormPole',shell=True)
-        if ret>0:
-            normal_pole.err=normal_pole.err+'Error in copying dsom: '+ str(ret)+' \n'
-            return 1
-        ret=subprocess.call('cp ./NormPole/start.sh ./'+self.token+'/NormPole',shell=True)
-        if ret>0:
-            normal_pole.err=normal_pole.err+'Error in copying *.sh: '+str(ret)+' \n'
-            return 1
+        if not os.path.exists(self.token+'/NormPole/oceanmodel.par'):
+            ret=subprocess.call('cp ./NormPole/*.par ./'+self.token+'/NormPole',shell=True)
+            if ret>0:
+                normal_pole.err=normal_pole.err+'Error in copying *.par: '+str(ret)+' \n'
+                return 1
+            ret=subprocess.call('cp ./NormPole/dsom ./'+self.token+'/NormPole',shell=True)
+            if ret>0:
+                normal_pole.err=normal_pole.err+'Error in copying dsom: '+ str(ret)+' \n'
+                return 1
+            ret=subprocess.call('cp ./NormPole/start.sh ./'+self.token+'/NormPole',shell=True)
+            if ret>0:
+                normal_pole.err=normal_pole.err+'Error in copying *.sh: '+str(ret)+' \n'
+                return 1
         return 0
 
 
