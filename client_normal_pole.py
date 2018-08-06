@@ -34,6 +34,11 @@ def second_to_zero(datetime_object):
     res=datetime(datetime_object.year, datetime_object.month, datetime_object.day, datetime_object.hour, datetime_object.minute, 0, 0)
     return res
 
+def timestamp():
+    now=datetime.today()
+    timestring=str(now.year)+'-'+str(now.month)+'-'+str(now.day)+' '+str(now.hour)+':'+str(now.minute)+':'+str(now.second)
+    return timestring
+
 
 class Normal_pole_calc:
     def __init__(self, calc_id, start_td, end_td, record, tides, dd, num_subd, lb, assim, assim_type, parallel, token):
