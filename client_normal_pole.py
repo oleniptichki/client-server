@@ -290,7 +290,7 @@ else:
     try:
         result=hello_client.service.normpole_exstrt_continue(calc.calc_id, calc.token, continued_from_id, assim_str,
                                                                calc.num_of_days_octask(), calc.assim_flag(),
-                                                               int(calc.tides), int(calc.dd), int(calc.lb))
+                                                               int(calc.tides), int(calc.dd), int(calc.lb)) 
         print(result)
         if result<=1:
             # create dictonary of errors
