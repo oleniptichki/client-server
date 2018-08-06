@@ -182,7 +182,8 @@ if len(res)>2 : # not 3 (don't know why, but len(res)<=2 is true and it allows 3
 # extract values of calculation parameters
 cursor.execute("SELECT normal_pole.start_time_date, normal_pole.end_time_date, normal_pole.record, normal_pole.tides,"
     + " normal_pole.domain_decomposition, normal_pole.num_subdomains, normal_pole.liquid_boundaries,"
-    + " normal_pole.assimilation, normal_pole.assim_type, normal_pole.parallel_version, user_calculation.token, user_calculation.calc_type"
+    + " normal_pole.assimilation, normal_pole.assim_type, normal_pole.parallel_version,"
+    + " user_calculation.token, user_calculation.calc_type, user_calculation.continued_from"
     + " FROM normal_pole, user_calculation WHERE user_calculation.calc_id="
                +calc_id+";")
 dt=cursor.fetchone()
@@ -191,6 +192,16 @@ if dt[11]!=2:
     raise Wrong_type_of_calculation_exception()
 # calc_id, start_td, end_td, record, tides, dd, num_subd, lb, assim, assim_type, parallel
 calc=Normal_pole_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8], dt[9], dt[10])
+# continued calculation - different options!
+continued_from_id=None
+if dt[12]>0:
+    continued_from_id=dt[12]
+    # check if loading calculation is finished
+    cursor.execute("SELECT status FROM user_calculation WHERE calc_id="+str(continued_from_id)+";")
+    dt=cursor.fetchone()
+    if dt[0]!='FINISHED':
+        print("You should load only finished calculations! Check status of the calculation you try to continue!")
+        raise Wrong_parameters_exception()
 
 # Checkings
 # It must be checked and modified if needed before release
@@ -253,48 +264,78 @@ except:
     raise Server_is_overloaded_exception()
 #    sys.exit(6)
 
-try:
-    result=hello_client.service.normpole_exstrt(calc.calc_id, calc.token, str(calc.ini_CP()), assim_str,
+if not continued_from_id: # new calculation
+    try:
+        result=hello_client.service.normpole_exstrt(calc.calc_id, calc.token, str(calc.ini_CP()), assim_str,
                                                 calc.num_of_days_octask(), calc.ini_step(), calc.start_td.year,
                                                 calc.h_to_days(), calc.assim_flag(), int(calc.tides),
                                                 int(calc.dd), int(calc.lb))
-    print(result)
-    if result>1 : # modelling is successfully launched
-        # set status='STARTED' and launch_time_date
-        cursor.execute("UPDATE user_calculation SET status='STARTED', launch_time_date='"+timestamp()+"' WHERE calc_id="+calc_id+";")
-        conn.commit()
-        ppid=result
-        # put PPID in the table Process controller
-        cursor.execute("SELECT pid FROM process_controller WHERE calc_id="+calc_id+";")
-        dt=cursor.fetchone()
-        if dt : # string exists
-            cursor.execute("UPDATE process_controller SET pid="+str(ppid)+", error_message='running' WHERE calc_id="+calc_id+";")
-            conn.commit()
-        else :
-            cursor.execute("INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES ("+calc_id+", 'normal_pole',"+str(ppid)+",'running') ;")
-            conn.commit()
-    else:
-        # processing of server errors - put it to DB table - Process controller
-        # create dictonary of errors
-        errors={1:"'Error in creation new user'",
+        print(result)
+        if result<=1 : # in case of errors
+            # create dictonary of errors
+            errors={1:"'Error in creation new user'",
                 -2:"'Error in directory creation'",
                 -4:"'CP copy failed'",
                 -5:"'assim.par writing failed'",
                 -6:"'octask.par writing failed'"}
-        cursor.execute(
-            "INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'normal_pole', '0','"+errors[result]+"') ;")
+
+    except WebFault:
+        print(traceback.format_exc())
+    #    sys.exit(3)
+
+    except Exception as other:
+        str=traceback.format_exc(limit=1)
+        print(str)
+    #    sys.exit(4)
+else:
+    try:
+        result = hello_client.service.normpole_exstrt_continue(calc.calc_id, calc.token, str(continued_from_id), assim_str,
+                                                      calc.num_of_days_octask(), calc.assim_flag(), int(calc.tides),
+                                                      int(calc.dd), int(calc.lb))
+        print(result)
+        if result<=1:
+            # create dictonary of errors
+            errors = {-1: "'Loaded calculation does not exist'",
+                      -2: "'Error in directory creation'",
+                      -3: "'CP copy failed'",
+                      -4: "'DAT copy failed'",
+                      -5: "'assim.par writing failed'",
+                      -6: "'octask.par reading failed'",
+                      -7: "'octask.par writing failed'"}
+    except WebFault:
+        print(traceback.format_exc())
+    #    sys.exit(3)
+
+    except Exception as other:
+        str = traceback.format_exc(limit=1)
+        print(str)
+        #    sys.exit(4)
+
+
+
+if result > 1:  # modelling is successfully launched
+    # set status='STARTED' and launch_time_date
+    cursor.execute( "UPDATE user_calculation SET status='STARTED', launch_time_date='" + timestamp() + "' WHERE calc_id=" + calc_id + ";")
+    conn.commit()
+    ppid = result
+    # put PPID in the table Process controller
+    cursor.execute("SELECT pid FROM process_controller WHERE calc_id=" + calc_id + ";")
+    dt = cursor.fetchone()
+    if dt:  # string exists
+        cursor.execute("UPDATE process_controller SET pid=" + str(ppid) + ", error_message='running' WHERE calc_id=" + calc_id + ";")
         conn.commit()
- #       sys.exit(5)
+    else:
+        cursor.execute("INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'normal_pole'," + str(
+                        ppid) + ",'running') ;")
+        conn.commit()
+else:
+    # processing of server errors - put it to DB table - Process controller
+    # create dictonary of errors
+    cursor.execute( "INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'normal_pole', '0','" +
+                errors[result] + "') ;")
+    conn.commit()
+    #       sys.exit(5)
     conn.close()
-
-except WebFault:
-     print(traceback.format_exc())
-#    sys.exit(3)
-
-except Exception as other:
-    str=traceback.format_exc(limit=1)
-    print(str)
-#    sys.exit(4)
 
 #sys.exit(0)
 

@@ -23,6 +23,8 @@ import serverfunc_operative_calc
 from serverfunc_operative_calc import operative_calc
 import serverfunc_normal_pole
 from serverfunc_normal_pole import normal_pole
+import serverfunc_normal_pole_continue
+from serverfunc_normal_pole_continue import normal_pole_continue
 import serverfunc_draw
 from serverfunc_draw import draw_class
 
@@ -100,6 +102,35 @@ class HelloWorldService(DefinitionBase):
             calc.errlogwriter()
             return 1  # error in creation of new user
 
+    @soap(Integer,String,Integer,String,Integer,Integer,Integer,Integer,Integer,_returns=Integer)
+    def normpole_exstrt_continue(self, calc_id, token, continue_id, assim_str, num_of_days, assim_flag, tides_flag, ddm_flag, lb_flag):
+        '''
+        Input parameters:
+        calc_id - Integer;
+        token - string :username
+        continue_id - integer, calc_id of loading calculation
+        assim_str - string to put into assim.par
+        num_of_days - duration of run in day, integer
+        ini_step, ini_year, record_d -from the previous octask.par
+        assim_flag - flag of assimilation, 0, 1 or 2
+        tides_flag - 1 if tides are included, 0 otherwise
+        ddm_flag - 1 if DDM, 0 otherwise
+        lb_flag - 1 if assimilation on liquid boundaries is included
+
+        '''
+        calc=normal_pole_continue(calc_id, token, continue_id, assim_str, num_of_days, assim_flag, tides_flag, ddm_flag, lb_flag)
+
+        ret=calc.initializer()
+        if ret<0:
+            calc.errlogwriter()
+            return ret
+        else:
+            # start calculation
+            os.chdir('/home/ftpuser/model/'+token+'/NormPole/')
+            self.proc=subprocess.Popen('./start.sh',shell=True)
+            pid=self.proc.pid
+            return pid
+
     @soap(Integer,String,Integer,String,_returns=Integer)
     def progress(self, calc_id, token, ppid, folder):
         '''
@@ -172,7 +203,15 @@ class HelloWorldService(DefinitionBase):
                 else:
                     progrs=0
                 if (progrs==1):
-                    return 101
+                    # it is important to be able to continue/load this calculation
+                    if folder=='NormPole':
+                        ret=subprocess.call('cp octask.par ./'+str(calc_id), shell=True)
+                        if ret==0:
+                            return 101
+                        else:
+                            return -7
+                    else:
+                        return 101
                 else:
                     if os.path.exists('./'+str(calc_id)):
                         ret=subprocess.call('rm -r '+str(calc_id), shell=True)
