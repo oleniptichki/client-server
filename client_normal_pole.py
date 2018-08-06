@@ -193,6 +193,8 @@ if dt[11]!=2:
     raise Wrong_type_of_calculation_exception()
 # calc_id, start_td, end_td, record, tides, dd, num_subd, lb, assim, assim_type, parallel
 calc=Normal_pole_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8], dt[9], dt[10])
+print(calc)
+print(calc.start_td)
 # continued calculation - different options!
 continued_from_id=None
 if dt[12]>0:
