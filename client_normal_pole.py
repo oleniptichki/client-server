@@ -220,9 +220,9 @@ if calc.lb and calc.dd and calc.assim:
     print("Cannot calculate LB+DDM+ASSIM")
     raise Wrong_parameters_exception()
 
+assim_str=''
 if calc.assim:
     # read assimilation periods
-    assim_str=''
     cursor.execute("SELECT start_time_date, end_time_date FROM assimilation_periods WHERE calc_id="+calc_id+";")
     res=cursor.fetchall()
     for i in range(0,len(res)):
