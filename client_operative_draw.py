@@ -245,7 +245,7 @@ elif (calc_type==2):
     end_td=dt[1]
     draw.record=dt[2]
     # check if output_time_date<end_time_date
-   if (draw.output_time_date>end_td):
+    if (draw.output_time_date>end_td):
 #        raise Inconsistent_data_exception()
         sys.exit(10)
 # calculate number of record
