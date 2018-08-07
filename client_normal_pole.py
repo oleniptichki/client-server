@@ -270,7 +270,6 @@ if calc.assim:
 try:
     url = 'http://192.168.88.243:7889/?wsdl'
     hello_client = Client(url)
-    print(hello_client)
 except:
 #    print("error connecting to server")
 #    raise Server_is_overloaded_exception()
