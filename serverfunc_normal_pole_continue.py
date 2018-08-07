@@ -42,14 +42,15 @@ class normal_pole_continue():
             normal_pole_continue.err = normal_pole_continue.err + "Calculation loaded does not exist"
             return -1
         else:
-            try:
-                os.mkdir(str(self.calc_id))
-                os.mkdir(str(self.calc_id)+'/XYZ')
-                os.mkdir(str(self.calc_id)+'/XY')
-                os.mkdir(str(self.calc_id)+'/YZ')
-            except:
-                normal_pole_continue.err=normal_pole_continue.err+'Error in directory creation, p2 \n'
-                return -2
+            if not os.path.exists(str(self.calc_id)):
+                try:
+                    os.mkdir(str(self.calc_id))
+                    os.mkdir(str(self.calc_id)+'/XYZ')
+                    os.mkdir(str(self.calc_id)+'/XY')
+                    os.mkdir(str(self.calc_id)+'/YZ')
+                except:
+                    normal_pole_continue.err=normal_pole_continue.err+'Error in directory creation, p2 \n'
+                    return -2
 
             # copying CP files
             path_to_data=normal_pole_continue.path+self.token+'/NormPole/'+str(self.continue_id)
