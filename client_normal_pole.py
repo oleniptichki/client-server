@@ -256,6 +256,10 @@ print(assim_str)
 try:
     url = 'http://192.168.88.243:7889/?wsdl'
     hello_client = Client(url)
+    result = hello_client.service.normpole_exstrt_continue(calc.calc_id, calc.token, continued_from_id, assim_str,
+                                                           calc.num_of_days_octask(), calc.assim_flag(),
+                                                           int(calc.tides), int(calc.dd), int(calc.lb))
+    print(result)
 #    normpole_exstrt(self, calc_id, token, CP_folder, assim_str, num_of_days, ini_step,
 #                    ini_year, record_d, assim_flag, tides_flag, ddm_flag, lb_flag)
 except:
@@ -288,9 +292,10 @@ if not continued_from_id: # new calculation
     #    sys.exit(4)
 else:
     try:
+
         result=hello_client.service.normpole_exstrt_continue(calc.calc_id, calc.token, continued_from_id, assim_str,
                                                                calc.num_of_days_octask(), calc.assim_flag(),
-                                                               int(calc.tides), int(calc.dd), int(calc.lb)) 
+                                                               int(calc.tides), int(calc.dd), int(calc.lb))
         print(result)
         if result<=1:
             # create dictonary of errors
