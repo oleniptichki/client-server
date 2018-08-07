@@ -267,7 +267,7 @@ except:
 
 if not continued_from_id: # new calculation
     try:
-        result=hello_client.service.normpole_exstrtnorm(calc.calc_id, calc.token, str(calc.ini_CP()), assim_str,
+        result=hello_client.service.normpole_exstrt(calc.calc_id, calc.token, str(calc.ini_CP()), assim_str,
                                                 calc.num_of_days_octask(), calc.ini_step(), calc.start_td.year,
                                                 calc.h_to_days(), calc.assim_flag(), int(calc.tides),
                                                 int(calc.dd), int(calc.lb))
@@ -291,11 +291,10 @@ if not continued_from_id: # new calculation
 else:
     try:
 
-        result=hello_client.service.normpole_exstrtnorm(calc.calc_id, calc.token, continued_from_id, assim_str,
+        result=hello_client.service.normpole_exstrt_continue(calc.calc_id, calc.token, continued_from_id, assim_str,
                                                                calc.num_of_days_octask(), calc.assim_flag(),
                                                                int(calc.tides), int(calc.dd), int(calc.lb))
         print(result)
-        print(hello_client)
         if result<=1:
             # create dictonary of errors
             errors = {-1: "'Loaded calculation does not exist'",

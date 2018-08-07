@@ -66,7 +66,7 @@ class HelloWorldService(DefinitionBase):
             return 1  # error in creation of new user
 
     @soap(Integer,String,String,String,Integer,Integer,Integer,Double,Integer,Integer,Integer,Integer,_returns=Integer)
-    def normpole_exstrtnorm(self, calc_id, token, CP_folder, assim_str, num_of_days, ini_step,
+    def normpole_exstrt(self, calc_id, token, CP_folder, assim_str, num_of_days, ini_step,
                  ini_year, record_d, assim_flag, tides_flag, ddm_flag, lb_flag):
         '''
         Input parameters:
@@ -103,7 +103,7 @@ class HelloWorldService(DefinitionBase):
             return 1  # error in creation of new user
 
     @soap(Integer,String,Integer,String,Integer,Integer,Integer,Integer,Integer,_returns=Integer)
-    def normpole_exstrtc(self, calc_id, token, continue_id, assim_str, num_of_days, assim_flag, tides_flag, ddm_flag, lb_flag):
+    def normpole_exstrt_continue(self, calc_id, token, continue_id, assim_str, num_of_days, assim_flag, tides_flag, ddm_flag, lb_flag):
         '''
         Input parameters:
         calc_id - Integer;
