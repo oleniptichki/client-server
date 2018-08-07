@@ -238,14 +238,33 @@ if (calc_type==1):
 # path to the results
     path_to_calc=token+'/OPirat/'+str(draw.calc_id)
 
-elif (calc_type==2):
+elif (calc_type==2) and not continued_from:
     cursor.execute("SELECT start_time_date, end_time_date, record FROM normal_pole WHERE calc_id="+str(draw.calc_id)+";")
     dt=cursor.fetchone()
     start_td=dt[0]
     end_td=dt[1]
     draw.record=dt[2]
     # check if output_time_date<end_time_date
-    if (draw.output_time_date>end_td):
+    if (draw.output_time_date>end_td) or (draw.output_time_date<start_td):
+#        raise Inconsistent_data_exception()
+        sys.exit(10)
+# calculate number of record
+    delta=(draw.output_time_date-start_td).total_seconds()
+    num_of_record=int(delta/(3600*draw.record))   # number of record
+
+# path to the results
+    path_to_calc=token+'/NormPole/'+str(draw.calc_id)
+
+elif (calc_type==2) and continued_from:
+    cursor.execute("SELECT end_time_date, record FROM normal_pole WHERE calc_id="+str(draw.calc_id)+";")
+    dt=cursor.fetchone()
+    end_td=dt[0]
+    draw.record=dt[1]
+    cursor.execute("SELECT start_time_date, record FROM normal_pole WHERE calc_id="+str(continued_from)+";")
+    dt=cursor.fetchone()
+    start_td=dt[0]
+    # check if output_time_date<end_time_date and record times are the same
+    if (draw.output_time_date>end_td) or (draw.output_time_date<start_td) or (draw.record!=dt[1]):
 #        raise Inconsistent_data_exception()
         sys.exit(10)
 # calculate number of record
