@@ -139,7 +139,7 @@ class normal_pole_continue():
 #--------------
     def errlogwriter(self):
         os.chdir(normal_pole_continue.path+self.token)
-        out=open('error.log', 'wt')
+        fout=open('error.log', 'wt')
         fout.write(normal_pole_continue.err)
         fout.close()
 	
