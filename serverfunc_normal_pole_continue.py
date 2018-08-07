@@ -37,9 +37,9 @@ class normal_pole_continue():
 
 
     def initializer(self):
-        os.chdir(normal_pole.path+self.token+'/NormPole')
+        os.chdir(normal_pole_continue.path+self.token+'/NormPole')
         if not os.path.exists(str(self.continue_id)):
-            normal_pole.err = normal_pole.err + "Calculation loaded does not exist"
+            normal_pole_continue.err = normal_pole_continue.err + "Calculation loaded does not exist"
             return -1
         else:
             try:
@@ -48,26 +48,26 @@ class normal_pole_continue():
                 os.mkdir(str(self.calc_id)+'/XY')
                 os.mkdir(str(self.calc_id)+'/YZ')
             except:
-                normal_pole.err=normal_pole.err+'Error in directory creation, p2 \n'
+                normal_pole_continue.err=normal_pole_continue.err+'Error in directory creation, p2 \n'
                 return -2
 
             # copying CP files
-            path_to_data=normal_pole.path+self.token+'/NormPole/'+str(self.continue_id)
+            path_to_data=normal_pole_continue.path+self.token+'/NormPole/'+str(self.continue_id)
             command='cp '+path_to_data+'/cp* ./'+str(self.calc_id)
             res=subprocess.call(command,shell=True)
             if (res==1):
-                normal_pole.err=normal_pole.err+" CP copy failed"
+                normal_pole_continue.err=normal_pole_continue.err+" CP copy failed"
                 return -3
             # copying DAT files
             command='cp '+path_to_data+'/XYZ/ ./'+str(self.calc_id)+'/XYZ/'
             res=subprocess.call(command,shell=True)
             if (res==1):
-                normal_pole.err=normal_pole.err+" DAT copy failed"
+                normal_pole_continue.err=normal_pole_continue.err+" DAT copy failed"
                 return -4
             command = 'cp ' + path_to_data + '/XY/ ./' + str(self.calc_id) + '/XY/'
             res=subprocess.call(command,shell=True)
             if (res==1):
-                normal_pole.err=normal_pole.err+" DAT copy failed"
+                normal_pole_continue.err=normal_pole_continue.err+" DAT copy failed"
                 return -4
 
 
@@ -82,7 +82,7 @@ class normal_pole_continue():
                 fout.write('END \n')
                 fout.close()
             except:
-                normal_pole.err = normal_pole.err + " assim.par writing failed"
+                normal_pole_continue.err = normal_pole_continue.err + " assim.par writing failed"
                 return -5
 
         #writing 'octask.par'
@@ -112,7 +112,7 @@ class normal_pole_continue():
                 else:
                     octask=octask+line
         except:
-            normal_pole.err = normal_pole.err + " octask.par reading failed"
+            normal_pole_continue.err = normal_pole_continue.err + " octask.par reading failed"
             return -6
         fin.close()
 
@@ -121,7 +121,7 @@ class normal_pole_continue():
             fout.write(octask)
             fout.close()
         except:
-            normal_pole.err = normal_pole.err + " octask.par writing failed"
+            normal_pole_continue.err = normal_pole_continue.err + " octask.par writing failed"
             return -7
 
         #initializing 'progress.txt'
@@ -133,14 +133,14 @@ class normal_pole_continue():
 
 
     def abspath(self):
-        abs_path=normal_pole.path+self.token+'/NormPole/start.sh'
+        abs_path=normal_pole_continue.path+self.token+'/NormPole/start.sh'
         return abs_path
 
 #--------------
     def errlogwriter(self):
-        os.chdir(normal_pole.path+self.token)
+        os.chdir(normal_pole_continue.path+self.token)
         out=open('error.log', 'wt')
-        fout.write(normal_pole.err)
+        fout.write(normal_pole_continue.err)
         fout.close()
 	
 		
