@@ -12,6 +12,7 @@
 
 import os
 import sys
+import time
 import soaplib
 import subprocess
 from soaplib.core.service import soap
@@ -206,6 +207,7 @@ class HelloWorldService(DefinitionBase):
                 if (progrs==1):
                     # it is important to be able to continue/load this calculation
                     if folder=='NormPole':
+                        time.sleep(2)
                         ret=subprocess.call('cp octask.par ./'+str(calc_id), shell=True)
                         if ret==0:
                             return 101

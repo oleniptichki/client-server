@@ -59,12 +59,12 @@ class normal_pole_continue():
                 normal_pole_continue.err=normal_pole_continue.err+" CP copy failed"
                 return -3
             # copying DAT files
-            command='cp '+path_to_data+'/XYZ/ ./'+str(self.calc_id)+'/XYZ/'
+            command='cp '+path_to_data+'/XYZ/* ./'+str(self.calc_id)+'/XYZ/'
             res=subprocess.call(command,shell=True)
             if (res==1):
                 normal_pole_continue.err=normal_pole_continue.err+" DAT copy failed"
                 return -4
-            command = 'cp ' + path_to_data + '/XY/ ./' + str(self.calc_id) + '/XY/'
+            command = 'cp ' + path_to_data + '/XY/* ./' + str(self.calc_id) + '/XY/'
             res=subprocess.call(command,shell=True)
             if (res==1):
                 normal_pole_continue.err=normal_pole_continue.err+" DAT copy failed"
