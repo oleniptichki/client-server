@@ -31,7 +31,7 @@ from serverfunc_draw import draw_class
 
 class HelloWorldService(DefinitionBase):
     @soap(String,Integer,_returns=Array(String))
-    def say_hello(self,name,times):
+    def say_hello_hello(self,name,times):
         results = []
         for i in range(0,times):
             results.append('Hello, %s'%name)
@@ -103,7 +103,7 @@ class HelloWorldService(DefinitionBase):
             return 1  # error in creation of new user
 
     @soap(Integer,String,Integer,String,Integer,Integer,Integer,Integer,Integer,_returns=Integer)
-    def normpole_exstrt_continue(self, calc_id, token, continue_id, assim_str, num_of_days, assim_flag, tides_flag, ddm_flag, lb_flag):
+    def normpole_exstrtc(self, calc_id, token, continue_id, assim_str, num_of_days, assim_flag, tides_flag, ddm_flag, lb_flag):
         '''
         Input parameters:
         calc_id - Integer;
