@@ -256,7 +256,8 @@ print(assim_str)
 try:
     url = 'http://192.168.88.243:7889/?wsdl'
     hello_client = Client(url)
-    result = hello_client.service.normpole_exstrt_continue(calc.calc_id, calc.token, continued_from_id, assim_str,
+    print(hello_client)
+    result = hello_client.service.normpole_exstrt(calc.calc_id, calc.token, continued_from_id, assim_str,
                                                            calc.num_of_days_octask(), calc.assim_flag(),
                                                            int(calc.tides), int(calc.dd), int(calc.lb))
     print(result)
