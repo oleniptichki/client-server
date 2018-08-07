@@ -143,10 +143,10 @@ cursor.execute("SELECT calc_id, plot_type, depth, crosssection, cs_type, cs_valu
                "zoom, zoom_lon_min, zoom_lon_max, zoom_lat_min, zoom_lat_max FROM pictures WHERE pictures_pk="+pictures_pk+";")
 dt=cursor.fetchone()
 calc_id=dt[0]
-
+draw=draw_class(dt)
 
 # extract type and status of the calculation
-# it is important to do before draw_class object creation in case of continuing calculations
+# it is important to do in case of continuing calculations
 cursor.execute("SELECT token, calc_type, continued_from, status FROM user_calculation WHERE calc_id="+str(calc_id)+";")
 dv=cursor.fetchone()
 # if the simulation hasn't finished yet or finished with error, we cannot plot anything!
@@ -173,8 +173,6 @@ if (calc_type==2) and continued_from:
         else:
             calc_id=continued_from
 
-#dt[0]=calc_id
-draw=draw_class(dt)
 draw.calc_id=calc_id
 
 # check if data are consistent
@@ -264,7 +262,7 @@ if (calc_type==1):
 # path to the results
     path_to_calc=token+'/OPirat/'+str(draw.calc_id)
 
-elif (calc_type==2) and not continued_from:
+elif (calc_type==2):
     cursor.execute("SELECT start_time_date, end_time_date, record FROM normal_pole WHERE calc_id="+str(draw.calc_id)+";")
     dt=cursor.fetchone()
     start_td=dt[0]
