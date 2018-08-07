@@ -161,11 +161,13 @@ if (calc_type==2) and continued_from:
     output_time_date=dt[8]
     flag=True
     while flag:
-        cursor.execute("SELECT start_time_date, end_time_date, continued_from FROM normal_pole WHERE calc_id="+str(calc_id)+";")
+        cursor.execute("SELECT start_time_date, end_time_date FROM normal_pole WHERE calc_id="+str(calc_id)+";")
         dv=cursor.fetchone()
         start_td=dv[0]
         end_td=dv[1]
-        continued_from=dv[2]
+        cursor.execute("SELECT continued_from FROM user_calculation WHERE calc_id="+str(calc_id)+";")
+        dv=cursor.fetchone()
+        continued_from=dv[0]
         if (start_td<output_time_date) and (end_td>output_time_date):
             flag=False
         else:
