@@ -173,8 +173,9 @@ if (calc_type==2) and continued_from:
         else:
             calc_id=continued_from
 
-dt[0]=calc_id
+#dt[0]=calc_id
 draw=draw_class(dt)
+draw.calc_id=calc_id
 
 # check if data are consistent
 if (draw.crosssection and draw.zoom) :
