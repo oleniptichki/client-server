@@ -212,7 +212,6 @@ cursor.execute("SELECT calc_id FROM user_calculation WHERE status='STARTED' AND 
 res=cursor.fetchall()
 print(res)
 print(len(res))
-sys.exit(0)
 if len(res)>0 : # if there is at least one
 #    print("There is more than 3 calculations launched. In queue")
 #    raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
