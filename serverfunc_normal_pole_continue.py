@@ -102,8 +102,6 @@ class normal_pole_continue():
                     octask=octask+str(self.calc_id)+'                                  :PATH TO OCEAN CONTROL POINT(RESULTES)(A32) \n'
                 elif line_num==40:
                     octask=octask+str(self.lb_flag)+'     :treating liquid (open) boundaries - assimilation(=0=>no assim. procedure included; =1=>assim. during whole period of time) \n'
-                elif line_num==41:
-                    octask=octask+'1     :=0=>new calc. (current .dat files in XYZ will be rewrited);>0=>continuing calc. \n'
                 elif line_num==42:
                     octask=octask+str(self.assim_flag)+'     :=0-no assimilation, =1-type1, =2-type2 \n'
                 elif line_num==44:
