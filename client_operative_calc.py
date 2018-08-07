@@ -96,6 +96,8 @@ dt=cursor.fetchone()
 token=dt[0]
 
 # connect to server
+# use this if needed:
+# hello_client.options.cache.clear()
 try:
     url = 'http://192.168.88.243:7889/?wsdl'
     hello_client = Client(url)
@@ -122,12 +124,12 @@ try:
     else:
         # processing of server errors - put it to DB table - Process controller
         # create dictonary of errors
-        errors={1:"'Error in creation new user'",
-                -2:"'Error in directory creation'",
-                -3:"'New year'",
-                -4:"'CP copy failed'",
-                -5:"'assim.par writing failed'",
-                -6:"'octask.par writing failed'"}
+        errors={1:"Error in creation new user",
+                -2:"Error in directory creation",
+                -3:"New year",
+                -4:"CP copy failed",
+                -5:"assim.par writing failed",
+                -6:"octask.par writing failed"}
         cursor.execute(
             "INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'operative_calc', '0','"+errors[result]+"') ;")
         conn.commit()

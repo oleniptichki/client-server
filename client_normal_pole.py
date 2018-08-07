@@ -253,6 +253,8 @@ print(assim_str)
 
 
 # connect to server
+# use this if needed:
+# hello_client.options.cache.clear()
 try:
     url = 'http://192.168.88.243:7889/?wsdl'
     hello_client = Client(url)
@@ -274,11 +276,11 @@ if not continued_from_id: # new calculation
         print(result)
         if result<=1 : # in case of errors
             # create dictonary of errors
-            errors={1:"'Error in creation new user'",
-                -2:"'Error in directory creation'",
-                -4:"'CP copy failed'",
-                -5:"'assim.par writing failed'",
-                -6:"'octask.par writing failed'"}
+            errors={1:"Error in creation new user",
+                -2:"Error in directory creation",
+                -4:"CP copy failed",
+                -5:"assim.par writing failed",
+                -6:"octask.par writing failed"}
 
     except WebFault:
         print(traceback.format_exc())
@@ -297,13 +299,13 @@ else:
         print(result)
         if result<=1:
             # create dictonary of errors
-            errors = {-1: "'Loaded calculation does not exist'",
-                      -2: "'Error in directory creation'",
-                      -3: "'CP copy failed'",
-                      -4: "'DAT copy failed'",
-                      -5: "'assim.par writing failed'",
-                      -6: "'octask.par reading failed'",
-                      -7: "'octask.par writing failed'"}
+            errors = {-1: "Loaded calculation does not exist",
+                      -2: "Error in directory creation",
+                      -3: "CP copy failed",
+                      -4: "DAT copy failed",
+                      -5: "assim.par writing failed",
+                      -6: "octask.par reading failed",
+                      -7: "octask.par writing failed"}
     except WebFault:
         print(traceback.format_exc())
     #    sys.exit(3)
