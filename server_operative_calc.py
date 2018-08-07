@@ -118,7 +118,7 @@ class HelloWorldService(DefinitionBase):
         lb_flag - 1 if assimilation on liquid boundaries is included
 
         '''
-        return -1
+
         calc=normal_pole_continue(calc_id, token, continue_id, assim_str, num_of_days, assim_flag, tides_flag, ddm_flag, lb_flag)
 
         ret=calc.initializer()
