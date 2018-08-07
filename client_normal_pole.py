@@ -179,6 +179,8 @@ if len(res)>2 : # not 3 (don't know why, but len(res)<=2 is true and it allows 3
 
 
 
+
+
 # extract values of calculation parameters
 cursor.execute("SELECT start_time_date, end_time_date, record, tides,"
     + " domain_decomposition, num_subdomains, liquid_boundaries,"
@@ -205,6 +207,14 @@ if dv[2]>0:
         sys.exit(7)
 
 # Check
+# check if there more then 1 calculation of one type/user launched
+cursor.execute("SELECT calc_id FROM user_calculation WHERE status='STARTED' AND calc_type=2 AND token='"+calc.token+"';")
+res=cursor.fetchall()
+if len(res)>0 : # if there is at least one
+#    print("There is more than 3 calculations launched. In queue")
+#    raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
+    sys.exit(2)
+
 # It must be checked and modified if needed before release
 default_start_date=datetime(2007,1,1,0,0,0,0)
 if calc.start_td<default_start_date:

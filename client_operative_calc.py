@@ -95,6 +95,14 @@ cursor.execute("SELECT token FROM user_calculation WHERE calc_id="+calc_id+";")
 dt=cursor.fetchone()
 token=dt[0]
 
+# check if there more then 1 calculation of one type/user launched
+cursor.execute("SELECT calc_id FROM user_calculation WHERE status='STARTED' AND calc_type=1 AND token='"+token+"';")
+res=cursor.fetchall()
+if len(res)>0 : # if there is at least one
+#    print("There is more than 3 calculations launched. In queue")
+#    raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
+    sys.exit(2)
+
 # connect to server
 # use this if needed:
 # hello_client.options.cache.clear()
