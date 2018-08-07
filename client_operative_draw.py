@@ -146,7 +146,6 @@ calc_id=dt[0]
 draw=draw_class(dt)
 
 # extract type and status of the calculation
-# it is important to do in case of continuing calculations
 cursor.execute("SELECT token, calc_type, continued_from, status FROM user_calculation WHERE calc_id="+str(calc_id)+";")
 dv=cursor.fetchone()
 # if the simulation hasn't finished yet or finished with error, we cannot plot anything!
@@ -157,6 +156,7 @@ token=dv[0]
 calc_type=dv[1]
 continued_from=dv[2]
 
+# next step is important to do in case of continuing calculations
 if (calc_type==2) and continued_from:
     output_time_date=dt[8]
     flag=True
@@ -165,15 +165,21 @@ if (calc_type==2) and continued_from:
         dv=cursor.fetchone()
         start_td=dv[0]
         end_td=dv[1]
+        if output_time_date>end_td:
+        #    raise Inconsistent_data_exception()
+            sys.exit(15)
         cursor.execute("SELECT continued_from FROM user_calculation WHERE calc_id="+str(calc_id)+";")
         dv=cursor.fetchone()
         continued_from=dv[0]
         if (start_td<output_time_date) and (end_td>output_time_date):
             flag=False
         else:
-            calc_id=continued_from
-
-draw.calc_id=calc_id
+            if continued_from:
+                calc_id=continued_from
+            else:
+            #    raise Inconsistent_data_exception()
+                sys.exit(16)
+    draw.calc_id=calc_id
 
 # check if data are consistent
 if (draw.crosssection and draw.zoom) :
