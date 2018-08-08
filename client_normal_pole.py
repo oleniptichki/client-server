@@ -85,7 +85,7 @@ class Normal_pole_calc:
             print(delta1)
             diff = timedelta(seconds=int((delta1-int(delta1)) * self.step))
             print(diff)
-            self.start_td = self.start_td - diff
+            self.start_td = second_to_zero(self.start_td - diff)
             print(self.start_td)
 
     def ini_step(self):
@@ -108,10 +108,10 @@ class Normal_pole_calc:
             result=result +1
         return int(result)
 
-#    def time_days(self):
-#        delta = (self.end_td - self.start_td).total_seconds()
-#        delta = delta / 86400.0
-#        return delta
+    def time_days(self):
+        delta = (self.end_td - self.start_td).total_seconds()
+        delta = delta / 86400.0
+        return delta
 
 #    def h_to_step(self):
 #        tt = self.record * 60 * 60 / self.step
@@ -235,10 +235,19 @@ if calc.start_td>calc.end_td:
 #    print("Error: Wrong dates")
 #    raise Wrong_parameters_exception()
     sys.exit(10)
-if calc.lb and calc.dd and calc.assim:
+if calc.dd and calc.assim:
 #    print("Cannot calculate LB+DDM+ASSIM")
 #    raise Wrong_parameters_exception()
     sys.exit(11)
+# limitation of number of days
+if calc.dd and (calc.time_days()>7):
+#    print("Cannot calculate DDM for more then 7 days")
+#    raise Wrong_parameters_exception()
+    sys.exit(14)
+if calc.time_days()>30:
+#    print("Heavy simulation: decrease end_time_date")
+#    raise Wrong_parameters_exception()
+    sys.exit(15)
 
 assim_str=''
 if calc.assim:
