@@ -83,7 +83,7 @@ class Normal_pole_calc:
         if (delta % self.step) > 0: # delta/self.step must be integer:
             delta1=delta / self.step    # delta in steps
             print(delta1)
-            diff = timedelta(seconds=int((delta1-int(delta1) * self.step)))
+            diff = timedelta(seconds=int((delta1-int(delta1)) * self.step))
             print(diff)
             self.start_td = self.start_td - diff
             print(self.start_td)
