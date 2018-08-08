@@ -82,11 +82,8 @@ class Normal_pole_calc:
         delta = (self.start_td - default_start).total_seconds()
         if (delta % self.step) > 0: # delta/self.step must be integer:
             delta1=delta / self.step    # delta in steps
-            print(delta1)
             diff = timedelta(seconds=int((delta1-int(delta1)) * self.step))
-            print(diff)
             self.start_td = second_to_zero(self.start_td - diff)
-            print(self.start_td)
 
     def ini_step(self):
         default_start = datetime(self.start_td.year, 1, 1, 0, 0, 0, 0)
@@ -112,10 +109,6 @@ class Normal_pole_calc:
         delta = (self.end_td - self.start_td).total_seconds()
         delta = delta / 86400.0
         return delta
-
-#    def h_to_step(self):
-#        tt = self.record * 60 * 60 / self.step
-#        return tt
 
     def h_to_days(self):
         tt = self.record / 24.0
