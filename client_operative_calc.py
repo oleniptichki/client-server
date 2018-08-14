@@ -122,9 +122,7 @@ if len(res)>0 : # if there is at least one
 # hello_client.options.cache.clear()
 try:
     url = 'http://'+os.environ['ICS_BALTIC_SERVER_IP']+':7889/?wsdl'
-    print(url)
     hello_client = Client(url)
-    print("echo")
 except:
     sys.exit(6)
 

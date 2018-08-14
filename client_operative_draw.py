@@ -9,6 +9,17 @@ from datetime import datetime
 from datetime import timedelta
 from ftplib import FTP
 import traceback
+
+# List of environment variables, client side
+# ICS_BALTIC_DB_HOST = 'localhost'
+# ICS_BALTIC_DB_DBNAME = 'ivs'
+# ICS_BALTIC_DB_DBUSER = 'ivs'
+# ICS_BALTIC_DB_PASSWD = ***
+
+# ICS_BALTIC_SERVER_IP = ***
+# ICS_BALTIC_FTP_IPADDR = ***
+# ICS_BALTIC_FTP_LOGIN = 'ftpuser'
+# ICS_BALTIC_FTP_PASSWD = ***
 import os
 
 
@@ -16,7 +27,8 @@ def connect_db():
     global cursor
     global conn
     # Define our connection string
-    conn_string = "host='localhost' dbname='ivs' user='ivs' password='o3NDz95Q'"
+    conn_string = "host='"+os.environ['ICS_BALTIC_DB_HOST']+"' dbname='"+os.environ['ICS_BALTIC_DB_DBNAME']+\
+                  "' user='"+os.environ['ICS_BALTIC_DB_DBUSER']+"' password='"+os.environ['ICS_BALTIC_DB_PASSWD']+"'"
     error_string = None
 
     # print the connection string we will use to connect
@@ -291,7 +303,7 @@ else:
 # === Stage 2 ===
 
 
-url = 'http://192.168.88.243:7889/?wsdl'
+url = 'http://' + os.environ['ICS_BALTIC_SERVER_IP'] + ':7889/?wsdl'
 hello_client = Client(url)
 # ===Connected===
 
@@ -321,8 +333,8 @@ try :
     if result:
         path_name=result.split(' ')
         try:
-            ftp=FTP("192.168.88.243")
-            ftp.login('ftpuser','o3NDz95Q')
+            ftp=FTP(os.environ["ICS_BALTIC_FTP_IPADDR"])
+            ftp.login(os.environ["ICS_BALTIC_FTP_LOGIN"],os.environ["ICS_BALTIC_FTP_PASSWD"])
             ftp.cwd('.'+path_name[0])
             os.chdir("PNG")
             png_file_local=open(str(draw.calc_id)+'_'+path_name[1],"wb")
