@@ -27,6 +27,7 @@ def connect_db():
     # Define our connection string
     conn_string = "host='"+os.environ['ICS_BALTIC_DB_HOST']+"' dbname='"+os.environ['ICS_BALTIC_DB_DBNAME']+\
                   "' user='"+os.environ['ICS_BALTIC_DB_DBUSER']+"' password='"+os.environ['ICS_BALTIC_DB_PASSWD']+"'"
+    print(conn_string)
     error_string=None
  
     # print the connection string we will use to connect
@@ -41,7 +42,7 @@ def connect_db():
     else:
         # conn.cursor will return a cursor object, you can use this cursor to perform queries
         cursor = conn.cursor()
-        # print("Connected!\n")
+        print("Connected!\n")
     return error_string   # if it is not NONE, i will return it to adeq.inm.ras.ru
 
 def timestamp():
