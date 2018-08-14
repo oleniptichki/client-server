@@ -235,6 +235,7 @@ if calc.start_td<default_start_date:
 this_day=date.today()
 midnight=time(0,0,0)
 today=datetime.combine(this_day,midnight)
+lbdata_end_date=datetime(2011,1,1,0,0,0,0)
 if calc.end_td>today:
 #    print("Error: Wrong dates")
 #    raise Wrong_parameters_exception()
@@ -256,6 +257,10 @@ if calc.time_days()>30:
 #    print("Heavy simulation: decrease end_time_date")
 #    raise Wrong_parameters_exception()
     sys.exit(15)
+if calc.lb and calc.end_td>lbdata_end_date:
+#    print("Error: no data for LB assimilation")
+#    raise Wrong_parameters_exception()
+    sys.exit(16)
 
 assim_str=''
 if calc.assim:
