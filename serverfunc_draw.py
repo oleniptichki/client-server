@@ -4,12 +4,16 @@ from datetime import datetime
 from datetime import timedelta
 #import shutil
 
+# List of environment variables, server side
+# ICS_BALTIC_DIR_MODEL = /home/ftpuser/model/  -- directory with Baltic Sea model
+# ICS_BALTIC_DIR_PY = /home/ftpuser/Py/ -- directory with this script (python scripts)
+# ICS_BALTIC_DIR_MODEL_RELAT = /model/ -- relative address
+# ICS_BALTIC_SERVER_IP = ***
+
 class draw_class:
 
-    path='/home/ftpuser/model/'
-    ftppath = '/model/'   #to download the result via ftp
-#    homepath='/home/tatiana/Tanya/ICS-ADEQ/Py/'
-#    cppath='/media/tatiana/TOSHIBA/CP_normal/'
+    path=os.environ['ICS_BALTIC_DIR_MODEL']
+    ftppath = os.environ['ICS_BALTIC_DIR_MODEL_RELAT']   #to download the result via ftp
     err=''
     def __init__(self, calc_id, path_to_calc, plot_type, depth, crosssection, cs_type,
         cs_value, cs_limits_min, cs_limits_max, num_of_record,

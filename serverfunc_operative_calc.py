@@ -4,10 +4,14 @@ from datetime import datetime
 from datetime import timedelta
 #import shutil
 
+# List of environment variables, server side
+# ICS_BALTIC_DIR_MODEL = /home/ftpuser/model/  -- directory with Baltic Sea model
+# ICS_BALTIC_DIR_PY = /home/ftpuser/Py/ -- directory with this script (python scripts)
+# ICS_BALTIC_DIR_MODEL_RELAT = /model/ -- relative address
+# ICS_BALTIC_SERVER_IP = ***
+
 class operative_calc():
-    path='/home/ftpuser/model/'
-#    homepath='/home/tatiana/Tanya/ICS-ADEQ/Py/'
-#    cppath='/media/tatiana/TOSHIBA/CP_normal/'
+    path=os.environ['ICS_BALTIC_DIR_MODEL']
     err=''
     def __init__(self, calc_id, token, duration, record_d, assim_numb):
         '''

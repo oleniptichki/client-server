@@ -28,6 +28,12 @@ from serverfunc_normal_pole_continue import normal_pole_continue
 import serverfunc_draw
 from serverfunc_draw import draw_class
 
+# List of environment variables, server side
+# ICS_BALTIC_DIR_MODEL = /home/ftpuser/model/  -- directory with Baltic Sea model
+# ICS_BALTIC_DIR_PY = /home/ftpuser/Py/ -- directory with this script (python scripts)
+# ICS_BALTIC_DIR_MODEL_RELAT = /model/ -- relative address
+# ICS_BALTIC_SERVER_IP = ***
+
 
 class HelloWorldService(DefinitionBase):
     @soap(String,Integer,_returns=Array(String))
@@ -57,7 +63,7 @@ class HelloWorldService(DefinitionBase):
                 return ret
             else:
                 # start calculation
-                os.chdir('/home/ftpuser/model/'+token+'/OPirat/')
+                os.chdir(os.environ['ICS_BALTIC_DIR_MODEL']+token+'/OPirat/')
                 self.proc=subprocess.Popen('./start.sh',shell=True)
                 pid=self.proc.pid
                 return pid
@@ -94,7 +100,7 @@ class HelloWorldService(DefinitionBase):
                 return ret
             else:
                 # start calculation
-                os.chdir('/home/ftpuser/model/'+token+'/NormPole/')
+                os.chdir(os.environ['ICS_BALTIC_DIR_MODEL']+token+'/NormPole/')
                 self.proc=subprocess.Popen('./start.sh',shell=True)
                 pid=self.proc.pid
                 return pid
@@ -127,7 +133,7 @@ class HelloWorldService(DefinitionBase):
             return ret
         else:
             # start calculation
-            os.chdir('/home/ftpuser/model/'+token+'/NormPole/')
+            os.chdir(os.environ['ICS_BALTIC_DIR_MODEL']+token+'/NormPole/')
             self.proc=subprocess.Popen('./start.sh',shell=True)
             pid=self.proc.pid
             return pid
@@ -146,7 +152,7 @@ class HelloWorldService(DefinitionBase):
         # check existence of the process:
         # receive PID of the process
         pid = None
-        os.chdir('/home/ftpuser/Py/')
+        os.chdir(os.environ['ICS_BALTIC_DIR_PY'])
         print(ppid)
 
      #   ret = subprocess.call('ps -fj --ppid ' + str(ppid) + ' | grep dsom > 1.txt', shell=True)
@@ -187,7 +193,7 @@ class HelloWorldService(DefinitionBase):
 
         if pid is not None:      # if process exist
             try:
-                os.chdir('/home/ftpuser/model/'+token+'/'+folder+'/')
+                os.chdir(os.environ['ICS_BALTIC_DIR_MODEL']+token+'/'+folder+'/')
                 fin=open('progress.txt', 'rt')
                 progrs=float(fin.read())
                 fin.close()      
@@ -196,7 +202,7 @@ class HelloWorldService(DefinitionBase):
                 return -1
         else:
             try:
-                os.chdir('/home/ftpuser/model/'+token+'/'+folder+'/')
+                os.chdir(os.environ['ICS_BALTIC_DIR_MODEL']+token+'/'+folder+'/')
                 if os.path.exists('progress.txt'):
                     fin=open('progress.txt', 'rt')
                     progrs=float(fin.read())
@@ -234,7 +240,7 @@ class HelloWorldService(DefinitionBase):
         '''
         # receive PID of the process
         pid=None
-        os.chdir('/home/ftpuser/Py/')
+        os.chdir(os.environ['ICS_BALTIC_DIR_PY'])
 
         #   ret = subprocess.call('ps -fj --ppid ' + str(ppid) + ' | grep dsom > 1.txt', shell=True)
         ret = subprocess.call('ps -afj | grep ' + str(ppid) + ' | grep dsom > 1.txt', shell=True)
@@ -280,7 +286,7 @@ class HelloWorldService(DefinitionBase):
             except:
                 return -6
         try:
-            os.chdir('/home/ftpuser/model/'+token+'/'+folder+'/')
+            os.chdir(os.environ['ICS_BALTIC_DIR_MODEL']+token+'/'+folder+'/')
             if os.path.exists('progress.txt'):
                 fin=open('progress.txt', 'rt')
                 progrs=float(fin.read())
@@ -359,7 +365,7 @@ if __name__=='__main__':
         from wsgiref.simple_server import make_server
         soap_application = soaplib.core.Application([HelloWorldService], 'tns')
         wsgi_application = wsgi.Application(soap_application)
-        server = make_server('192.168.88.243', 7889, wsgi_application)
+        server = make_server(os.environ['ICS_BALTIC_SERVER_IP'], 7889, wsgi_application)
         server.serve_forever()
     except ImportError:
         print("Error: example server code requires Python >= 2.5")
