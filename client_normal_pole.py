@@ -8,10 +8,12 @@ import sys
 from datetime import datetime, date, time
 from datetime import timedelta
 import traceback
+import os
 def connect_db():
     global cursor
     global conn
     # Define our connection string
+
     conn_string = "host='localhost' dbname='ivs' user='ivs' password='o3NDz95Q'"
     error_string=None
  
