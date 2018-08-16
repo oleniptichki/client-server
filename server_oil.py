@@ -37,7 +37,7 @@ class HelloWorldService(DefinitionBase):
         return results
 
 # My functions. Begin
-    @soap(Double,Double,Double,Double,Double,String,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Double,Double,String,Integer,_returns=Integer)
+    @soap(Double,Double,Double,Double,Double,String,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Double,Double,String,String,_returns=Integer)
     def oil_exstrt(self, lat, lon, mass, density, viscosity, path_to_env, step_rec, duration, t1, t2,
                    risk_nDelta, risk_nDeltaStep, spec_dam, alpha, tau, token, calc_id):
         '''
@@ -60,7 +60,7 @@ class HelloWorldService(DefinitionBase):
         alpha
         tau
 
-        calc_id - Integer;
+        calc_id - String;
         token
 
         '''

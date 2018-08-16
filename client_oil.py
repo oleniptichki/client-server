@@ -82,7 +82,6 @@ if error_db_connection:
 # hello_client.options.cache.clear()
 try:
     url = 'http://'+os.environ['ICS_BALTIC_SERVER_IP']+':7889/?wsdl'
-    print(url)
     hello_client = Client(url)
 except:
     print("error connecting to server")
@@ -105,7 +104,6 @@ spec_dam=100
 alpha=0.1
 tau=10
 token='oil'
-calc_id=1
 
 try:
     result = hello_client.service.oil_exstrt(lat, lon, mass, density, viscosity, path_to_env, step_rec, duration, t1, t2,

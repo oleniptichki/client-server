@@ -45,7 +45,7 @@ class oil_run():
         path_to_out - path to the result
 
         token
-        calc_id
+        calc_id  - String
 
         '''
         # model step = 300.0
