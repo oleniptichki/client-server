@@ -88,8 +88,8 @@ class oil_run():
             try:
                 os.mkdir(self.calc_id)
                 os.chdir(self.calc_id)
-                os.mkdir(oil_run.filenames['inFolder'])
-                os.mkdir(oil_run.filenames['outFolder'])
+                os.mkdir(oil_run.filenames['inFolder'].replace('/',''))
+                os.mkdir(oil_run.filenames['outFolder'].replace('/',''))
             except:
                 oil_run.err = oil_run.err + 'Error in directory creation, p1 \n'
                 return 1
