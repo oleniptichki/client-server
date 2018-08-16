@@ -6,7 +6,7 @@ import shutil
 
 class oil_run():
 
-    path='home/ftpuser/oil/'   #??
+    path='/home/ftpuser/oil/'   #??
     exe='OSM-2nd-CB-manual'
     err=''
     filenames={"outFolder": "/output/",
