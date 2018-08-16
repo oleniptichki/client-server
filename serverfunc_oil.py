@@ -197,19 +197,19 @@ class oil_run():
         output_file.write("0.0           ! initial water content")
         output_file.close()
 
-        filename=self.path_to_out+"/"+oil_run.filenames['outPar']
+        filename=oil_run.path+self.token+"/"+oil_run.filenames['outPar']
         output_file = open(filename, 'wt')
         output_file.write(self.path_to_out+"/"+"        ! path to data")
         output_file.close()
 
-        filename=self.path_to_out+"/"+oil_run.filenames['initPar']
+        filename=oil_run.path+self.token+"/"+oil_run.filenames['initPar']
         output_file = open(filename, 'wt')
         output_file.write(self.path_to_out+"/"+"        ! path to data")
         output_file.close()
 
 
         #initializing 'progress.txt'
-        filename=oil_run.path+token+'/progress.txt'
+        filename=oil_run.path+self.token+'/progress.txt'
         fout=open(filename, 'wt')
         fout.write(str(0))
         fout.close()
