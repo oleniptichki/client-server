@@ -68,6 +68,7 @@ class HelloWorldService(DefinitionBase):
                  risk_nDelta, risk_nDeltaStep, spec_dam, alpha, tau, token, calc_id)
         if calc.userinit()==0:
             ret=calc.dirinit()
+            print(ret)
             if ret>0:
                 calc.errlogwriter()
                 return -2
