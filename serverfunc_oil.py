@@ -217,9 +217,9 @@ class oil_run():
 
 #--------------
     def errlogwriter(self):
-        os.chdir(normal_pole.path+self.token)
+        os.chdir(oil_run.path+self.token)
         fout=open('error.log', 'wt')
-        fout.write(normal_pole.err)
+        fout.write(oil_run.err)
         fout.close()
 	
 		
