@@ -82,8 +82,8 @@ if error_db_connection:
 # hello_client.options.cache.clear()
 try:
     url = 'http://'+os.environ['ICS_BALTIC_SERVER_IP']+':7889/?wsdl'
+    print(url)
     hello_client = Client(url)
-    hello_client.options.cache.clear()
 except:
     print("error connecting to server")
     raise Server_is_overloaded_exception()
@@ -108,10 +108,8 @@ token='oil'
 calc_id=1
 
 try:
-    result = hello_client.service.oil_exstrt(calc.calc_id, calc.token, str(calc.ini_cp()), assim_str,
-                                                  calc.num_of_days_octask(), calc.ini_step(), calc.start_td.year,
-                                                  calc.h_to_days(), calc.assim_flag(), int(calc.tides),
-                                                  int(calc.dd), int(calc.lb))
+    result = hello_client.service.oil_exstrt(lat, lon, mass, density, viscosity, path_to_env, step_rec, duration, t1, t2,
+                   risk_nDelta, risk_nDeltaStep, spec_dam, alpha, tau, token, calc_id)
 
 
 #    @soap(Double, Double, Double, Double, Double, String, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
