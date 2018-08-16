@@ -77,7 +77,7 @@ class HelloWorldService(DefinitionBase):
                 if ret==0:
                     # start calculation
                     os.chdir(os.environ['ICS_BALTIC_DIR_OIL']+token)
-                    self.proc=subprocess.Popen(calc.exe,shell=True)
+                    self.proc=subprocess.Popen("/"+calc.exe,shell=True)
                     pid=self.proc.pid
                     return pid
                 else:
