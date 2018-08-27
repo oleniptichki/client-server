@@ -187,7 +187,10 @@ if ret>0:
 # ===== End checking of data =======
 risk_ndeltastep=calc.risk_ndeltastep()
 
-print(calc)
+print(calc.lat, calc.lon, calc.mass, calc.density, calc.viscosity,
+                                             calc.path_to_env_data(), calc.step_rec, duration, calc.t1, calc.t2,
+                                             calc.risk_ndelta, risk_ndeltastep, calc.spec_dam, calc.alpha, calc.tau,
+                                             calc.token, calc_id)
 
 # connect to server
 # use this if needed:
