@@ -146,14 +146,14 @@ if calc.calc_type=="NormPole":
     if not dt:
         raise Missing_env_data_exception()
     calc.step_rec=dt[0]*60  # convert from hours to minutes
-    duration=((dt[2]-dt[1]).total_seconds()) // 3600  # in hours
+    duration=int(((dt[2]-dt[1]).total_seconds()) / 3600)  # in hours
 elif calc.calc_type=="OPirat":
     cursor.execute("SELECT record, duration FROM operative_calc WHERE calc_id="+str(calc.id_of_calc)+";")
     dt=cursor.fetchone()
     if not dt:
         raise Missing_env_data_exception()
     calc.step_rec=dt[0]*60  # convert from hours to minutes
-    duration=(dt[1]+3)*24   # in hours
+    duration=int((dt[1]+3)*24)   # in hours
 else:
     raise Wrong_type_of_calculation_exception(" Check environment data ID")
 
