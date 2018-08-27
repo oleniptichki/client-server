@@ -77,6 +77,7 @@ class Oil_run:
         elif calc_type==1:
             self.calc_type="OPirat"
         else:
+            print(calc_type)
             self.calc_type="unknown_type"
         self.step_rec=60 # 1 hour as default, it will be changed
         self.alpha=0.1
@@ -135,6 +136,7 @@ calc=Oil_run(int(calc_id), dv[0], dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6
 #try for interest:
 #calc=Oil_run(int(calc_id), dv[0], dt, dv[1])
 # extract and check environment calculation data
+print(calc.calc_type)
 if calc.calc_type=="NormPole":
     cursor.execute("SELECT record, start_time_date, end_time_date FROM normal_pole WHERE calc_id="+str(calc.id_of_calc)+";")
     dt=cursor.fetchone()
