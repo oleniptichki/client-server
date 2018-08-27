@@ -47,7 +47,7 @@ def connect_db():
 
 class Oil_run:
     def __init__(self, calc_id, token, lat, lon, mass, density, viscosity, id_of_calc, t1, t2,
-                 risk_nDelta, spec_dam, calc_type):
+                 risk_ndelta, spec_dam, calc_type):
         # Parameters of this type of calculation:
         # calc_id - identifier of calculation (FK from table "user_calculation")
         # token - name of the user
@@ -59,7 +59,7 @@ class Oil_run:
         # id_of_calc - ID of calculation to define path to environment data
         # t1 - from this time oil model starts (in hours), it is relative to the environment data time, default 0
         # t2 - in hours, default it is equivalent to the duration of the model run (no more then 2 weeks)
-        # risk_nDelta - max time of oil spill appearance, choose from 0 to t2
+        # risk_ndelta - max time of oil spill appearance, choose from 0 to t2
         # spec_dam - special damage, in thousand rubles, default 100
         self.calc_id = calc_id
         self.token=token   # from user_calculation
@@ -71,7 +71,7 @@ class Oil_run:
         self.id_of_calc=id_of_calc
         self.t1=t1
         self.t2=t2
-        self.risk_nDelta=risk_nDelta
+        self.risk_ndelta=risk_ndelta
         self.spec_dam=spec_dam
         if calc_type==2:
             self.calc_type="NormPole"
@@ -88,9 +88,9 @@ class Oil_run:
             path='/home/ftpuser/model/'+self.token+'/'+self.calc_type+'/'+str(self.id_of_calc) +'/XYZ/'
             return path
 
-        def risk_nDeltaStep(self):
-            delta=(self.risk_nDelta-self.t1)//3
-            self.risk_nDelta=t1+delta*3
+        def risk_ndeltastep(self):
+            delta=(self.risk_ndelta-self.t1)//3
+            self.risk_ndelta=t1+delta*3
             return delta
 
 
@@ -185,7 +185,7 @@ ret=subprocess.call(["python3","lon_lat_checker.py",str(calc.lat),str(calc.lon)]
 if ret>0:
     raise Wrong_parameters_exception(" oil spill must occur on the sea surface")
 # ===== End checking of data =======
-risk_nDeltaStep=calc.risk_nDeltaStep()
+risk_ndeltastep=calc.risk_ndeltastep()
 
 
 # connect to server
@@ -210,7 +210,7 @@ except:
 try:
     result = hello_client.service.oil_exstrt(calc.lat, calc.lon, calc.mass, calc.density, calc.viscosity,
                                              calc.path_to_env_data(), calc.step_rec, duration, calc.t1, calc.t2,
-                                             calc.risk_nDelta, risk_nDeltaStep, calc.spec_dam, calc.alpha, calc.tau,
+                                             calc.risk_ndelta, risk_ndeltastep, calc.spec_dam, calc.alpha, calc.tau,
                                              calc.token, calc_id)
 
 
