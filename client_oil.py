@@ -90,7 +90,7 @@ class Oil_run:
 
     def risk_ndeltastep(self):
         delta=(self.risk_ndelta-self.t1)//3
-        self.risk_ndelta=t1+delta*3
+        self.risk_ndelta=self.t1+delta*3
         return delta
 
 
@@ -187,6 +187,7 @@ if ret>0:
 # ===== End checking of data =======
 risk_ndeltastep=calc.risk_ndeltastep()
 
+print(calc)
 
 # connect to server
 # use this if needed:
