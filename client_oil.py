@@ -185,7 +185,7 @@ ret=subprocess.call(["python3","lon_lat_checker.py",str(calc.lat),str(calc.lon)]
 if ret>0:
     raise Wrong_parameters_exception(" oil spill must occur on the sea surface")
 # ===== End checking of data =======
-risk_ndeltastep=calc.risk_ndeltastep()
+risk_ndeltas=calc.risk_ndeltastep()
 
 
 # connect to server
@@ -210,7 +210,7 @@ except:
 try:
     result = hello_client.service.oil_exstrt(calc.lat, calc.lon, calc.mass, calc.density, calc.viscosity,
                                              calc.path_to_env_data(), calc.step_rec, duration, calc.t1, calc.t2,
-                                             calc.risk_ndelta, risk_ndeltastep, calc.spec_dam, calc.alpha, calc.tau,
+                                             calc.risk_ndelta, risk_ndeltas, calc.spec_dam, calc.alpha, calc.tau,
                                              calc.token, calc_id)
 
 
