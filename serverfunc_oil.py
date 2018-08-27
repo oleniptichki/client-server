@@ -77,6 +77,8 @@ class oil_run():
             try:
                 os.mkdir(self.token)
                 shutil.copy(oil_run.exe, self.token+'/'+oil_run.exe)
+                shutil.copy('print_evolution.py', self.token+'/'+'print_evolution.py')
+                shutil.copy('print_localization.py', self.token+'/'+'print_localization.py')
             except:
                 oil_run.err = oil_run.err + 'Error in directory creation, p1 \n'
                 return 1

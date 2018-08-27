@@ -21,6 +21,8 @@ from soaplib.core.server import wsgi
 from soaplib.core.model.clazz import Array
 import serverfunc_oil
 from serverfunc_oil import oil_run
+import serverfunc_oil_draw
+from serverfunc_oil_draw import oil_draw
 
 # List of environment variables, server side
 # ICS_BALTIC_DIR_OIL = /home/ftpuser/oil/  -- directory with oil model
@@ -175,6 +177,37 @@ class HelloWorldService(DefinitionBase):
         except:
             return -7  
         return 0
+
+    @soap(Integer,String,String,Integer,Integer,_returns=String)
+    def oil_plot(self, calc_id, token, plot_type, app_time, time):
+        '''
+        Parameters of graphical output:
+        calc_id - Integer, identifier of calculation;
+        token - String
+        plot_type - String, enum: 'mass', 'area', 'volume', 'emulsion_density', 'emulsion_viscosity', 'water_content'
+             'coordinates', 'control', 'damage'
+        app_time - time of oil spill appearance, from 0 to Risk_nDelta with step risk_nDeltaStep
+        time - relative time of output, in steps
+        :return: STRING: PATH+' '+file_name
+        '''
+        draw=oil_draw(calc_id, token, plot_type, app_time, time)
+        ret=draw.write_evolution_pars()
+        if ret>0:
+            draw.errlogwriter()
+            return None
+        if draw.plot_type=="water_content":  # add there other problem files
+            filename=draw.full_name_txt()
+            ret=draw.remove_zero(filename)
+            if ret > 0:
+                draw.errlogwriter()
+                return None
+        ret=draw.file_exec()
+        if ret>0 :
+            return None
+        else:
+            name_of_file=draw.full_name_png()
+            return name_of_file
+
 
         
 
