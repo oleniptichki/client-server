@@ -130,9 +130,11 @@ if len(res)>2 : # not 3 (don't know why, but len(res)<=2 is true and it allows 3
 # extract data from DB
 cursor.execute("SELECT lat, lon, mass, density, viscosity, id_of_calc, t1, t2, risk_nDelta, spec_dam FROM oil_run WHERE calc_id="+calc_id+";")
 dt=cursor.fetchone()
-cursor.execute("SELECT token, calc_type FROM user_calculation WHERE calc_id="+calc_id+";")
+cursor.execute("SELECT token FROM user_calculation WHERE calc_id="+calc_id+";")
 dv=cursor.fetchone()
-calc=Oil_run(int(calc_id), dv[0], dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7],dt[8], dt[9], dv[1])
+cursor.execute("SELECT calc_type FROM user_calculation WHERE calc_id="+str(dt[5])+";")
+ds=cursor.fetchone()
+calc=Oil_run(int(calc_id), dv[0], dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7],dt[8], dt[9], ds[0])
 #try for interest:
 #calc=Oil_run(int(calc_id), dv[0], dt, dv[1])
 # extract and check environment calculation data
