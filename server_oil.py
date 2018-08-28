@@ -28,6 +28,7 @@ from serverfunc_oil_draw import oil_draw
 # ICS_BALTIC_DIR_OIL = /home/ftpuser/oil/  -- directory with oil model
 # ICS_BALTIC_DIR_OIL_SCRIPTS = /home/ftpuser/Py/  -- directory with Python scripts
 # ICS_BALTIC_SERVER_IP = ***
+# OIL_EXE=OSM-2nd-CB-manual
 
 
 class HelloWorldService(DefinitionBase):
@@ -98,10 +99,11 @@ class HelloWorldService(DefinitionBase):
         tot_prog - total progress to convert the result to percents
 
         '''
+        oil_exe = 'OSM-2nd-CB-manual'
 
         # check existence of the process:
         print(pid)
-        ret = subprocess.call('ps -p ' + str(pid) + ' > 1.txt', shell=True)
+        ret = subprocess.call('ps -p ' + str(pid) + ' | grep ' + oil_exe +' > 1.txt', shell=True)
         if ret>0:
             return -1
         try:
@@ -114,7 +116,7 @@ class HelloWorldService(DefinitionBase):
         ret = output.split()
         print(len(ret))
         print(output)
-        if len(ret)>5:    # process exist
+        if len(ret)>2:    # process exist, len(ret) must be 3 or 4
             try:
                 os.chdir(os.environ['ICS_BALTIC_DIR_OIL'] + token)
                 fin = open('progress.txt', 'rt')
