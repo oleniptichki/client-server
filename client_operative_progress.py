@@ -51,16 +51,20 @@ calc_id=sys.argv[1]
 error_db_connection=connect_db()
 # if no connection to DB
 if error_db_connection:
+    print('sys.exit(201)')
     sys.exit(201)        # exit code > 200 because progress returns the number from 0 to 100 - completeness of the calculation in percents
 
 # check whether the process was interrupted
 try:
     cursor.execute("SELECT error_message FROM process_controller WHERE calc_id="+calc_id+";")
     dt=cursor.fetchone()
-    if dt[0]=='calculation interrupted':
-        sys.exit(103)
 except:
+    print('sys.exit(202)')
     sys.exit(202)
+if dt[0]=='calculation interrupted':
+    print('sys.exit(103)')
+    sys.exit(103)
+
 
 # extract user_name (token) and type of calculation
 try:
@@ -77,6 +81,7 @@ try:
     else:
         folder='RotPole'
 except:
+    print('sys.exit(202)')
     sys.exit(202)
 
 # connect to server
@@ -84,6 +89,7 @@ try:
     url = 'http://'+os.environ['ICS_BALTIC_SERVER_IP']+':7889/?wsdl'
     hello_client = Client(url)
 except:
+    print('sys.exit(203)')
     sys.exit(203)
 
 # get PPID from process_controller
@@ -95,6 +101,7 @@ try:
         pid=ppid
     conn.close()
 except:
+    print('sys.exit(204)')
     sys.exit(204)
 
 try:
@@ -112,49 +119,55 @@ try:
     else:
         result=0 # this is an impossible case
     print(result)
+
+except WebFault:
+    # print(traceback.format_exc())
+    print('sys.exit(206)')
+    sys.exit(206)
+
+except Exception as other:
+    err_str = traceback.format_exc(limit=1)
+    print('sys.exit(207)')
+    sys.exit(207)
     # processing of the result in case of error
 
-    if result<0:
-        if calc_type == 1 or calc_type == 2:
-            errors={-1:"'System responce at ps -afj... is strange'",
+if result<0:
+    if calc_type == 1 or calc_type == 2:
+        errors={-1:"'System responce at ps -afj... is strange'",
                     -3:"'Error in calling of ps -afj'",
                     -4:"'Problem with reading 1.txt'",
                     -1:"'Error in reading file progress.txt'",
                     -6:"'Error of processing the case when the process in absent'"}
-        elif calc_type==4:
-            errors = {-1: "'Error in calling of ps -p'",
+    elif calc_type==4:
+        errors = {-1: "'Error in calling of ps -p'",
                       -2: "'Error in reading from file 1.txt'",
                       -3: "'Error in reading from file progress.txt'",
                       -4: "'Error of processing the case when the process in absent'"}
-        else:
-            pass
-        error=errors[result]
-        cursor.execute("UPDATE process_controller SET error_message="+error+" WHERE calc_id="+calc_id+";")
-        conn.commit()
-        conn.close()
-        sys.exit(205)
-    elif result == 101:
-        cursor.execute("UPDATE process_controller SET error_message='success' WHERE calc_id="+calc_id+";")
-        cursor.execute("UPDATE user_calculation SET status='FINISHED' WHERE calc_id="+calc_id+";")
-        conn.commit()
-        conn.close()
-        sys.exit(101)
-    elif result >= 102:
-        cursor.execute("UPDATE process_controller SET error_message='model crashed' WHERE calc_id="+calc_id+";")
-        cursor.execute("UPDATE user_calculation SET status='FINISHED WITH ERROR' WHERE calc_id="+calc_id+";")
-        conn.commit()
-        conn.close()
-        sys.exit(102)
     else:
-        conn.close()
-        sys.exit(result)
+        pass
+    error=errors[result]
+    cursor.execute("UPDATE process_controller SET error_message="+error+" WHERE calc_id="+calc_id+";")
+    conn.commit()
+    conn.close()
+    print('sys.exit(205)')
+    sys.exit(205)
+elif result == 101:
+    cursor.execute("UPDATE process_controller SET error_message='success' WHERE calc_id="+calc_id+";")
+    cursor.execute("UPDATE user_calculation SET status='FINISHED' WHERE calc_id="+calc_id+";")
+    conn.commit()
+    conn.close()
+    print('sys.exit(101)')
+    sys.exit(101)
+elif result >= 102:
+    cursor.execute("UPDATE process_controller SET error_message='model crashed' WHERE calc_id="+calc_id+";")
+    cursor.execute("UPDATE user_calculation SET status='FINISHED WITH ERROR' WHERE calc_id="+calc_id+";")
+    conn.commit()
+    conn.close()
+    print('sys.exit(102)')
+    sys.exit(102)
+else:
+    conn.close()
+    sys.exit(result)
 
-except WebFault:
-    # print(traceback.format_exc())
-    sys.exit(206)
-
-except Exception as other:
-    err_str=traceback.format_exc(limit=1)
-    sys.exit(207)
 
 
