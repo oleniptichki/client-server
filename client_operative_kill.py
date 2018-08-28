@@ -54,6 +54,7 @@ error_db_connection=connect_db()
 # if no connection to DB
 if error_db_connection:
     print('sys.exit(1)')
+    sys.exit(1)
 
 # check whether the process crashed
 try:
@@ -61,8 +62,10 @@ try:
     dt=cursor.fetchone()
     if dt[0]=='model crashed':
         print('sys.exit(0)')
+        sys.exit(0)
 except:
     print('sys.exit(7)')
+    sys.exit(7)
 
 # extract user_name (token)
 try:
@@ -80,6 +83,7 @@ try:
         folder='RotPole'
 except:
     print('sys.exit(7)')
+    sys.exit(7)
 
 
 # connect to server
@@ -88,6 +92,7 @@ try:
     hello_client = Client(url)
 except:
     print('sys.exit(2)')
+    sys.exit(2)
 
 try:
     # get PPID from process_controller
@@ -99,6 +104,7 @@ try:
     conn.close()
 except:
     print('sys.exit(3)')
+    sys.exit(3)
 
 try:
     connect_db()
@@ -146,12 +152,16 @@ try:
         conn.commit()
         conn.close()
         print('sys.exit(4)')
+        sys.exit(4)
 except WebFault:
     # print(traceback.format_exc())
     print('sys.exit(5)')
+    sys.exit(5)
 
 except Exception as other:
     str=traceback.format_exc(limit=1)
     print('sys.exit(6)')
+    sys.exit(6)
 
 print('sys.exit(0)')
+sys.exit(0)
