@@ -99,7 +99,7 @@ class HelloWorldService(DefinitionBase):
         tot_prog - total progress to convert the result to percents
 
         '''
-        oil_exe = 'OSM-2nd-CB-manual'
+        oil_exe = 'OSM'
 
         # check existence of the process:
         print(pid)
