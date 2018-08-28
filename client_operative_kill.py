@@ -66,6 +66,7 @@ try:
 except:
     print('sys.exit(7)')
     sys.exit(7)
+print('i am here')
 
 # extract user_name (token)
 try:
