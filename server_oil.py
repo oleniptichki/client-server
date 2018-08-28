@@ -100,6 +100,7 @@ class HelloWorldService(DefinitionBase):
         '''
 
         # check existence of the process:
+        print(pid)
         ret = subprocess.call('ps -p ' + str(pid) + ' > 1.txt', shell=True)
         if ret>0:
             return -1
