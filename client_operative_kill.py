@@ -57,6 +57,11 @@ if error_db_connection:
     sys.exit(1)
 
 # check whether the process crashed
+cursor.execute("SELECT error_message FROM process_controller WHERE calc_id="+calc_id+";")
+dt=cursor.fetchone()
+if dt[0]=='model crashed':
+    print('sys.exit(0)')
+    sys.exit(0)
 try:
     cursor.execute("SELECT error_message FROM process_controller WHERE calc_id="+calc_id+";")
     dt=cursor.fetchone()
@@ -66,7 +71,6 @@ try:
 except:
     print('sys.exit(7)')
     sys.exit(7)
-print('i am here')
 
 # extract user_name (token)
 try:
