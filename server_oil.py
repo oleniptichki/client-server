@@ -143,11 +143,11 @@ class HelloWorldService(DefinitionBase):
                     return 101  # calculation is completed
                 else:
                     print("calculation finished with error, check")
-#                    if os.path.exists('./'+str(calc_id)):
-#                        ret=subprocess.call('rm -r '+str(calc_id), shell=True)
-#                        return 102
-#                    else:
-                    return 102
+                    if os.path.exists('./'+str(calc_id)):
+                        ret=subprocess.call('rm -r '+str(calc_id), shell=True)
+                        return 102
+                    else:
+                        return 102
             except:
                 return -4
 
@@ -181,9 +181,9 @@ class HelloWorldService(DefinitionBase):
             else:
                 progrs=0
             if (progrs<tot_prog):   #??
-#                if os.path.exists('./'+str(calc_id)):
-#                    ret=subprocess.call('rm -r '+str(calc_id), shell=True)
-#                    os.remove('progress.txt')
+                if os.path.exists('./'+str(calc_id)):
+                    ret=subprocess.call('rm -r '+str(calc_id), shell=True)
+                    os.remove('progress.txt')
                 print("deleting folder")
         except:
             return -2
