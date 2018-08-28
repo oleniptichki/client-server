@@ -8,6 +8,7 @@ import sys
 from datetime import datetime
 from datetime import timedelta
 from time import sleep
+import traceback
 
 # List of environment variables, client side
 # ICS_BALTIC_DB_HOST = 'localhost'
