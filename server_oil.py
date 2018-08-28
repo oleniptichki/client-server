@@ -105,31 +105,31 @@ class HelloWorldService(DefinitionBase):
         print(pid)
         print('ps -p ' + str(pid) + ' | grep ' + oil_exe +' > 1.txt')
         ret = subprocess.call('ps -p ' + str(pid) + ' | grep ' + oil_exe +' > 1.txt', shell=True)
-        if ret>0:
-            return -1
-        try:
-            f = open('1.txt', 'rt')
-            output = f.read()
-            f.close()
-            os.remove('1.txt')
-        except:
-            return -2
-        ret = output.split()
-        print(len(ret))
-        print(output)
-        if len(ret)>2:    # process exist, len(ret) must be 3 or 4
+#        if ret>0:
+#            return -1
+        if ret==0:
             try:
-                os.chdir(os.environ['ICS_BALTIC_DIR_OIL'] + token)
-                fin = open('progress.txt', 'rt')
-                progrs = float(fin.read())
-                print("progrs="+str(progrs))
-                fin.close()
-                print(str(progrs) + " of " + str(tot_prog) + " is completed ...")
-                percent = int(progrs * 100 / tot_prog)
-                return percent
+                f = open('1.txt', 'rt')
+                output = f.read()
+                f.close()
+                os.remove('1.txt')
             except:
-                return -3
-
+                return -2
+            temp = output.split()
+            print(len(temp))
+            print(output)
+            if len(temp)>2:    # process exist, len(ret) must be 3 or 4
+                try:
+                    os.chdir(os.environ['ICS_BALTIC_DIR_OIL'] + token)
+                    fin = open('progress.txt', 'rt')
+                    progrs = float(fin.read())
+                    print("progrs="+str(progrs))
+                    fin.close()
+                    print(str(progrs) + " of " + str(tot_prog) + " is completed ...")
+                    percent = int(progrs * 100 / tot_prog)
+                    return percent
+                except:
+                    return -3
         else:
             try:
                 os.chdir(os.environ['ICS_BALTIC_DIR_OIL']+token)
@@ -164,9 +164,12 @@ class HelloWorldService(DefinitionBase):
 
         try:
             ret=subprocess.call('kill -9 '+str(pid), shell=True)
-            if ret != 0 :
-                return -1
         except:
+            return -1
+        # check existance of the process
+        oil_exe = 'OSM'
+        ret = subprocess.call('ps -p ' + str(pid) + ' | grep ' + oil_exe, shell=True)
+        if ret==0:
             return -1
 
         try:
