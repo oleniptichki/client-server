@@ -53,16 +53,16 @@ calc_id=sys.argv[1]
 error_db_connection=connect_db()
 # if no connection to DB
 if error_db_connection:
-    sys.exit(1)
+    print('sys.exit(1)')
 
 # check whether the process crashed
 try:
     cursor.execute("SELECT error_message FROM process_controller WHERE calc_id="+calc_id+";")
     dt=cursor.fetchone()
     if dt[0]=='model crashed':
-        sys.exit(0)
+        print('sys.exit(0)')
 except:
-    sys.exit(7)
+    print('sys.exit(7)')
 
 # extract user_name (token)
 try:
@@ -79,7 +79,7 @@ try:
     else:
         folder='RotPole'
 except:
-    sys.exit(7)
+    print('sys.exit(7)')
 
 
 # connect to server
@@ -87,7 +87,7 @@ try:
     url = 'http://'+os.environ['ICS_BALTIC_SERVER_IP']+':7889/?wsdl'
     hello_client = Client(url)
 except:
-    sys.exit(2)
+    print('sys.exit(2)')
 
 try:
     # get PPID from process_controller
@@ -98,7 +98,7 @@ try:
         pid=ppid
     conn.close()
 except:
-    sys.exit(3)
+    print('sys.exit(3)')
 
 try:
     connect_db()
@@ -134,7 +134,7 @@ try:
         cursor.execute("UPDATE process_controller SET error_message="+error+" WHERE calc_id="+calc_id+";")
         conn.commit()
         conn.close()
-        sys.exit(4)
+        print('sys.exit(4)')
     elif result == 0:
         cursor.execute("UPDATE process_controller SET error_message='calculation interrupted' WHERE calc_id="+calc_id+";")
         cursor.execute("UPDATE user_calculation SET status='FINISHED WITH ERROR' WHERE calc_id="+calc_id+";")
@@ -145,13 +145,13 @@ try:
         cursor.execute("UPDATE process_controller SET error_message="+error+" WHERE calc_id="+calc_id+";")
         conn.commit()
         conn.close()
-        sys.exit(4)
+        print('sys.exit(4)')
 except WebFault:
     # print(traceback.format_exc())
-    sys.exit(5)
+    print('sys.exit(5)')
 
 except Exception as other:
     str=traceback.format_exc(limit=1)
-    sys.exit(6)
+    print('sys.exit(6)')
 
-sys.exit(0)
+print('sys.exit(0)')
