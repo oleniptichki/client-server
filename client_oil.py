@@ -91,7 +91,7 @@ class Oil_run:
     def risk_ndeltastep(self):
         delta=(self.risk_ndelta-self.t1)//3
         self.risk_ndelta=self.t1+delta*3
-        return delta
+        return (delta*60)
 
 
 
@@ -129,7 +129,7 @@ if len(res)>2 : # not 3 (don't know why, but len(res)<=2 is true and it allows 3
 
 
 # extract data from DB
-cursor.execute("SELECT lat, lon, mass, density, viscosity, id_of_calc, t1, t2, risk_nDelta, spec_dam FROM oil_run WHERE calc_id="+calc_id+";")
+cursor.execute("SELECT lat, lon, mass, density, viscosity, id_of_calc, t1, t2, risk_ndelta, spec_dam FROM oil_run WHERE calc_id="+calc_id+";")
 dt=cursor.fetchone()
 cursor.execute("SELECT token FROM user_calculation WHERE calc_id="+calc_id+";")
 dv=cursor.fetchone()
@@ -186,6 +186,10 @@ if ret>0:
     raise Wrong_parameters_exception(" oil spill must occur on the sea surface")
 # ===== End checking of data =======
 risk_ndeltastep=calc.risk_ndeltastep()
+# update risk_nDelta if it was changed + write risk_ndeltastep
+cursor.execute("UPDATE oil_run SET risk_ndelta=" + str(calc.risk_ndelta) + ", risk_ndeltastep=" + str(risk_ndeltastep) + ";")
+conn.commit()
+
 
 print(calc.lat, calc.lon, calc.mass, calc.density, calc.viscosity,
                                              calc.path_to_env_data(), calc.step_rec, duration, calc.t1, calc.t2,
@@ -219,6 +223,11 @@ try:
 
 
     print(result)
+    if result < 0:  # in case of errors
+        # create dictonary of errors
+        errors = {-1: "Error in creation new user",
+                  -2: "Error in directory creation",
+                  -3: "Error in writing input data"}
 
 except WebFault:
     print(traceback.format_exc())
@@ -227,8 +236,33 @@ except WebFault:
 except Exception as other:
     str=traceback.format_exc(limit=1)
     print(str)
-    sys.exit(4)
+    #sys.exit(4)
 
+if result > 0:  # modelling is successfully launched
+    # set status='STARTED' and launch_time_date
+    cursor.execute( "UPDATE user_calculation SET status='STARTED', launch_time_date='" + timestamp() + "' WHERE calc_id=" + calc_id + ";")
+    conn.commit()
+    pid = result
+    # put PPID in the table Process controller
+    cursor.execute("SELECT pid FROM process_controller WHERE calc_id=" + calc_id + ";")
+    dt = cursor.fetchone()
+    if dt:  # string exists
+        cursor.execute("UPDATE process_controller SET pid=" + str(pid) + ", error_message='running' WHERE calc_id=" + calc_id + ";")
+        conn.commit()
+    else:
+        cursor.execute("INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'oil_run'," + str(
+                        pid) + ",'running') ;")
+        conn.commit()
+else:
+    # processing of server errors - put it to DB table - Process controller
+    # create dictonary of errors
+    cursor.execute( "INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'oil_run', '0','" +
+                errors[result] + "') ;")
+    conn.commit()
+    #sys.exit(5)
+
+conn.close()
 
 sys.exit(0)
+
 

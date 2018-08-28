@@ -73,6 +73,8 @@ try:
         folder='OPirat'
     elif calc_type==2:
         folder='NormPole'
+    elif calc_type == 4:
+        folder = ''  # in this case we will call another programm
     else:
         folder='RotPole'
 except:
@@ -91,24 +93,42 @@ try:
     cursor.execute("SELECT pid FROM process_controller WHERE calc_id="+calc_id+";")
     dt=cursor.fetchone()
     ppid=dt[0]
+    if calc_type==4:
+        pid=ppid
     conn.close()
 except:
     sys.exit(3)
 
 try:
-    result=hello_client.service.killer(int(calc_id), token, int(ppid), folder)
-#    print(result)
-
     connect_db()
+    if calc_type == 1 or calc_type == 2:
+        result = hello_client.service.killer(int(calc_id), token, int(ppid), folder)
+    elif calc_type==4:
+        # i need to convert result to progress !!
+        cursor.execute("SELECT risk_ndelta, risk_ndeltastep FROM oil_run WHERE calc_id=" + calc_id + ";")
+        dt = cursor.fetchone()
+        tot_prog=int(dt[0]*60/dt[1]+1)
+        result = hello_client.service.oil_killer(int(calc_id), token, int(pid), folder, tot_prog)
+        # result is in percents !!
+    else:
+        result=0 # this is an impossible case
+    print(result)
+
+    # processing of the result in case of error
+
     if result<0:
         # processing of server errors - put it to DB table - Process controller
         # create dictonary of errors
-        errors={-2:"'System responce at ps -afj... is strange'",
-                -3:"'Error in calling of ps -afj'",
-                -4:"'Problem with reading 1.txt'",
-                -6:"'Error in subprocess initialising'",
-                -7:"'Unexpected error: cannot remove files'",
-                -8:"'Unexpected error: cannot kill the process'"}
+        if calc_type == 1 or calc_type == 2:
+            errors={-2:"'System responce at ps -afj... is strange'",
+                    -3:"'Error in calling of ps -afj'",
+                    -4:"'Problem with reading 1.txt'",
+                    -6:"'Error in subprocess initialising'",
+                    -7:"'Unexpected error: cannot remove files'",
+                    -8:"'Unexpected error: cannot kill the process'"}
+        elif calc_type == 4:
+            errors={-1:"'Cannot kill the process'",
+                    -2:"'Cannot remove files'"}
         error=errors[result]
         cursor.execute("UPDATE process_controller SET error_message="+error+" WHERE calc_id="+calc_id+";")
         conn.commit()

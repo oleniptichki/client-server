@@ -88,13 +88,14 @@ class HelloWorldService(DefinitionBase):
             calc.errlogwriter()
             return -1  # error in creation of new user
 
-    @soap(Integer,String,Integer,_returns=Integer)
-    def progress(self, calc_id, token, pid):
+    @soap(Integer,String,Integer,Integer,_returns=Integer)
+    def oil_progress(self, calc_id, token, pid, tot_prog):
         '''
         Input parameters:
         calc_id - Integer
         token - string :username
         pid - PID
+        tot_prog - total progress to convert the result to percents
 
         '''
 
@@ -119,7 +120,9 @@ class HelloWorldService(DefinitionBase):
                 progrs = float(fin.read())
                 print("progrs="+str(progrs))
                 fin.close()
-                return int(progrs)
+                print(str(progrs) + " of " + str(tot_prog) + " is completed ...")
+                percent = int(progrs * 100 / tot_prog)
+                return percent
             except:
                 return -3
 
@@ -132,7 +135,7 @@ class HelloWorldService(DefinitionBase):
                     fin.close()
                 else:
                     progrs=0
-                if (progrs==100):
+                if (progrs==tot_prog):
                     return 101  # calculation is completed
                 else:
                     print("calculation finished with error, check")
@@ -144,13 +147,14 @@ class HelloWorldService(DefinitionBase):
             except:
                 return -4
 
-    @soap(Integer,String,Integer,_returns=Integer)
-    def killer(self, calc_id, token, pid):
+    @soap(Integer,String,Integer,Integer,_returns=Integer)
+    def oil_killer(self, calc_id, token, pid, tot_prog):
         '''
         Input parameters:
         calc_id - Integer
         token - string :username
         pid - PID
+        tot_prog - total progress to check the result
 
         '''
 
@@ -159,7 +163,7 @@ class HelloWorldService(DefinitionBase):
             if ret != 0 :
                 return -1
         except:
-            return -2
+            return -1
 
         try:
             os.chdir(os.environ['ICS_BALTIC_DIR_MODEL']+token)
@@ -169,13 +173,13 @@ class HelloWorldService(DefinitionBase):
                 fin.close()
             else:
                 progrs=0
-            if (progrs<100):   #??
+            if (progrs<tot_prog):   #??
 #                if os.path.exists('./'+str(calc_id)):
 #                    ret=subprocess.call('rm -r '+str(calc_id), shell=True)
 #                    os.remove('progress.txt')
                 print("deleting folder")
         except:
-            return -7  
+            return -2
         return 0
 
     @soap(Integer,String,String,Integer,Integer,_returns=String)

@@ -71,6 +71,8 @@ try:
         folder='OPirat'
     elif calc_type==2:
         folder='NormPole'
+    elif calc_type==4:
+        folder=''  # in this case we will call another programm
     else:
         folder='RotPole'
 except:
@@ -88,21 +90,42 @@ try:
     cursor.execute("SELECT pid FROM process_controller WHERE calc_id="+calc_id+";")
     dt=cursor.fetchone()
     ppid=dt[0]
+    if calc_type==4:
+        pid=ppid
     conn.close()
 except:
     sys.exit(204)
 
 try:
-    result=hello_client.service.progress(int(calc_id), token, int(ppid), folder)
-#    print(result)
-    # processing of the result in case of error
     connect_db()
+    if calc_type == 1 or calc_type == 2:
+        result=hello_client.service.progress(int(calc_id), token, int(ppid), folder)
+    elif calc_type==4:
+        # i need to convert result to progress !!
+        cursor.execute("SELECT risk_ndelta, risk_ndeltastep FROM oil_run WHERE calc_id=" + calc_id + ";")
+        dt = cursor.fetchone()
+        tot_prog=int(dt[0]*60/dt[1]+1)
+        result = hello_client.service.oil_progress(int(calc_id), token, int(pid), tot_prog)
+        # result is in percents !!
+    else:
+        result=0 # this is an impossible case
+    print(result)
+    # processing of the result in case of error
+
     if result<0:
-        errors={-2:"'System responce at ps -afj... is strange'",
-                -3:"'Error in calling of ps -afj'",
-                -4:"'Problem with reading 1.txt'",
-                -1:"'Error in reading file progress.txt'",
-                -6:"'Error of processing the case when the process in absent'"}
+        if calc_type == 1 or calc_type == 2:
+            errors={-1:"'System responce at ps -afj... is strange'",
+                    -3:"'Error in calling of ps -afj'",
+                    -4:"'Problem with reading 1.txt'",
+                    -1:"'Error in reading file progress.txt'",
+                    -6:"'Error of processing the case when the process in absent'"}
+        elif calc_type==4:
+            errors = {-1: "'Error in calling of ps -p'",
+                      -2: "'Error in reading from file 1.txt'",
+                      -3: "'Error in reading from file progress.txt'",
+                      -4: "'Error of processing the case when the process in absent'"}
+        else:
+            pass
         error=errors[result]
         cursor.execute("UPDATE process_controller SET error_message="+error+" WHERE calc_id="+calc_id+";")
         conn.commit()
