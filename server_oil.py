@@ -103,6 +103,7 @@ class HelloWorldService(DefinitionBase):
 
         # check existence of the process:
         print(pid)
+        print('ps -p ' + str(pid) + ' | grep ' + oil_exe +' > 1.txt')
         ret = subprocess.call('ps -p ' + str(pid) + ' | grep ' + oil_exe +' > 1.txt', shell=True)
         if ret>0:
             return -1
