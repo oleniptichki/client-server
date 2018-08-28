@@ -93,6 +93,10 @@ class Oil_run:
         self.risk_ndelta=self.t1+delta*3
         return (delta*60)
 
+def timestamp():
+    now=datetime.today()
+    timestring=str(now.year)+'-'+str(now.month)+'-'+str(now.day)+' '+str(now.hour)+':'+str(now.minute)+':'+str(now.second)
+    return timestring
 
 
 class Server_is_overloaded_exception(Exception):
