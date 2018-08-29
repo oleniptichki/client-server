@@ -116,7 +116,8 @@ try:
         cursor.execute("SELECT risk_ndelta, risk_ndeltastep FROM oil_run WHERE calc_id=" + calc_id + ";")
         dt = cursor.fetchone()
         tot_prog=int(dt[0]*60/dt[1]+1)
-        result = hello_client.service.oil_killer(int(calc_id), token, int(pid), folder, tot_prog)
+        print(tot_prog)
+        result = hello_client.service.oil_killer(int(calc_id), token, int(pid), tot_prog)
         # result is in percents !!
     else:
         result=0 # this is an impossible case
