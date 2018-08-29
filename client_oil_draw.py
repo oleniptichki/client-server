@@ -69,7 +69,7 @@ class Wrong_type_of_calculation_exception(Exception):
     pass
 
 
-# calc_id is the argument - got it
+# picture_id is the argument - got it
 picture_id=sys.argv[1]
 
 # connect to database
