@@ -171,6 +171,7 @@ class HelloWorldService(DefinitionBase):
         try:
             os.chdir(os.environ['ICS_BALTIC_DIR_OIL']+token)
             print(os.listdir('.'))
+            print(tot_prog)
             if os.path.exists('progress.txt'):
                 fin=open('progress.txt', 'rt')
                 progrs=float(fin.read())
@@ -180,6 +181,7 @@ class HelloWorldService(DefinitionBase):
             else:
                 progrs=0
             if (progrs<tot_prog):   #??
+                print("progrs=%i" % progrs)
                 if os.path.exists('./'+str(calc_id)):
                     ret=subprocess.call('rm -r '+str(calc_id), shell=True)
                 print("deleting folder")
