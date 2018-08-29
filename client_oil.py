@@ -88,6 +88,17 @@ class Oil_run:
         path='/home/ftpuser/model/'+self.token+'/'+self.calc_type+'/'+str(self.id_of_calc) +'/XYZ/'
         return path
 
+    def risk_nd_correct(self):
+        if self.risk_ndelta<0:
+            self.risk_ndelta=0
+            return 1
+        if self.risk_ndelta>t2:
+            self.risk_ndelta=t2
+            return 1
+        return 0
+
+
+
     def risk_ndeltastep(self):
         delta=(self.risk_ndelta-self.t1)//3
         self.risk_ndelta=self.t1+delta*3
@@ -188,6 +199,8 @@ if calc.spec_dam<=0:
 ret=subprocess.call(["python3","lon_lat_checker.py",str(calc.lat),str(calc.lon)])
 if ret>0:
     raise Wrong_parameters_exception(" oil spill must occur on the sea surface")
+if calc.risk_nd_correct()>0:
+    print("Warning: risk_nDelta was changed to %i" %calc.risk_ndelta)
 # ===== End checking of data =======
 risk_ndeltastep=calc.risk_ndeltastep()
 # update risk_nDelta if it was changed + write risk_ndeltastep

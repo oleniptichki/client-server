@@ -19,7 +19,7 @@ class oil_draw:
         "outPar": "outpar.txt"}
 
 
-    def __init__(self, calc_id, token, plot_type, app_time, time='0'):
+    def __init__(self, calc_id, token, plot_type, app_time, time=0):
         '''
         Parameters of graphical output:
         calc_id - Integer, identifier of calculation;

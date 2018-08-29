@@ -45,18 +45,34 @@ def connect_db():
 
 
 class Oil_draw:
-    def __init__(self, calc_id, token, plot_type):
+    def __init__(self, calc_id, token, plot_type, app_time, time=0):
         '''
         :param calc_id: identifier of calculation (FK from table "user_calculation")
         :param token: name of the user
         :param plot_type:  String, enum: 'mass', 'area', 'volume', 'emulsion_density', 'emulsion_viscosity', 'water_content'
              'coordinates', 'control', 'damage'
-        :app_time: time of oil spill appearance, from 0 to Risk_nDelta with step risk_nDeltaStep
-        :time: relative time of output, in steps
+        :app_time: time of oil spill appearance, from 0 to Risk_nDelta with step risk_nDeltaStep, in hours
+        :time: relative time of output, in steps, only for localization plot
         '''
         self.calc_id = calc_id
         self.token=token
         self.plot_type=plot_type
+        self.app_time=app_time
+        if plot_type=='coordinates':
+            self.time=time
+        else:
+            self.time=0
+
+    def app_time_checker(self, risk_ndelta, risk_ndeltastep):
+        if self.app_time<0:
+            self.app_time=0
+        if self.app_time>risk_ndelta:
+            self.app_time=risk_ndelta
+        n=int(round(self.app_time/risk_ndeltastep))
+        if n!=self.app_time:
+            self.app_time=n
+            return 1
+        return 0
 
 
 class Server_is_overloaded_exception(Exception):
@@ -83,10 +99,14 @@ if error_db_connection:
 cursor.execute("SELECT calc_id, plot_type, app_time, time FROM oil_draw WHERE picture_id=" + picture_id + ";")
 dt=cursor.fetchone()
 
-cursor.execute("SELECT token FROM user_calculation WHERE calc_id=" + str())
+cursor.execute("SELECT token FROM user_calculation WHERE calc_id=" + str(dt[0]) + ";")
+dv=cursor.fetchone()
+draw=Oil_draw(dt[0], dv[0], dt[1], dt[2], dt[3])
 
 cursor.execute("SELECT risk_ndelta, risk_ndeltastep FROM oil_run WHERE calc_id=" + calc_id + ";")
-dt = cursor.fetchone()
+dz = cursor.fetchone()
+if draw.app_time_checker(dz[0], dz[1])>0:
+    print("Warning: app_time was changed to %i hours" %draw.app_time)
 
 # connect to server
 # use this if needed:
