@@ -170,6 +170,7 @@ class HelloWorldService(DefinitionBase):
 
         try:
             os.chdir(os.environ['ICS_BALTIC_DIR_OIL']+token)
+            print(os.listdir('.'))
             if os.path.exists('progress.txt'):
                 fin=open('progress.txt', 'rt')
                 progrs=float(fin.read())
