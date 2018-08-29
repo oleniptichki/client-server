@@ -46,10 +46,14 @@ def connect_db():
 
 class Oil_draw:
     def __init__(self, calc_id, token, plot_type):
-        # Parameters of this type of calculation:
-        # calc_id - identifier of calculation (FK from table "user_calculation")
-        # token - name of the user
-        # plot_type
+        '''
+        :param calc_id: identifier of calculation (FK from table "user_calculation")
+        :param token: name of the user
+        :param plot_type:  String, enum: 'mass', 'area', 'volume', 'emulsion_density', 'emulsion_viscosity', 'water_content'
+             'coordinates', 'control', 'damage'
+        :app_time: time of oil spill appearance, from 0 to Risk_nDelta with step risk_nDeltaStep
+        :time: relative time of output, in steps
+        '''
         self.calc_id = calc_id
         self.token=token
         self.plot_type=plot_type
@@ -65,8 +69,6 @@ class Wrong_type_of_calculation_exception(Exception):
     pass
 
 
-#    def oil_plot(self, calc_id, token, plot_type, app_time, time):
-
 # calc_id is the argument - got it
 picture_id=sys.argv[1]
 
@@ -77,9 +79,14 @@ if error_db_connection:
     print("error in DB connection")
 #    sys.exit(1)
 
-calc_id='1'
-token='oil'
-calc=Oil_run(calc_id,token)
+# get calc_id and other parameters of the picture
+cursor.execute("SELECT calc_id, plot_type, app_time, time FROM oil_draw WHERE picture_id=" + picture_id + ";")
+dt=cursor.fetchone()
+
+cursor.execute("SELECT token FROM user_calculation WHERE calc_id=" + str())
+
+cursor.execute("SELECT risk_ndelta, risk_ndeltastep FROM oil_run WHERE calc_id=" + calc_id + ";")
+dt = cursor.fetchone()
 
 # connect to server
 # use this if needed:
