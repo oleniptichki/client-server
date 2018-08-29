@@ -166,11 +166,7 @@ class HelloWorldService(DefinitionBase):
             ret=subprocess.call('kill -9 '+str(pid), shell=True)
         except:
             return -1
-        # check existance of the process
-        oil_exe = 'OSM'
-        ret = subprocess.call('ps -p ' + str(pid) + ' | grep ' + oil_exe, shell=True)
-        if ret==0:
-            return -1
+
 
         try:
             os.chdir(os.environ['ICS_BALTIC_DIR_MODEL']+token)
