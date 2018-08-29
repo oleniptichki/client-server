@@ -169,17 +169,18 @@ class HelloWorldService(DefinitionBase):
 
 
         try:
-            os.chdir(os.environ['ICS_BALTIC_DIR_MODEL']+token)
+            os.chdir(os.environ['ICS_BALTIC_DIR_OIL']+token)
             if os.path.exists('progress.txt'):
                 fin=open('progress.txt', 'rt')
                 progrs=float(fin.read())
                 fin.close()
+                if progrs<tot_prog:
+                    os.remove('progress.txt')
             else:
                 progrs=0
             if (progrs<tot_prog):   #??
                 if os.path.exists('./'+str(calc_id)):
                     ret=subprocess.call('rm -r '+str(calc_id), shell=True)
-                    os.remove('progress.txt')
                 print("deleting folder")
         except:
             return -2
