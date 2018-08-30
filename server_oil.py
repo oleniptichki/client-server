@@ -237,6 +237,7 @@ class HelloWorldService(DefinitionBase):
             else:
                 line=fin.readline()
 
+
 # My functions. End
 
 if __name__=='__main__':
