@@ -44,8 +44,8 @@ def connect_db():
     return error_string   # if it is not NONE, i will return it to adeq.inm.ras.ru
 
 
-class Oil_draw:
-    def __init__(self, calc_id, token, plot_type):
+class oil_draw:
+    def __init__(self, calc_id, token, plot_type, app_time, time=0):
         '''
         :param calc_id: identifier of calculation (FK from table "user_calculation")
         :param token: name of the user
@@ -57,6 +57,15 @@ class Oil_draw:
         self.calc_id = calc_id
         self.token=token
         self.plot_type=plot_type
+        if self.plot_type=="coordinates":
+            self.time=time
+        else:
+            self.time=0
+        self.app_time=app_time
+
+    def app_time_checker(self,risk_ndelta,risk_ndeltastep):
+        # paste here
+        pass
 
 
 class Server_is_overloaded_exception(Exception):
@@ -83,10 +92,18 @@ if error_db_connection:
 cursor.execute("SELECT calc_id, plot_type, app_time, time FROM oil_draw WHERE picture_id=" + picture_id + ";")
 dt=cursor.fetchone()
 
-cursor.execute("SELECT token FROM user_calculation WHERE calc_id=" + str())
+cursor.execute("SELECT token FROM user_calculation WHERE calc_id=" + str(dt[0]))
+dv=cursor.fetchone()
+
+draw=oil_draw(dt[0],dv[0],dt[1],dt[2],dt[3])
 
 cursor.execute("SELECT risk_ndelta, risk_ndeltastep FROM oil_run WHERE calc_id=" + calc_id + ";")
 dt = cursor.fetchone()
+ret=draw.app_time_checker(dt[0],dt[1])
+#_??
+
+if draw.plot_type=="coordinates":
+    # check time using remote function "calculation times"
 
 # connect to server
 # use this if needed:

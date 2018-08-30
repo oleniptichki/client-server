@@ -216,8 +216,26 @@ class HelloWorldService(DefinitionBase):
             name_of_file=draw.full_name_png()
             return name_of_file
 
-
-        
+    @soap(Integer,String,_returns=Integer)
+    def calculation_times(self, time1, token):
+        '''
+        this function is aimed to read calculation_times.txt and return the time when oil spill has disappeared
+        :param token needed to identify path
+        :param time1: in model steps
+        :return: time2 in model steps
+        '''
+        os.chdir(os.environ['ICS_BALTIC_DIR_OIL']+token)
+        fin=open('calculation_times.txt')
+        line=fin.readline()
+        while line:
+            line.strip("\n")
+            mas=line.split(" ")
+            t1=int(mas[0])
+            if t1==time1:
+                t2=int(mas[1])
+                return t2
+            else:
+                line=fin.readline()
 
 # My functions. End
 
