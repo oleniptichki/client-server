@@ -127,7 +127,7 @@ except:
 draw=oil_draw(dt[0], dv[0], dt[1], dt[2], dt[3])
 
 try:
-    cursor.execute("SELECT risk_ndelta, risk_ndeltastep FROM oil_run WHERE calc_id=" + calc_id + ";")
+    cursor.execute("SELECT risk_ndelta, risk_ndeltastep FROM oil_run WHERE calc_id=" + str(draw.calc_id) + ";")
     dz = cursor.fetchone()
 except:
     print("error getting data from DB 3")
