@@ -66,14 +66,14 @@ class oil_draw:
     def app_time_checker(self, risk_ndelta, risk_ndeltastep):
         '''
         :param risk_ndelta: in hours
-        :param risk_ndeltastep: in steps
+        :param risk_ndeltastep: in minutes
         :return: 1 if app_time is changed
         '''
         if self.app_time<0:
             self.app_time=0
         if self.app_time>risk_ndelta:
             self.app_time=risk_ndelta
-        n=int(round((self.app_time*12)/risk_ndeltastep))  # transform app_time from hours to steps
+        n=int(round((self.app_time*60)/risk_ndeltastep))  # transform app_time from hours to minutes
         if n!=self.app_time:
             self.app_time=n
             return 1
@@ -169,7 +169,9 @@ except Exception as other:
 
 #==========================================================
 # It may be not important, but useful in other applications
-cursor.execute("SELECT calc_type FROM user_calculation WHERE calc_id="+str(draw.calc_id)+";")
+cursor.execute("SELECT id_of_calc FROM oil_run WHERE calc_id="+str(draw.calc_id)+";")
+dx=cursor.fetchone()
+cursor.execute("SELECT calc_type FROM user_calculation WHERE calc_id="+str(dx[0])+";")
 ds=cursor.fetchone()
 if ds[0]==2:  #NormPole
     cursor.execute("SELECT start_time_date FROM normal_pole WHERE calc_id="+str(draw.calc_id)+";")
