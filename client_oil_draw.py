@@ -74,8 +74,9 @@ class oil_draw:
         if self.app_time>risk_ndelta:
             self.app_time=risk_ndelta
         n=int(round((self.app_time*60)/risk_ndeltastep))  # transform app_time from hours to minutes
-        if n!=self.app_time:
-            self.app_time=n
+        time=risk_ndelta+n*(risk_ndeltastep//60)
+        if time!=self.app_time:
+            self.app_time=time
             return 1
         return 0
 
