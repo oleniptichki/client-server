@@ -64,11 +64,16 @@ class oil_draw:
             self.time=0
 
     def app_time_checker(self, risk_ndelta, risk_ndeltastep):
+        '''
+        :param risk_ndelta: in hours
+        :param risk_ndeltastep: in steps
+        :return: 1 if app_time is changed
+        '''
         if self.app_time<0:
             self.app_time=0
         if self.app_time>risk_ndelta:
             self.app_time=risk_ndelta
-        n=int(round(self.app_time/risk_ndeltastep))
+        n=int(round((self.app_time*12)/risk_ndeltastep))  # transform app_time from hours to steps
         if n!=self.app_time:
             self.app_time=n
             return 1
