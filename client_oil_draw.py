@@ -75,8 +75,8 @@ class oil_draw:
         return 0
 
 
-class Server_is_overloaded_exception(Exception):
-    pass
+#class Server_is_overloaded_exception(Exception):
+#    pass
 
 class Wrong_parameters_exception(Exception):
     pass
@@ -84,6 +84,21 @@ class Wrong_parameters_exception(Exception):
 class Wrong_type_of_calculation_exception(Exception):
     pass
 
+class Missing_env_data_exception(Exception):
+    pass
+
+def second_to_zero(datetime_object):
+    res=datetime(datetime_object.year, datetime_object.month, datetime_object.day, datetime_object.hour, datetime_object.minute, 0, 0)
+    return res
+
+def hours_to_zero(datetime_object):
+    res=datetime(datetime_object.year, datetime_object.month, datetime_object.day, 0, 0, 0, 0)
+    return res
+
+def time_machine(datetime_object):
+    delta=timedelta(days=3)  # 3 days back in the past
+    res=datetime_object-delta
+    return res
 
 # picture_id is the argument - got it
 picture_id=sys.argv[1]
@@ -93,7 +108,7 @@ error_db_connection=connect_db()
 # if no connection to DB
 if error_db_connection:
     print("error in DB connection")
-#    sys.exit(1)
+    sys.exit(1)
 
 try:
     # get calc_id and other parameters of the picture
@@ -125,43 +140,60 @@ except:
 #    sys.exit(6)
 
 try:
-    result=hello_client.service.calculation_times(draw.app_time, draw.token)
-    print(result)
-
+    # convert app_time in hours to app_time in steps
+    time2=hello_client.service.calculation_times((draw.app_time*12), draw.token)
+    print(time2) # in model steps
+    # convert time2 back to hours
+    time2=int(time2/12)
 except WebFault:
     print(traceback.format_exc())
 except Exception as other:
     str=traceback.format_exc(limit=1)
     print(str)
 
-#step_rec=60  # 1 hour
-#duration=168 # 1 week
-#t1=0
-#t2=168
-#risk_nDelta=160 # 160 hours
-#risk_nDeltaStep=2400 # 40 hours
+#==========================================================
+# It may be not important, but useful in other applications
+cursor.execute("SELECT calc_type FROM user_calculation WHERE calc_id="+str(draw.calc_id)+";")
+ds=cursor.fetchone()
+if ds[0]==2:  #NormPole
+    cursor.execute("SELECT start_time_date FROM normal_pole WHERE calc_id="+str(draw.calc_id)+";")
+    dt=cursor.fetchone()
+    if not dt:
+        raise Missing_env_data_exception()
+    start_time_date=dt[0]
+elif ds[0]==1:  #OPirat
+    cursor.execute("SELECT launch_time_date FROM user_calculation WHERE calc_id="+str(draw.calc_id)+";")
+    dt=cursor.fetchone()
+    if not dt:
+        raise Missing_env_data_exception()
+    start_time_date=time_machine(hours_to_zero(dt[0]))
+else:
+    raise Wrong_type_of_calculation_exception(" Check environment data ID")
+app_time_date=start_time_date+timedelta(hours=draw.app_time)
+disapp_time_date=start_time_date+timedelta(hours=time2)
+print("oil spill appeared " + app_time_date.isoformat() + " and disappeared " + disapp_time_date.isoformat())
+#===========================================================
 
+# check time in case plot_type="coordinates"
+if draw.plot_type == 'coordinates':
+    # don't forget that draw.time is in model steps
+    if (draw.time<(draw.app_time*12)) or (draw.time>(time2*12)):
+        raise Wrong_parameters_exception()
 
+#++++++++++++++ MAIN +++++++++++++++++++++++++++++++++++++++
 try:
-    result = hello_client.service.oil_exstrt(lat, lon, mass, density, viscosity, path_to_env, step_rec, duration, t1, t2,
-                   risk_nDelta, risk_nDeltaStep, spec_dam, alpha, tau, token, calc_id)
-
-
-#    @soap(Double, Double, Double, Double, Double, String, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-#          Double, Double, String, Integer, _returns=Integer)
-#    def oil_exstrt(self, lat, lon, mass, density, viscosity, path_to_env, step_rec, duration, t1, t2,
-#                   risk_nDelta, risk_nDeltaStep, spec_dam, alpha, tau, token, calc_id):
+    result = hello_client.service.oil_plot(draw.calc_id, draw.token, draw.plot_type, draw.app_time, draw.time)
     print(result)
 
 except WebFault:
     print(traceback.format_exc())
-    sys.exit(3)
+#    sys.exit(3)
 
 except Exception as other:
     str=traceback.format_exc(limit=1)
     print(str)
-    sys.exit(4)
+#    sys.exit(4)
 
 
-sys.exit(0)
+#sys.exit(0)
 

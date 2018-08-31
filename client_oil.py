@@ -188,12 +188,21 @@ dt=cursor.fetchone()
 if dt[0]!="FINISHED":
     raise Wrong_parameters_exception(" env_data calc has not been completed")
 # check duration of environment calculation
-if calc.t1<0 or calc.t2<calc.t1:
-    raise Wrong_parameters_exception(" rude error in t1, t2")
-if calc.t2>duration:
-    raise Wrong_parameters_exception(" t2 exceed total number of hours in environment calculation")
-if (calc.t2-calc.t1)>336:
-    raise Wrong_parameters_exception(" too broad time period, decrease t2")
+set_t1_t2_flag=True    # set duration - optional - specify it!
+if set_t1_t2_flag:
+    calc.t1=0
+    if duration>336:
+        calc.t2=336
+    else:
+        calc.t2=duration
+else:
+    if calc.t1<0 or calc.t2<calc.t1:
+        raise Wrong_parameters_exception(" rude error in t1, t2")
+    if calc.t2>duration:
+        raise Wrong_parameters_exception(" t2 exceed total number of hours in environment calculation")
+    if (calc.t2-calc.t1)>336:
+        raise Wrong_parameters_exception(" too broad time period, decrease t2")
+
 if calc.spec_dam<=0:
     raise Wrong_parameters_exception(" oil spills always cause damage, increase special damage")
 ret=subprocess.call(["python3","lon_lat_checker.py",str(calc.lat),str(calc.lon)])
@@ -202,6 +211,9 @@ if ret>0:
 if calc.risk_nd_correct()>0:
     print("Warning: risk_nDelta was changed to %i" %calc.risk_ndelta)
 # ===== End checking of data =======
+
+
+
 risk_ndeltastep=calc.risk_ndeltastep()
 # update risk_nDelta if it was changed + write risk_ndeltastep
 cursor.execute("UPDATE oil_run SET risk_ndelta=" + str(calc.risk_ndelta) + ", risk_ndeltastep=" + str(risk_ndeltastep) + ";")

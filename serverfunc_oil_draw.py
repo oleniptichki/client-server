@@ -26,7 +26,8 @@ class oil_draw:
         token - String
         plot_type - String, enum: 'mass', 'area', 'volume', 'emulsion_density', 'emulsion_viscosity', 'water_content'
             'coordinates', 'control', 'damage'
-        app_time - time of oil spill appearance, from 0 to Risk_nDelta with step risk_nDeltaStep
+        app_time - time of oil spill appearance, from 0 to Risk_nDelta with step risk_nDeltaStep (in model steps)
+            remark: app_time must be in accordance with the first column in 'calculation_times.txt'
         time - relative time of output, in steps
 
         '''
