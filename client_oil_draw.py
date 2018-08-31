@@ -114,15 +114,24 @@ try:
     # get calc_id and other parameters of the picture
     cursor.execute("SELECT calc_id, plot_type, app_time, time FROM oil_draw WHERE picture_id=" + picture_id + ";")
     dt=cursor.fetchone()
+except:
+    print("error getting data from DB 1")
+    sys.exit(1)
 
+try:
     cursor.execute("SELECT token FROM user_calculation WHERE calc_id=" + str(dt[0]) + ";")
     dv=cursor.fetchone()
-    draw=oil_draw(dt[0], dv[0], dt[1], dt[2], dt[3])
+except:
+    print("error getting data from DB 2")
+    sys.exit(1)
+draw=oil_draw(dt[0], dv[0], dt[1], dt[2], dt[3])
 
+try:
     cursor.execute("SELECT risk_ndelta, risk_ndeltastep FROM oil_run WHERE calc_id=" + calc_id + ";")
     dz = cursor.fetchone()
 except:
-    print("error getting data from DB")
+    print("error getting data from DB 3")
+    sys.exit(1)
 
 
 if draw.app_time_checker(dz[0], dz[1])>0:
@@ -147,9 +156,11 @@ try:
     time2=int(time2/12)
 except WebFault:
     print(traceback.format_exc())
+    sys.exit(1)
 except Exception as other:
     str=traceback.format_exc(limit=1)
     print(str)
+    sys.exit(1)
 
 #==========================================================
 # It may be not important, but useful in other applications
@@ -187,12 +198,12 @@ try:
 
 except WebFault:
     print(traceback.format_exc())
-#    sys.exit(3)
+    sys.exit(3)
 
 except Exception as other:
     str=traceback.format_exc(limit=1)
     print(str)
-#    sys.exit(4)
+    sys.exit(4)
 
 
 #sys.exit(0)
