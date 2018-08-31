@@ -5,9 +5,9 @@ from suds import WebFault
 import test
 import psycopg2
 import sys
-#from datetime import datetime, date, time
-#from datetime import timedelta
-#import traceback
+from datetime import datetime, date, time
+from datetime import timedelta
+import traceback
 
 # List of environment variables, client side
 # ICS_BALTIC_DB_HOST = 'localhost'
@@ -44,7 +44,7 @@ def connect_db():
     return error_string   # if it is not NONE, i will return it to adeq.inm.ras.ru
 
 
-class Oil_draw:
+class oil_draw:
     def __init__(self, calc_id, token, plot_type, app_time, time=0):
         '''
         :param calc_id: identifier of calculation (FK from table "user_calculation")
@@ -95,16 +95,21 @@ if error_db_connection:
     print("error in DB connection")
 #    sys.exit(1)
 
-# get calc_id and other parameters of the picture
-cursor.execute("SELECT calc_id, plot_type, app_time, time FROM oil_draw WHERE picture_id=" + picture_id + ";")
-dt=cursor.fetchone()
+try:
+    # get calc_id and other parameters of the picture
+    cursor.execute("SELECT calc_id, plot_type, app_time, time FROM oil_draw WHERE picture_id=" + picture_id + ";")
+    dt=cursor.fetchone()
 
-cursor.execute("SELECT token FROM user_calculation WHERE calc_id=" + str(dt[0]) + ";")
-dv=cursor.fetchone()
-draw=Oil_draw(dt[0], dv[0], dt[1], dt[2], dt[3])
+    cursor.execute("SELECT token FROM user_calculation WHERE calc_id=" + str(dt[0]) + ";")
+    dv=cursor.fetchone()
+    draw=oil_draw(dt[0], dv[0], dt[1], dt[2], dt[3])
 
-cursor.execute("SELECT risk_ndelta, risk_ndeltastep FROM oil_run WHERE calc_id=" + calc_id + ";")
-dz = cursor.fetchone()
+    cursor.execute("SELECT risk_ndelta, risk_ndeltastep FROM oil_run WHERE calc_id=" + calc_id + ";")
+    dz = cursor.fetchone()
+except:
+    print("error getting data from DB")
+
+
 if draw.app_time_checker(dz[0], dz[1])>0:
     print("Warning: app_time was changed to %i hours" %draw.app_time)
 
@@ -119,9 +124,16 @@ except:
     raise Server_is_overloaded_exception()
 #    sys.exit(6)
 
-#lat=59.985494
-#lon=29.582476
-#path_to_env='/home/ftpuser/model/oil/NormPole/11/XYZ/'
+try:
+    result=hello_client.service.calculation_times(draw.app_time, draw.token)
+    print(result)
+
+except WebFault:
+    print(traceback.format_exc())
+except Exception as other:
+    str=traceback.format_exc(limit=1)
+    print(str)
+
 #step_rec=60  # 1 hour
 #duration=168 # 1 week
 #t1=0
