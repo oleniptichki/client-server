@@ -175,13 +175,13 @@ dx=cursor.fetchone()
 cursor.execute("SELECT calc_type FROM user_calculation WHERE calc_id="+str(dx[0])+";")
 ds=cursor.fetchone()
 if ds[0]==2:  #NormPole
-    cursor.execute("SELECT start_time_date FROM normal_pole WHERE calc_id="+str(draw.calc_id)+";")
+    cursor.execute("SELECT start_time_date FROM normal_pole WHERE calc_id="+str(dx[0])+";")
     dt=cursor.fetchone()
     if not dt:
         raise Missing_env_data_exception()
     start_time_date=dt[0]
 elif ds[0]==1:  #OPirat
-    cursor.execute("SELECT launch_time_date FROM user_calculation WHERE calc_id="+str(draw.calc_id)+";")
+    cursor.execute("SELECT launch_time_date FROM user_calculation WHERE calc_id="+str(dx[0])+";")
     dt=cursor.fetchone()
     if not dt:
         raise Missing_env_data_exception()
