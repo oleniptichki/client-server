@@ -209,7 +209,6 @@ if draw.plot_type == 'coordinates':
 
 #++++++++++++++ MAIN +++++++++++++++++++++++++++++++++++++++
 try:
-    print(draw.lon, draw.lat)
     result = hello_client.service.oil_plot(draw.calc_id, draw.token, draw.plot_type, draw.app_time, draw.time, draw.lon, draw.lat)
     print(result)
 
