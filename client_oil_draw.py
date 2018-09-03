@@ -216,6 +216,7 @@ except Exception as other:
 if result:
     path_name=result.split(' ')
     try:
+        print("here")
         ftp=FTP(os.environ["ICS_BALTIC_FTP_IPADDR"])
         print(os.environ["ICS_BALTIC_FTP_IPADDR"])
         ftp.login(os.environ["ICS_BALTIC_FTP_LOGIN"],os.environ["ICS_BALTIC_FTP_PASSWD"])
