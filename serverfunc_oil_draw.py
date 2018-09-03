@@ -85,6 +85,7 @@ class oil_draw:
             return 2
         if self.evol_ind:
             try:
+                print(os.listdir('.'))
                 fout.open('evolution_pars.txt', "wt")
                 # check whether source file exist
                 if not os.path.exists("."+oil_draw.filenames["outFolder"]+str(self.app_time)+"-"+self.plot_type+".txt"):
@@ -96,6 +97,7 @@ class oil_draw:
                            "-"+self.plot_type+".png\n")
                 fout.write(self.imageXlab + "\n")
                 fout.write(self.imageYlab + "\n")
+                fout.close()
             except:
                 oil_draw.err=oil_draw.err+"Error in writing evolution_pars.txt \n"
                 return 3
@@ -114,6 +116,7 @@ class oil_draw:
                 fout.write(str(self.time) + "\n")
                 fout.write(self.imageXlab + "\n")
                 fout.write(self.imageYlab + "\n")
+                fout.close()
             except:
                 oil_draw.err = oil_draw.err + "Error in writing evolution_pars.txt \n"
                 return 3
@@ -128,6 +131,7 @@ class oil_draw:
                 fout.write(oil_draw.path + self.token + oil_draw.filenames["outFolder"] + "damage.png\n")
                 fout.write(self.imageXlab + "\n")
                 fout.write(self.imageYlab + "\n")
+                fout.close()
             except:
                 oil_draw.err = oil_draw.err + "Error in writing evolution_pars.txt \n"
                 return 3
