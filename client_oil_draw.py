@@ -148,6 +148,8 @@ if draw.app_time_checker(dz[0], dz[1])>0:
 if draw.plot_type=='coordinates':
     draw.lon=dz[2]
     draw.lat=dz[3]
+    print(draw.lon, draw.lat)
+print(draw.lon, draw.lat)
 
 # connect to server
 # use this if needed:
