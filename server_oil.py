@@ -210,7 +210,7 @@ class HelloWorldService(DefinitionBase):
             if ret > 0:
                 draw.errlogwriter()
                 return None
-        ret = draw.file_exec()
+        ret = draw.print_exec()
         if ret > 0:
             return None
         else:
