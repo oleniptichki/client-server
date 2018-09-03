@@ -263,7 +263,7 @@ class oil_draw:
         return full_name
 
     def errlogwriter(self):
-        os.chdir(self.path_to_res)
+        os.chdir(oil_draw.path+self.token)
         fout=open('error.log', 'wt')
         fout.write(oil_draw.err)
         fout.close()
