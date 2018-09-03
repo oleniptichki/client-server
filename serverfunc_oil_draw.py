@@ -242,12 +242,12 @@ class oil_draw:
 
     def full_name_png(self):  #some modifications should be made there
         if self.evol_ind:
-            full_name=oil_draw.path+self.token+oil_draw.filenames["outFolder"]+" "+str(self.app_time)+"-"+self.plot_type+".png"
+            full_name=oil_draw.path+self.token+"/"+str(self.calc_id)+oil_draw.filenames["outFolder"]+" "+str(self.app_time)+"-"+self.plot_type+".png"
         elif self.plot_type=='coordinates':
-            full_name=oil_draw.path + self.token + oil_draw.filenames["outFolder"] +" "+ str(self.app_time)+\
+            full_name=oil_draw.path + self.token+"/"+str(self.calc_id) + oil_draw.filenames["outFolder"] +" "+ str(self.app_time)+\
                       "-coordinates" + str(self.time) + ".png"
         elif self.plot_type=='damage':
-            full_name=oil_draw.path + self.token + oil_draw.filenames["outFolder"] +" "+ "damage.png"
+            full_name=oil_draw.path + self.token+"/"+str(self.calc_id) + oil_draw.filenames["outFolder"] +" "+ "damage.png"
         else:
             full_name=''
 
@@ -255,12 +255,12 @@ class oil_draw:
 
     def full_name_txt(self):  #some modifications should be made there
         if self.evol_ind:
-            full_name=oil_draw.path+self.token+oil_draw.filenames["outFolder"]+str(self.app_time)+"-"+self.plot_type+".txt"
+            full_name=oil_draw.path+self.token+"/"+str(self.calc_id)+oil_draw.filenames["outFolder"]+str(self.app_time)+"-"+self.plot_type+".txt"
         elif self.plot_type=='coordinates':
-            full_name=oil_draw.path + self.token + oil_draw.filenames["outFolder"] + str(self.app_time)+\
+            full_name=oil_draw.path + self.token +"/"+str(self.calc_id)+ oil_draw.filenames["outFolder"] + str(self.app_time)+\
                       "-coordinates.txt"
         elif self.plot_type=='damage':
-            full_name=oil_draw.path + self.token + oil_draw.filenames["outFolder"] + "damage.txt"
+            full_name=oil_draw.path + self.token +"/"+str(self.calc_id)+ oil_draw.filenames["outFolder"] + "damage.txt"
         else:
             full_name=''
 
