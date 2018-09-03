@@ -197,6 +197,7 @@ print("oil spill appeared " + app_time_date.isoformat() + " and disappeared " + 
 # check time in case plot_type="coordinates"
 if draw.plot_type == 'coordinates':
     # don't forget that draw.time is in model steps
+    print(draw.time, (draw.app_time*12), (time2*12))
     if (draw.time<(draw.app_time*12)) or (draw.time>(time2*12)):
         raise Wrong_parameters_exception()
 
