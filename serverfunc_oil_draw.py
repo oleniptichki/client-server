@@ -106,6 +106,8 @@ class oil_draw:
                 oil_draw.err=oil_draw.err+"Error in writing evolution_pars.txt \n"
                 return 3
         elif self.plot_type=='coordinates':
+            print(str(self.lon))
+            print("%.4f" % self.lon)
             try:
                 fout=open('evolution_pars.txt', "wt")
                 # check whether source file exist
@@ -116,7 +118,7 @@ class oil_draw:
                            + "-coordinates.txt\n")
                 fout.write(oil_draw.path + self.token+'/'+str(self.calc_id) + oil_draw.filenames["outFolder"] + str(self.app_time)
                            + "-coordinates-" + str(self.time) + ".png\n")
-                print('here')
+                print(str(self.lon))
                 print("%.4f" %self.lon)
                 fout.write("%.4f \n" %(self.lon))
                 fout.write("%.4f \n" %(self.lat))
