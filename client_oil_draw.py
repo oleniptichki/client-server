@@ -46,7 +46,7 @@ def connect_db():
 
 
 class oil_draw:
-    def __init__(self, calc_id, token, plot_type, app_time, time=0):
+    def __init__(self, calc_id, token, plot_type, app_time, time):
         '''
         :param calc_id: identifier of calculation (FK from table "user_calculation")
         :param token: name of the user
