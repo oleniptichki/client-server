@@ -20,7 +20,7 @@ class oil_draw:
         "outPar": "outpar.txt"}
 
 
-    def __init__(self, calc_id, token, plot_type, app_time, time=0):
+    def __init__(self, calc_id, token, plot_type, app_time, time=0, lon=0, lat=0):
         '''
         Parameters of graphical output:
         calc_id - Integer, identifier of calculation;
@@ -30,7 +30,8 @@ class oil_draw:
         app_time - time of oil spill appearance, from 0 to Risk_nDelta with step risk_nDeltaStep (in model steps)
             remark: app_time must be in accordance with the first column in 'calculation_times.txt'
         time - relative time of output, in steps
-
+        lon - longitude of spill appearance (in localization plot)
+        lat - latitude of spill appearance (in localization plot)
         '''
         self.calc_id=calc_id
         self.token=token
@@ -73,6 +74,8 @@ class oil_draw:
             pass
         self.app_time=app_time*12    # convert hours to model steps
         self.time=time
+        self.lat=lat
+        self.lon=lon
 
 
     def write_evolution_pars(self):
@@ -112,11 +115,11 @@ class oil_draw:
                 fout.write(oil_draw.path + self.token+'/'+str(self.calc_id) + oil_draw.filenames["outFolder"] + str(self.app_time)
                            + "-coordinates.txt\n")
                 fout.write(oil_draw.path + self.token+'/'+str(self.calc_id) + oil_draw.filenames["outFolder"] + str(self.app_time)
-                           + "-coordinates" + str(self.time) + ".png\n")
+                           + "-coordinates-" + str(self.time) + ".png\n")
+                fout.write("%.4f" %(self.lon))
+                fout.write("%.4f" %(self.lat))
                 fout.write(str(self.app_time) + "\n")
                 fout.write(str(self.time) + "\n")
-                fout.write(self.imageXlab + "\n")
-                fout.write(self.imageYlab + "\n")
                 fout.close()
             except:
                 oil_draw.err = oil_draw.err + "Error in writing evolution_pars.txt \n"

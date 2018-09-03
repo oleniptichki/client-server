@@ -187,8 +187,8 @@ class HelloWorldService(DefinitionBase):
             return -2
         return 0
 
-    @soap(Integer, String, String, Integer, Integer, _returns=String)
-    def oil_plot(self, calc_id, token, plot_type, app_time, time):
+    @soap(Integer, String, String, Integer, Integer, Double, Double, _returns=String)
+    def oil_plot(self, calc_id, token, plot_type, app_time, time, lon, lat):
         '''
         Parameters of graphical output:
         calc_id - Integer, identifier of calculation;
@@ -197,9 +197,11 @@ class HelloWorldService(DefinitionBase):
              'coordinates', 'control', 'damage'
         app_time - time of oil spill appearance, from 0 to Risk_nDelta with step risk_nDeltaStep
         time - relative time of output, in steps
+        lon - longitude of spill appearance (in localization plot)
+        lat - latitude of spill appearance (in localization plot)
         :return: STRING: PATH+' '+file_name
         '''
-        draw = oil_draw(calc_id, token, plot_type, app_time, time)
+        draw = oil_draw(calc_id, token, plot_type, app_time, time, lon, lat)
         ret = draw.write_evolution_pars()
         if ret > 0:
             draw.errlogwriter()

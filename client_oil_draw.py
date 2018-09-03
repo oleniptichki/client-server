@@ -63,6 +63,8 @@ class oil_draw:
             self.time=time
         else:
             self.time=0
+        self.lat=0
+        self.lon=0
 
     def app_time_checker(self, risk_ndelta, risk_ndeltastep):
         '''
@@ -134,7 +136,7 @@ except:
 draw=oil_draw(dt[0], dv[0], dt[1], dt[2], dt[3])
 
 try:
-    cursor.execute("SELECT risk_ndelta, risk_ndeltastep FROM oil_run WHERE calc_id=" + str(draw.calc_id) + ";")
+    cursor.execute("SELECT risk_ndelta, risk_ndeltastep, lon, lat FROM oil_run WHERE calc_id=" + str(draw.calc_id) + ";")
     dz = cursor.fetchone()
 except:
     print("error getting data from DB 3")
@@ -143,6 +145,9 @@ except:
 
 if draw.app_time_checker(dz[0], dz[1])>0:
     print("Warning: app_time was changed to %i hours" %draw.app_time)
+if draw.plot_type=='coordinates':
+    draw.lon=dz[2]
+    draw.lat=dz[3]
 
 # connect to server
 # use this if needed:
@@ -203,7 +208,7 @@ if draw.plot_type == 'coordinates':
 
 #++++++++++++++ MAIN +++++++++++++++++++++++++++++++++++++++
 try:
-    result = hello_client.service.oil_plot(draw.calc_id, draw.token, draw.plot_type, draw.app_time, draw.time)
+    result = hello_client.service.oil_plot(draw.calc_id, draw.token, draw.plot_type, draw.app_time, draw.time, draw.lon, draw.lat)
     print(result)
 
 except WebFault:
