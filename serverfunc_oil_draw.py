@@ -70,7 +70,7 @@ class oil_draw:
             self.imageYlab="Damage, billion rubles"
         else:
             pass
-        self.app_time=app_time
+        self.app_time=app_time*12    # convert hours to model steps
         self.time=time
 
 
@@ -87,13 +87,13 @@ class oil_draw:
             try:
                 fout=open('evolution_pars.txt', 'wt')
                 # check whether source file exist
-                if not os.path.exists("./"+str(self.calc_id)+'/'+oil_draw.filenames["outFolder"]+str(self.app_time)+"-"+self.plot_type+".txt"):
-                    print("./"+str(self.calc_id)+'/'+oil_draw.filenames["outFolder"]+str(self.app_time)+"-"+self.plot_type+".txt")
+                if not os.path.exists("./"+str(self.calc_id)+oil_draw.filenames["outFolder"]+str(self.app_time)+"-"+self.plot_type+".txt"):
+                    print("./"+str(self.calc_id)+oil_draw.filenames["outFolder"]+str(self.app_time)+"-"+self.plot_type+".txt")
                     oil_draw.err = oil_draw.err + 'Could not find source file \n'
                     return 4
-                fout.write(oil_draw.path+str(self.calc_id)+'/'+self.token+oil_draw.filenames["outFolder"]+str(self.app_time)+
+                fout.write(oil_draw.path+self.token+'/'+str(self.calc_id)+oil_draw.filenames["outFolder"]+str(self.app_time)+
                            "-"+self.plot_type+".txt\n")
-                fout.write(oil_draw.path+str(self.calc_id)+'/'+self.token+oil_draw.filenames["outFolder"]+str(self.app_time)+
+                fout.write(oil_draw.path+self.token+'/'+str(self.calc_id)+oil_draw.filenames["outFolder"]+str(self.app_time)+
                            "-"+self.plot_type+".png\n")
                 fout.write(self.imageXlab + "\n")
                 fout.write(self.imageYlab + "\n")
@@ -108,9 +108,9 @@ class oil_draw:
                 if not os.path.exists("./"+str(self.calc_id)+'/'+oil_draw.filenames["outFolder"]+str(self.app_time)+"-coordinates.txt"):
                     oil_draw.err = oil_draw.err + 'Could not find source file \n'
                     return 4
-                fout.write(oil_draw.path +str(self.calc_id)+'/'+ self.token + oil_draw.filenames["outFolder"] + str(self.app_time)
+                fout.write(oil_draw.path + self.token+'/'+str(self.calc_id) + oil_draw.filenames["outFolder"] + str(self.app_time)
                            + "-coordinates.txt\n")
-                fout.write(oil_draw.path +str(self.calc_id)+'/'+ self.token + oil_draw.filenames["outFolder"] + str(self.app_time)
+                fout.write(oil_draw.path + self.token+'/'+str(self.calc_id) + oil_draw.filenames["outFolder"] + str(self.app_time)
                            + "-coordinates" + str(self.time) + ".png\n")
                 fout.write(str(self.app_time) + "\n")
                 fout.write(str(self.time) + "\n")
@@ -127,8 +127,8 @@ class oil_draw:
                 if not os.path.exists("."+oil_draw.filenames["outFolder"]+"damage.txt"):
                     oil_draw.err = oil_draw.err + 'Could not find source file \n'
                     return 4
-                fout.write(oil_draw.path +str(self.calc_id)+'/'+ self.token + oil_draw.filenames["outFolder"] + "damage.txt\n")
-                fout.write(oil_draw.path +str(self.calc_id)+'/'+ self.token + oil_draw.filenames["outFolder"] + "damage.png\n")
+                fout.write(oil_draw.path + self.token+'/'+str(self.calc_id) + oil_draw.filenames["outFolder"] + "damage.txt\n")
+                fout.write(oil_draw.path + self.token+'/'+str(self.calc_id) + oil_draw.filenames["outFolder"] + "damage.png\n")
                 fout.write(self.imageXlab + "\n")
                 fout.write(self.imageYlab + "\n")
                 fout.close()
