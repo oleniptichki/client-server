@@ -87,6 +87,7 @@ class oil_draw:
             try:
                 print(os.listdir('.'))
                 fout.open('evolution_pars.txt', "wt")
+                print(os.listdir('.'))
                 # check whether source file exist
                 if not os.path.exists("."+oil_draw.filenames["outFolder"]+str(self.app_time)+"-"+self.plot_type+".txt"):
                     oil_draw.err = oil_draw.err + 'Could not find source file \n'
