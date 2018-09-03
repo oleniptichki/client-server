@@ -7,6 +7,7 @@ import psycopg2
 import sys
 from datetime import datetime, date, time
 from datetime import timedelta
+from ftplib import FTP
 import traceback
 
 # List of environment variables, client side
