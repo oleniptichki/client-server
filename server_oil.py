@@ -202,7 +202,6 @@ class HelloWorldService(DefinitionBase):
         :return: STRING: PATH+' '+file_name
         '''
         draw = oil_draw(calc_id, token, plot_type, app_time, time, lon, lat)
-        print(draw.lon, draw.lat)
         ret = draw.write_evolution_pars()
         if ret > 0:
             draw.errlogwriter()
