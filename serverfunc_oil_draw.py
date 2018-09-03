@@ -116,7 +116,7 @@ class oil_draw:
                            + "-coordinates.txt\n")
                 fout.write(oil_draw.path + self.token+'/'+str(self.calc_id) + oil_draw.filenames["outFolder"] + str(self.app_time)
                            + "-coordinates-" + str(self.time) + ".png\n")
-                print("%.4f \n" %(self.lon))
+                print("%.4f \n" %self.lon)
                 fout.write("%.4f \n" %(self.lon))
                 fout.write("%.4f \n" %(self.lat))
                 fout.write(str(self.app_time) + "\n")
