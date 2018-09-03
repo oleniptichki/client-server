@@ -86,7 +86,7 @@ class oil_draw:
         if self.evol_ind:
             try:
                 print(os.listdir('.'))
-                fout.open('evolution_pars.txt', "wt")
+                fout=open('evolution_pars.txt', 'wt')
                 print(os.listdir('.'))
                 # check whether source file exist
                 if not os.path.exists("."+oil_draw.filenames["outFolder"]+str(self.app_time)+"-"+self.plot_type+".txt"):
@@ -104,7 +104,7 @@ class oil_draw:
                 return 3
         elif self.plot_type=='coordinates':
             try:
-                fout.open('evolution_pars.txt', "wt")
+                fout=open('evolution_pars.txt', "wt")
                 # check whether source file exist
                 if not os.path.exists("."+oil_draw.filenames["outFolder"]+str(self.app_time)+"-coordinates.txt"):
                     oil_draw.err = oil_draw.err + 'Could not find source file \n'
@@ -123,7 +123,7 @@ class oil_draw:
                 return 3
         elif self.plot_type=='damage':
             try:
-                fout.open('evolution_pars.txt', "wt")
+                fout=open('evolution_pars.txt', "wt")
                 # check whether source file exist
                 if not os.path.exists("."+oil_draw.filenames["outFolder"]+"damage.txt"):
                     oil_draw.err = oil_draw.err + 'Could not find source file \n'
