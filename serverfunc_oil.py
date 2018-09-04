@@ -133,7 +133,7 @@ class oil_run():
         output_file.write("0.0625      ! dphi -- step of written environmental data on phi \n")
         output_file.write("0.03125     ! dtheta -- step of written environmental data on theta \n")
         output_file.write("300.        ! dt -- step on time [s] \n")
-        output_file.write("-0.10000E+33       ! gapVal\n")
+        output_file.write("0.10000E+20       ! gapVal\n")
         output_file.write(str(
             self.step_rec) + "          ! steps of records on time in files with environmental data (1 step = 5 minutes)\n")
         output_file.write(
