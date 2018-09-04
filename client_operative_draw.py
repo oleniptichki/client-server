@@ -305,8 +305,8 @@ else:
 
 url = 'http://' + os.environ['ICS_BALTIC_SERVER_IP'] + ':7889/?wsdl'
 hello_client = Client(url)
-hello_client.options.cache.clear()
-hello_client = Client(url)
+#hello_client.options.cache.clear()
+#hello_client = Client(url)
 # ===Connected===
 
 try :

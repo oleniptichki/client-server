@@ -231,6 +231,8 @@ print(calc.lat, calc.lon, calc.mass, calc.density, calc.viscosity,
 try:
     url = 'http://'+os.environ['ICS_BALTIC_SERVER_IP']+':7889/?wsdl'
     hello_client = Client(url)
+    hello_client.options.cache.clear()
+    hello_client = Client(url)
 except:
     print("error connecting to server")
     raise Server_is_overloaded_exception()
