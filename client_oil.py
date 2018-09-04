@@ -92,8 +92,8 @@ class Oil_run:
         if self.risk_ndelta<0:
             self.risk_ndelta=0
             return 1
-        if self.risk_ndelta>t2:
-            self.risk_ndelta=t2
+        if self.risk_ndelta>self.t2:
+            self.risk_ndelta=self.t2
             return 1
         return 0
 
