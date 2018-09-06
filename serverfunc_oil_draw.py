@@ -166,7 +166,7 @@ class oil_draw:
         print(massiv[-1])
         path=full_filename.rstrip(massiv[-1])
         print(path)
-        temp_filename = full_filename.rstrip('.txt') + '1.txt'
+        temp_filename = full_filename.replace('.txt', '1.txt')
         print("temp_filename=", temp_filename)
         return 4
         i=1
