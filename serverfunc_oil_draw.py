@@ -159,6 +159,12 @@ class oil_draw:
         except:
             oil_draw.err=oil_draw.err+"Cannot open file: "+full_filename+" \n"
             return 1
+        # testing
+        print("massiv testing")
+        print(full_filename)
+        massiv=full_filename.split('/')
+        print(massiv[-1])
+        return 4
         i=1
         nummax=2
         flag=False
@@ -184,7 +190,7 @@ class oil_draw:
             elif nummax>1:  # rewriting file
                 try:
                     temp_filename=full_filename.rstrip('.txt')+'1.txt'
-                    print(temp_filename)
+                    print("temp_filename=", temp_filename)
                     print(full_filename)
                     print(full_filename.rstrip('.txt'))
                     os.rename(full_filename,temp_filename)
