@@ -175,7 +175,7 @@ class oil_draw:
                 flag=True
             else:
                 flag=False
-                max_wc=float(srtmas[1])
+                max_wc=float(strmas[1])
             i+=1
         fin.close()
         if flag:
