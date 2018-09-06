@@ -195,8 +195,8 @@ class oil_draw:
             elif nummax>1:  # rewriting file
                 try:
                     shutil.copy(loc_filename,temp_filename)
-                    fin.open(temp_filename,'rt')
-                    fout.open(loc_filename,'wt')
+                    fin=open(temp_filename,'rt')
+                    fout=open(loc_filename,'wt')
                     print("Step2")
                     i=1
                     while True:
