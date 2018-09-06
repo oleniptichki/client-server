@@ -194,7 +194,7 @@ class oil_draw:
                 print("Warning: file "+full_filename+" is broken")
             elif nummax>1:  # rewriting file
                 try:
-                    os.rename(loc_filename,temp_filename)
+                    shutil.copy(loc_filename,temp_filename)
                     fin.open(temp_filename,'rt')
                     fout.open(loc_filename,'wt')
                     print("Step2")
