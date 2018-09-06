@@ -184,6 +184,9 @@ class oil_draw:
             elif nummax>1:  # rewriting file
                 try:
                     temp_filename=full_filename.rstrip('.txt')+'1.txt'
+                    print(temp_filename)
+                    print(full_filename)
+                    print(full_filename.rstrip('.txt'))
                     os.rename(full_filename,temp_filename)
                     fin.open(temp_filename,'rt')
                     fout.open(full_filename,'wt')
