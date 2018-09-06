@@ -188,6 +188,7 @@ class oil_draw:
                 max_wc=float(strmas[1])
             i+=1
         fin.close()
+        print("flag=", flag)
         if flag:
             if nummax==1:
                 print("Warning: file "+full_filename+" is broken")
@@ -196,6 +197,7 @@ class oil_draw:
                     os.rename(loc_filename,temp_filename)
                     fin.open(temp_filename,'rt')
                     fout.open(loc_filename,'wt')
+                    print("Step2")
                     i=1
                     while True:
                         line=fin.readline()
