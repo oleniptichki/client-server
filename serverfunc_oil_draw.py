@@ -166,7 +166,7 @@ class oil_draw:
         path=full_filename.rstrip(loc_filename)
         temp_filename = loc_filename.replace('.txt', '1.txt')
         os.chdir(path)
-        shutil.copy(loc_filename, loc_filename+'.res')
+#        shutil.copy(loc_filename, loc_filename+'.res')
         print("===Done===")
 
         i=1
@@ -188,16 +188,14 @@ class oil_draw:
                 max_wc=float(strmas[1])
             i+=1
         fin.close()
-        print("flag=", flag)
         if flag:
             if nummax==1:
                 print("Warning: file "+full_filename+" is broken")
             elif nummax>1:  # rewriting file
                 try:
-                    shutil.copy(loc_filename,temp_filename)
+                    shutil.move(loc_filename,temp_filename)
                     fin=open(temp_filename,'rt')
                     fout=open(loc_filename,'wt')
-                    print("Step2")
                     i=1
                     while True:
                         line=fin.readline()
