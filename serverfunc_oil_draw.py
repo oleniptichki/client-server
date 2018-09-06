@@ -1,6 +1,6 @@
 import os
 import subprocess
-#import shutil
+import shutil
 
 
 class oil_draw:
@@ -159,16 +159,16 @@ class oil_draw:
         except:
             oil_draw.err=oil_draw.err+"Cannot open file: "+full_filename+" \n"
             return 1
-        # testing
-        print("massiv testing")
-        print(full_filename)
+
+        # definition, preparation
         massiv=full_filename.split('/')
-        print(massiv[-1])
-        path=full_filename.rstrip(massiv[-1])
-        print(path)
-        temp_filename = full_filename.replace('.txt', '1.txt')
-        print("temp_filename=", temp_filename)
-        return 4
+        loc_filename=massiv[-1]
+        path=full_filename.rstrip(loc_filename)
+        temp_filename = loc_filename.replace('.txt', '1.txt')
+        os.chdir(path)
+        shutil.copy(loc_filename, loc_filename+'.res')
+        print("===Done===")
+
         i=1
         nummax=2
         flag=False
@@ -193,13 +193,9 @@ class oil_draw:
                 print("Warning: file "+full_filename+" is broken")
             elif nummax>1:  # rewriting file
                 try:
-                    temp_filename=full_filename.rstrip('.txt')+'1.txt'
-                    print("temp_filename=", temp_filename)
-                    print(full_filename)
-                    print(full_filename.rstrip('.txt'))
-                    os.rename(full_filename,temp_filename)
+                    os.rename(loc_filename,temp_filename)
                     fin.open(temp_filename,'rt')
-                    fout.open(full_filename,'wt')
+                    fout.open(loc_filename,'wt')
                     i=1
                     while True:
                         line=fin.readline()
