@@ -181,7 +181,7 @@ class oil_run():
 
         filename = self.path_to_out + oil_run.filenames['inFolder'] + oil_run.filenames['inputPath']
         output_file = open(filename, 'wt')
-        output_file.write(self.path_to_env + "/" + " ! path to environmental data")
+        output_file.write(self.path_to_env + " ! path to environmental data \n")
         output_file.write("uu.dat                                        ! name of file with x-velosity of currents \n")
         output_file.write("vv.dat                                        ! name of file with y-velosity of currents \n")
         output_file.write("uwnd.dat                                      ! name of file with x-velosity of wind \n")
