@@ -340,17 +340,12 @@ try :
             ftp=FTP(os.environ["ICS_BALTIC_FTP_IPADDR"])
             ftp.login(os.environ["ICS_BALTIC_FTP_LOGIN"],os.environ["ICS_BALTIC_FTP_PASSWD"])
             ftp.cwd('.'+path_name[0])
-            print(os.environ['ICS_BALTIC_PNG_PATH'])
             os.chdir(os.environ['ICS_BALTIC_PNG_PATH'])
-            print(os.getcwd())
             png_file_local=open(str(draw.calc_id)+'_'+path_name[1],"wb")
             ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
             png_file_local.close()
             #os.chdir("..")
         except:
-            print("error")
-            print(os.environ['ICS_BALTIC_PNG_PATH'])
-            print(os.getcwd())
             sys.exit(1)
 
         cursor.execute("UPDATE pictures SET picture='" + str(draw.calc_id)+'_'+path_name[1] + "' WHERE pictures_pk=" + pictures_pk + ";")
