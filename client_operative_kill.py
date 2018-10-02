@@ -53,7 +53,6 @@ calc_id=sys.argv[1]
 error_db_connection=connect_db()
 # if no connection to DB
 if error_db_connection:
-    print('sys.exit(1)')
     sys.exit(1)
 
 # check whether the process crashed
@@ -61,10 +60,8 @@ try:
     cursor.execute("SELECT error_message FROM process_controller WHERE calc_id="+calc_id+";")
     dt=cursor.fetchone()
 except:
-    print('sys.exit(7)')
-    sys.exit(7)
+    sys.exit(1)
 if dt[0]=='model crashed':
-    print('sys.exit(0)')
     sys.exit(0)
 
 
@@ -83,8 +80,7 @@ try:
     else:
         folder='RotPole'
 except:
-    print('sys.exit(7)')
-    sys.exit(7)
+    sys.exit(1)
 
 
 # connect to server
@@ -92,8 +88,7 @@ try:
     url = 'http://'+os.environ['ICS_BALTIC_SERVER_IP']+':7889/?wsdl'
     hello_client = Client(url)
 except:
-    print('sys.exit(2)')
-    sys.exit(2)
+    sys.exit(1)
 
 try:
     # get PPID from process_controller
@@ -104,8 +99,7 @@ try:
         pid=ppid
     conn.close()
 except:
-    print('sys.exit(3)')
-    sys.exit(3)
+    sys.exit(1)
 
 try:
     connect_db()
@@ -120,16 +114,13 @@ try:
         # result is in percents !!
     else:
         result=0 # this is an impossible case
-    print(result)
 except WebFault:
     # print(traceback.format_exc())
-    print('sys.exit(5)')
-    sys.exit(5)
+    sys.exit(1)
 
 except Exception as other:
     str = traceback.format_exc(limit=1)
-    print('sys.exit(6)')
-    sys.exit(6)
+    sys.exit(1)
 
 # processing of the result in case of error
 
@@ -150,7 +141,7 @@ if result<0:
     cursor.execute("UPDATE process_controller SET error_message="+error+" WHERE calc_id="+calc_id+";")
     conn.commit()
     conn.close()
-    print('sys.exit(4)')
+    sys.exit(1)
 elif result == 0:
     cursor.execute("UPDATE process_controller SET error_message='calculation interrupted' WHERE calc_id="+calc_id+";")
     cursor.execute("UPDATE user_calculation SET status='FINISHED WITH ERROR' WHERE calc_id="+calc_id+";")
@@ -161,9 +152,7 @@ else:
     cursor.execute("UPDATE process_controller SET error_message="+error+" WHERE calc_id="+calc_id+";")
     conn.commit()
     conn.close()
-    print('sys.exit(4)')
-    sys.exit(4)
+    sys.exit(1)
 
 
-print('sys.exit(0)')
-sys.exit(0)
+sys.exit(0) # success!

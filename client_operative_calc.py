@@ -95,7 +95,7 @@ res=cursor.fetchall()
 if len(res)>2 : # not 3 (don't know why, but len(res)<=2 is true and it allows 3 calc to be launched)
 #    print("There is more than 3 calculations launched. In queue")
 #    raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
-    sys.exit(2)
+    sys.exit(1)
 
 
 # extract values of calculation parameters
@@ -115,7 +115,7 @@ res=cursor.fetchall()
 if len(res)>0 : # if there is at least one
 #    print("There is more than 3 calculations launched. In queue")
 #    raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
-    sys.exit(2)
+    sys.exit(1)
 
 # connect to server
 # use this if needed:
@@ -124,7 +124,7 @@ try:
     url = 'http://'+os.environ['ICS_BALTIC_SERVER_IP']+':7889/?wsdl'
     hello_client = Client(url)
 except:
-    sys.exit(6)
+    sys.exit(1)
 
 try:
     result=hello_client.service.operatcalc_exstrt(calc.calc_id, token, calc.duration, calc.h_to_days(), calc.assim_numb())
@@ -155,15 +155,15 @@ try:
         cursor.execute(
             "INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'operative_calc', '0','"+errors[result]+"') ;")
         conn.commit()
-        sys.exit(5)
+        sys.exit(1)
     conn.close()
 except WebFault:
     # print(traceback.format_exc())
-    sys.exit(3)
+    sys.exit(1)
 
 except Exception as other:
     str=traceback.format_exc(limit=1)
-    sys.exit(4)
+    sys.exit(1)
 
 sys.exit(0)
 

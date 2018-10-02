@@ -51,19 +51,17 @@ calc_id=sys.argv[1]
 error_db_connection=connect_db()
 # if no connection to DB
 if error_db_connection:
-    print('sys.exit(201)')
-    sys.exit(201)        # exit code > 200 because progress returns the number from 0 to 100 - completeness of the calculation in percents
+    sys.exit(1)        # exit code
 
 # check whether the process was interrupted
 try:
     cursor.execute("SELECT error_message FROM process_controller WHERE calc_id="+calc_id+";")
     dt=cursor.fetchone()
 except:
-    print('sys.exit(202)')
-    sys.exit(202)
+    sys.exit(1)
 if dt[0]=='calculation interrupted':
-    print('sys.exit(103)')
-    sys.exit(103)
+#    print('103')   # calling progress of interrupted calculation
+    sys.exit(1)
 
 
 # extract user_name (token) and type of calculation
@@ -81,16 +79,14 @@ try:
     else:
         folder='RotPole'
 except:
-    print('sys.exit(202)')
-    sys.exit(202)
+    sys.exit(1)
 
 # connect to server
 try:
     url = 'http://'+os.environ['ICS_BALTIC_SERVER_IP']+':7889/?wsdl'
     hello_client = Client(url)
 except:
-    print('sys.exit(203)')
-    sys.exit(203)
+    sys.exit(1)
 
 # get PPID from process_controller
 try:
@@ -101,8 +97,7 @@ try:
         pid=ppid
     conn.close()
 except:
-    print('sys.exit(204)')
-    sys.exit(204)
+    sys.exit(1)
 
 try:
     connect_db()
@@ -118,17 +113,13 @@ try:
         # result is in percents !!
     else:
         result=0 # this is an impossible case
-    print(result)
 
 except WebFault:
-    # print(traceback.format_exc())
-    print('sys.exit(206)')
-    sys.exit(206)
+    sys.exit(1)
 
 except Exception as other:
-    err_str = traceback.format_exc(limit=1)
-    print('sys.exit(207)')
-    sys.exit(207)
+#    err_str = traceback.format_exc(limit=1)
+    sys.exit(1)
     # processing of the result in case of error
 
 if result<0:
@@ -149,25 +140,24 @@ if result<0:
     cursor.execute("UPDATE process_controller SET error_message="+error+" WHERE calc_id="+calc_id+";")
     conn.commit()
     conn.close()
-    print('sys.exit(205)')
-    sys.exit(205)
+    sys.exit(1)
 elif result == 101:
     cursor.execute("UPDATE process_controller SET error_message='success' WHERE calc_id="+calc_id+";")
     cursor.execute("UPDATE user_calculation SET status='FINISHED' WHERE calc_id="+calc_id+";")
     conn.commit()
     conn.close()
-    print('sys.exit(101)')
-    sys.exit(101)
+    print('101')
+    sys.exit(0)    # success! calculation is finished
 elif result >= 102:
     cursor.execute("UPDATE process_controller SET error_message='model crashed' WHERE calc_id="+calc_id+";")
     cursor.execute("UPDATE user_calculation SET status='FINISHED WITH ERROR' WHERE calc_id="+calc_id+";")
     conn.commit()
     conn.close()
-    print('sys.exit(102)')
-    sys.exit(102)
+    sys.exit(1)    # model crashed
 else:
+    print(result)    # result (progress) to stdout
     conn.close()
-    sys.exit(result)
+    sys.exit(0)     # success!
 
 
 

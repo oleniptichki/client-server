@@ -20,6 +20,8 @@ import traceback
 # ICS_BALTIC_FTP_IPADDR = ***
 # ICS_BALTIC_FTP_LOGIN = 'ftpuser'
 # ICS_BALTIC_FTP_PASSWD = ***
+
+# ICS_BALTIC_PNG_PATH = '/***/' - path to save pictures
 import os
 
 
@@ -163,7 +165,7 @@ dv=cursor.fetchone()
 # if the simulation hasn't finished yet or finished with error, we cannot plot anything!
 if dv[3]!='FINISHED':
 #    raise Not_finished_calc_exception
-    sys.exit(9)
+    sys.exit(1)
 token=dv[0]
 calc_type=dv[1]
 continued_from=dv[2]
@@ -179,7 +181,7 @@ if (calc_type==2) and continued_from:
         end_td=dv[1]
         if output_time_date>end_td:
         #    raise Inconsistent_data_exception()
-            sys.exit(15)
+            sys.exit(1)
         cursor.execute("SELECT continued_from FROM user_calculation WHERE calc_id="+str(calc_id)+";")
         dv=cursor.fetchone()
         continued_from=dv[0]
@@ -190,14 +192,14 @@ if (calc_type==2) and continued_from:
                 calc_id=continued_from
             else:
             #    raise Inconsistent_data_exception()
-                sys.exit(16)
+                sys.exit(1)
     draw.calc_id=calc_id
 
 # check if data are consistent
 if (draw.crosssection and draw.zoom) :
 #    print("There couldn't be a crossection and surface zoom simultaneously")
  #   raise Inconsistent_data_exception()
-    sys.exit(2)
+    sys.exit(1)
 # <if depth>1 and crossection then set lev 1 depth>
 # <if depth<=1 and crossection then set lev 1 250>
 #if ((draw.depth>1) and draw.crosssection) :
@@ -208,23 +210,23 @@ if (draw.crosssection and draw.zoom) :
 if (draw.crosssection and (draw.plot_type=='uu')):
 #    print("no data on the vertical component of the velocity")
 #    raise Inconsistent_data_exception()
-    sys.exit(3)
+    sys.exit(1)
 if ((draw.plot_type=='eta') and draw.crosssection) :
 #    print("Sea level is a surface plot")
 #    raise Inconsistent_data_exception()
-    sys.exit(4)
+    sys.exit(1)
 if ((draw.depth>1) and (draw.plot_type=='eta')) :
 #    print("There couldn't be a SSH plot at the deep levels of the sea")
 #    raise Inconsistent_data_exception()
-    sys.exit(5)
+    sys.exit(1)
 if ((draw.scale) and (draw.scale_step<=0)):
 #    print("less than zero scale step is prohibited")
 #    raise Inconsistent_data_exception()
-    sys.exit(6)
+    sys.exit(1)
 if ((draw.scale) and ((draw.scale_max-draw.scale_min)/draw.scale_step>13)):
 #    print("Need to increase scale_step")
 #    raise Inconsistent_data_exception()
-    sys.exit(7)
+    sys.exit(1)
 
 # check of latitude and longitude
 error_flag=0
@@ -248,7 +250,7 @@ if (draw.zoom):
 if (error_flag>0):
 #    print('request to data outside coordinate limits, LAT/LON values wrong')
 #    raise Inconsistent_data_exception
-    sys.exit(8)
+    sys.exit(1)
 
 
 if (calc_type==1):
@@ -269,7 +271,7 @@ if (calc_type==1):
     finish_date=start_time+delta_days
     if (draw.output_time_date>finish_date):
 #        raise Inconsistent_data_exception()
-        sys.exit(10)
+        sys.exit(1)
 
 # calculate number of record 
     start_date=start_date-delta_days
@@ -289,7 +291,7 @@ elif (calc_type==2):
     # check if output_time_date<end_time_date
     if (draw.output_time_date>end_td) or (draw.output_time_date<start_td):
 #        raise Inconsistent_data_exception()
-        sys.exit(10)
+        sys.exit(1)
 # calculate number of record
     delta=(draw.output_time_date-start_td).total_seconds()
     num_of_record=int(delta/(3600*draw.record))   # number of record
@@ -338,26 +340,25 @@ try :
             ftp=FTP(os.environ["ICS_BALTIC_FTP_IPADDR"])
             ftp.login(os.environ["ICS_BALTIC_FTP_LOGIN"],os.environ["ICS_BALTIC_FTP_PASSWD"])
             ftp.cwd('.'+path_name[0])
-            os.chdir("PNG")
+            os.chdir(os.environ['ICS_BALTIC_PNG_PATH'])
             png_file_local=open(str(draw.calc_id)+'_'+path_name[1],"wb")
             ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
             png_file_local.close()
-            os.chdir("..")
+            #os.chdir("..")
         except:
-            sys.exit(11)
+            sys.exit(1)
 
         cursor.execute("UPDATE pictures SET picture='" + str(draw.calc_id)+'_'+path_name[1] + "' WHERE pictures_pk=" + pictures_pk + ";")
         conn.commit()
     else:
-        sys.exit(12)
+        sys.exit(1)
 
 except WebFault:
     # print(traceback.format_exc())
-    sys.exit(13)
+    sys.exit(1)
 
 except Exception as other:
     str=traceback.format_exc(limit=1)
-    print(str)
-    sys.exit(14)
+    sys.exit(1)
 
 sys.exit(0)
