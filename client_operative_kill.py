@@ -144,7 +144,7 @@ if result<0:
     sys.exit(1)
 elif result == 0:
     cursor.execute("UPDATE process_controller SET error_message='calculation interrupted' WHERE calc_id="+calc_id+";")
-    cursor.execute("UPDATE user_calculation SET status='FINISHED WITH ERROR' WHERE calc_id="+calc_id+";")
+    cursor.execute("UPDATE user_calculation SET status='STOPPED' WHERE calc_id="+calc_id+";")
     conn.commit()
     conn.close()
 else:
