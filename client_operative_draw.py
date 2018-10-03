@@ -145,7 +145,7 @@ class Not_finished_calc_exception(Exception):
 # logging
 logging=True
 if logging:
-    flog=open('error.log')
+    flog=open('error.log','wt')
 
 # pictures_pk is the argument - got it
 pictures_pk=sys.argv[1]
