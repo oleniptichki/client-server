@@ -142,6 +142,11 @@ class Not_finished_calc_exception(Exception):
     pass
 
 
+# logging
+logging=True
+if logging:
+    flog=open('error.log')
+
 # pictures_pk is the argument - got it
 pictures_pk=sys.argv[1]
 
@@ -333,32 +338,41 @@ try :
         draw.zoom_lat_max,
         draw.duration,
         draw.record)
-#    print(result)
+    if logging:
+        flog.write('Pictures_pk='+pictures_pk+' ; result='+result)
     if result:
         path_name=result.split(' ')
         try:
             ftp=FTP(os.environ["ICS_BALTIC_FTP_IPADDR"])
             ftp.login(os.environ["ICS_BALTIC_FTP_LOGIN"],os.environ["ICS_BALTIC_FTP_PASSWD"])
             ftp.cwd('.'+path_name[0])
-            os.chdir(os.environ['ICS_BALTIC_PNG_PATH'])
+            os.chdir(os.environ['ICS_BALTIC_PNG_PATH']+'calcs/')
             png_file_local=open(str(draw.calc_id)+'_'+path_name[1],"wb")
             ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
             png_file_local.close()
             #os.chdir("..")
         except:
+            if logging:
+                flog.write('Error in downloading file via FTP')
             sys.exit(1)
 
-        cursor.execute("UPDATE pictures SET picture='" + str(draw.calc_id)+'_'+path_name[1] + "' WHERE pictures_pk=" + pictures_pk + ";")
+        cursor.execute("UPDATE pictures SET picture='" + '/calcs/' + str(draw.calc_id)+'_'+path_name[1] + "' WHERE pictures_pk=" + pictures_pk + ";")
         conn.commit()
     else:
         sys.exit(1)
 
 except WebFault:
-    # print(traceback.format_exc())
+    if logging:
+        flog.write(traceback.format_exc()+'\n')
     sys.exit(1)
 
 except Exception as other:
-    str=traceback.format_exc(limit=1)
+    if logging:
+        str=traceback.format_exc(limit=1)
+        flog.write(traceback.format_exc() + '\n')
     sys.exit(1)
+
+if logging:
+    flog.close()
 
 sys.exit(0)
