@@ -339,7 +339,7 @@ try :
         draw.duration,
         draw.record)
     if logging:
-        flog.write('Pictures_pk='+pictures_pk+' ; result='+result)
+        flog.write('Pictures_pk='+pictures_pk+' ; result='+result+'\n')
     if result:
         path_name=result.split(' ')
         try:
@@ -351,10 +351,14 @@ try :
             log=log+'; cwd '+'.'+path_name[0]
             os.chdir(os.environ['ICS_BALTIC_PNG_PATH']+'calcs/')
             log = log + '; chdir' + os.environ['ICS_BALTIC_PNG_PATH']+'calcs/'
-            png_file_local=open(str(draw.calc_id)+'_'+path_name[1],"wb")
-            ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
+            try:
+                png_file_local=open(str(draw.calc_id)+'_'+path_name[1],"wb")
+                ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
+                png_file_local.close()
+            except Exception:
+                str = traceback.format_exc(limit=2)
+                log=log+'; '+str
             log=log+'; retreived'
-            png_file_local.close()
             #os.chdir("..")
         except:
             if logging:
