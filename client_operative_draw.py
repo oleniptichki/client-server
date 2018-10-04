@@ -344,16 +344,22 @@ try :
         path_name=result.split(' ')
         try:
             ftp=FTP(os.environ["ICS_BALTIC_FTP_IPADDR"])
+            log='Connecting...'
             ftp.login(os.environ["ICS_BALTIC_FTP_LOGIN"],os.environ["ICS_BALTIC_FTP_PASSWD"])
+            log=log+'; connected. '
             ftp.cwd('.'+path_name[0])
+            log=log+'; cwd '+'.'+path_name[0]
             os.chdir(os.environ['ICS_BALTIC_PNG_PATH']+'calcs/')
+            log = log + '; chdir' + os.environ['ICS_BALTIC_PNG_PATH']+'calcs/'
             png_file_local=open(str(draw.calc_id)+'_'+path_name[1],"wb")
             ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
+            log=log+'; retreived'
             png_file_local.close()
             #os.chdir("..")
         except:
             if logging:
-                flog.write('Error in downloading file via FTP')
+                flog.write('Error in downloading file via FTP \n')
+                flog.write(log + ' \n')
             sys.exit(1)
 
         cursor.execute("UPDATE pictures SET picture='" + '/calcs/' + str(draw.calc_id)+'_'+path_name[1] + "' WHERE pictures_pk=" + pictures_pk + ";")
