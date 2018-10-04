@@ -358,6 +358,9 @@ try :
             except Exception:
                 exc_str = traceback.format_exc(limit=2)
                 log=log+'; '+exc_str
+                if logging:
+                    flog.write('Error in downloading file via FTP \n')
+                    flog.write(log + ' \n')
             log=log+'; retreived'
             #os.chdir("..")
         except:
