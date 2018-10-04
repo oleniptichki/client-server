@@ -356,8 +356,8 @@ try :
                 ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
                 png_file_local.close()
             except Exception:
-                str = traceback.format_exc(limit=2)
-                log=log+'; '+str
+                exc_str = traceback.format_exc(limit=2)
+                log=log+'; '+exc_str
             log=log+'; retreived'
             #os.chdir("..")
         except:
