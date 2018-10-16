@@ -107,10 +107,12 @@ class operative_calc():
         #writing 'assim.par'
         step1=delta*288
         step2=(delta+3)*288
+        step3=(delta+4)*288
         try:
             fout=open('assim.par', 'wt')
             fout.write('ST \n')
             fout.write(str(step1)+' '+str(step2)+' \n')
+            fout.write(str(step2)+' '+str(step3)+' \n')
             fout.write('SS \n')
             fout.write('SL \n')
             fout.write('END \n')
