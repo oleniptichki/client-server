@@ -112,6 +112,7 @@ class operative_calc():
             fout=open('assim.par', 'wt')
             fout.write('ST \n')
             fout.write(str(step1)+' '+str(step2)+' \n')
+            fout.write('QQ \n')
             fout.write(str(step2)+' '+str(step3)+' \n')
             fout.write('SS \n')
             fout.write('SL \n')
