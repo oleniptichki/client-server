@@ -113,7 +113,7 @@ class operative_calc():
             fout.write('ST \n')
             fout.write(str(step1)+' '+str(step2)+' \n')
             # QQ insertion period
-            fout.write(str(step2)+' '+str(step2)+' \n')
+            # fout.write(str(step2)+' '+str(step2)+' \n')
             fout.write('SS \n')
             fout.write('SL \n')
             fout.write('END \n')
@@ -168,7 +168,7 @@ class operative_calc():
             fout.write('0     :=0=>new calc. (current .dat files in XYZ will be rewrited);>0=>continuing calc. \n')
 #            fout.write(str(self.assim_numb)+'     :=0-no assimilation, =1-type1, =2-type2 \n')   #when there will be two methods working
             fout.write('2     :=0-no assimilation, =1-type1, =2-type2 \n')
-            fout.write('72    :=0-if no assimilation, =period (int, in steps) of assimilation otherwise \n')
+            fout.write('36    :=0-if no assimilation, =period (int, in steps) of assimilation otherwise \n')
             fout.write('0     :=0-no ddm, =1-ddm \n')
             fout.write('1     :=0-no tides, =1-tides included \n')
             fout.close()
