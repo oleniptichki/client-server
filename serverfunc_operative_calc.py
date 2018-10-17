@@ -113,7 +113,7 @@ class operative_calc():
             fout.write('ST \n')
             fout.write(str(step1)+' '+str(step2)+' \n')
             # QQ insertion period
-            fout.write(str(step2)+' '+str(step2)+' \n')
+            fout.write(str(step2)+' '+str(step3)+' \n')
             fout.write('SS \n')
             fout.write('SL \n')
             fout.write('END \n')
