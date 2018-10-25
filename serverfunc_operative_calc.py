@@ -107,7 +107,9 @@ class operative_calc():
         #writing 'assim.par'
         step1=delta*288
         step2=(delta+3)*288
+        #for operational forecast only
         step3=(delta+4)*288
+#        step3=step2  # in other cases
         try:
             fout=open('assim.par', 'wt')
             fout.write('ST \n')

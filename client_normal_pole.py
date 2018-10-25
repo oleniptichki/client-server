@@ -286,6 +286,8 @@ if calc.assim:
         step1=assim_date_to_step(calc.start_td.year, assim_begin, calc.step)
         step2=assim_date_to_step(calc.start_td.year, assim_end, calc.step)
         assim_str=assim_str+str(step1)+' '+str(step2)+'\n'
+        # does nothing here, but it is important:
+        assim_str = assim_str + str(step2) + ' ' + str(step2) + '\n'   # see validation commit
 
 # connect to server
 # use this if needed:
