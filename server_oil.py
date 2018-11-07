@@ -40,7 +40,7 @@ class HelloWorldService(DefinitionBase):
             results.append('Hello, %s' % name)
         return results
 
-    # My functions. Begin
+    # ==================================== OIL ==========================================
     @soap(Double, Double, Double, Double, Double, String, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
           Double, Double, String, String, _returns=Integer)
     def oil_exstrt(self, lat, lon, mass, density, viscosity, path_to_env, step_rec, duration, t1, t2,
@@ -179,7 +179,7 @@ class HelloWorldService(DefinitionBase):
                     os.remove('progress.txt')
             else:
                 progrs = 0
-            if (progrs < tot_prog):  # ??
+            if progrs < tot_prog:  # ??
                 if os.path.exists('./' + str(calc_id)):
                     ret = subprocess.call('rm -r ' + str(calc_id), shell=True)
                 print("deleting folder")

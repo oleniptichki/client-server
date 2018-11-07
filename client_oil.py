@@ -274,7 +274,7 @@ if result > 0:  # modelling is successfully launched
     cursor.execute( "UPDATE user_calculation SET status='STARTED', launch_time_date='" + timestamp() + "' WHERE calc_id=" + calc_id + ";")
     conn.commit()
     pid = result
-    # put PPID in the table Process controller
+    # put PID in the table Process controller
     cursor.execute("SELECT pid FROM process_controller WHERE calc_id=" + calc_id + ";")
     dt = cursor.fetchone()
     if dt:  # string exists

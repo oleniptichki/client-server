@@ -76,7 +76,7 @@ try:
     elif calc_type==2:
         folder='NormPole'
     elif calc_type == 4:
-        folder = ''  # in this case we will call another programm
+        folder = ''  # in this case we go to folder OIL
     else:
         folder='RotPole'
 except:

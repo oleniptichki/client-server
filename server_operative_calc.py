@@ -356,7 +356,213 @@ class HelloWorldService(DefinitionBase):
                 name_of_file=draw.full_name_gather()
                 return name_of_file
 
-        
+
+
+
+
+    # ==================================== OIL ==========================================
+    @soap(Double, Double, Double, Double, Double, String, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+          Double, Double, String, String, _returns=Integer)
+    def oil_exstrt(self, lat, lon, mass, density, viscosity, path_to_env, step_rec, duration, t1, t2,
+                   risk_nDelta, risk_nDeltaStep, spec_dam, alpha, tau, token, calc_id):
+        '''
+        Input parameters:
+
+        parameters of oil:
+        lat - latitude
+        lon - longitude (coordinates of oil spill)
+        mass - mass of oil, tonnes
+        density
+        viscosity
+        path_to_env - path to files uu.dat, uwnd.dat ...
+        step_rec - period of recording, in minutes, Integer
+        duration - in hours, Integer
+        t1 - in hours, default =0
+        t2 - in hours, default =duration
+        risk_nDelta - max. time of spill appearance, in hours
+        risk_nDeltaStep - step of risk discret. (in minutes)
+        spec_dam - specific Damage (thousand rub)
+        alpha
+        tau
+
+        calc_id - String;
+        token
+
+        '''
+        calc = oil_run(lat, lon, mass, density, viscosity, path_to_env, step_rec, duration, t1, t2,
+                       risk_nDelta, risk_nDeltaStep, spec_dam, alpha, tau, token, calc_id)
+        if calc.userinit() == 0:
+            ret = calc.dirinit()
+            print(ret)
+            if ret > 0:
+                calc.errlogwriter()
+                return -2
+            else:
+                ret = calc.write_input_data()
+                if ret == 0:
+                    # start calculation
+                    os.chdir(os.environ['ICS_BALTIC_DIR_OIL'] + token)
+                    self.proc = subprocess.Popen("./" + calc.exe, shell=True)
+                    pid = self.proc.pid
+                    return pid
+                else:
+                    return -3
+        else:
+            calc.errlogwriter()
+            return -1  # error in creation of new user
+
+    @soap(Integer, String, Integer, Integer, _returns=Integer)
+    def oil_progress(self, calc_id, token, pid, tot_prog):
+        '''
+        Input parameters:
+        calc_id - Integer
+        token - string :username
+        pid - PID
+        tot_prog - total progress to convert the result to percents
+
+        '''
+        oil_exe = 'OSM'
+
+        # check existence of the process:
+        print(pid)
+        print('ps -p ' + str(pid) + ' | grep ' + oil_exe + ' > 1.txt')
+        ret = subprocess.call('ps -p ' + str(pid) + ' | grep ' + oil_exe + ' > 1.txt', shell=True)
+        #        if ret>0:
+        #            return -1
+        if ret == 0:
+            try:
+                f = open('1.txt', 'rt')
+                output = f.read()
+                f.close()
+                os.remove('1.txt')
+            except:
+                return -2
+            temp = output.split()
+            print(len(temp))
+            print(output)
+            if len(temp) > 2:  # process exist, len(ret) must be 3 or 4
+                try:
+                    os.chdir(os.environ['ICS_BALTIC_DIR_OIL'] + token)
+                    fin = open('progress.txt', 'rt')
+                    progrs = float(fin.read())
+                    print("progrs=" + str(progrs))
+                    fin.close()
+                    print(str(progrs) + " of " + str(tot_prog) + " is completed ...")
+                    percent = int(progrs * 100 / tot_prog)
+                    return percent
+                except:
+                    return -3
+        else:
+            try:
+                os.chdir(os.environ['ICS_BALTIC_DIR_OIL'] + token)
+                if os.path.exists('progress.txt'):
+                    fin = open('progress.txt', 'rt')
+                    progrs = float(fin.read())
+                    fin.close()
+                else:
+                    progrs = 0
+                if (progrs == tot_prog):
+                    return 101  # calculation is completed
+                else:
+                    print("calculation finished with error, check")
+                    if os.path.exists('./' + str(calc_id)):
+                        ret = subprocess.call('rm -r ' + str(calc_id), shell=True)
+                        return 102
+                    else:
+                        return 102
+            except:
+                return -4
+
+    @soap(Integer, String, Integer, Integer, _returns=Integer)
+    def oil_killer(self, calc_id, token, pid, tot_prog):
+        '''
+        Input parameters:
+        calc_id - Integer
+        token - string :username
+        pid - PID
+        tot_prog - total progress to check the result
+
+        '''
+
+        try:
+            ret = subprocess.call('kill -9 ' + str(pid), shell=True)
+        except:
+            return -1
+
+        try:
+            os.chdir(os.environ['ICS_BALTIC_DIR_OIL'] + token)
+            if os.path.exists('progress.txt'):
+                fin = open('progress.txt', 'rt')
+                progrs = float(fin.read())
+                fin.close()
+                if progrs < tot_prog:
+                    os.remove('progress.txt')
+            else:
+                progrs = 0
+            if progrs < tot_prog:  # ??
+                if os.path.exists('./' + str(calc_id)):
+                    ret = subprocess.call('rm -r ' + str(calc_id), shell=True)
+                print("deleting folder")
+        except:
+            return -2
+        return 0
+
+    @soap(Integer, String, String, Integer, Integer, Double, Double, _returns=String)
+    def oil_plot(self, calc_id, token, plot_type, app_time, time, lon, lat):
+        '''
+        Parameters of graphical output:
+        calc_id - Integer, identifier of calculation;
+        token - String
+        plot_type - String, enum: 'mass', 'area', 'volume', 'emulsion_density', 'emulsion_viscosity', 'water_content'
+             'coordinates', 'control', 'damage'
+        app_time - time of oil spill appearance, from 0 to Risk_nDelta with step risk_nDeltaStep
+        time - relative time of output, in steps
+        lon - longitude of spill appearance (in localization plot)
+        lat - latitude of spill appearance (in localization plot)
+        :return: STRING: PATH+' '+file_name
+        '''
+        draw = oil_draw(calc_id, token, plot_type, app_time, time, lon, lat)
+        ret = draw.write_evolution_pars()
+        if ret > 0:
+            draw.errlogwriter()
+            return None
+        if draw.plot_type == "water_content":  # add there other problem files
+            filename = draw.full_name_txt()
+            ret = draw.remove_zero(filename)
+            if ret > 0:
+                draw.errlogwriter()
+                return None
+        ret = draw.print_exec()
+        if ret > 0:
+            return None
+        else:
+            name_of_file = draw.full_name_png()
+            return name_of_file
+
+    @soap(Integer, String, _returns=Integer)
+    def calculation_times(self, time1, token):
+        '''
+        this function is aimed to read calculation_times.txt and return the time when oil spill has disappeared
+        :param token needed to identify path
+        :param time1: in model steps
+        :return: time2 in model steps
+        '''
+        os.chdir(os.environ['ICS_BALTIC_DIR_OIL'] + token)
+        fin = open('calculation_times.txt')
+        line = fin.readline()
+        while line:
+            line.strip("\n")
+            mas = line.split(" ")
+            t1 = int(mas[0])
+            if t1 == time1:
+                t2 = int(mas[1])
+                return t2
+            else:
+                line = fin.readline()
+
+
+# ======================== OIL. End ===========================================================
+
 
 # My functions. End
 

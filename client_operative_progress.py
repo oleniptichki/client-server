@@ -75,7 +75,7 @@ try:
     elif calc_type==2:
         folder='NormPole'
     elif calc_type==4:
-        folder=''  # in this case we will call another programm
+        folder=''  # in this case we go to OIL folder, see below
     else:
         folder='RotPole'
 except:
@@ -103,12 +103,12 @@ try:
     connect_db()
     if calc_type == 1 or calc_type == 2:
         result=hello_client.service.progress(int(calc_id), token, int(ppid), folder)
-    elif calc_type==4:
+    elif calc_type==4:    # oil case
         # i need to convert result to progress !!
         cursor.execute("SELECT risk_ndelta, risk_ndeltastep FROM oil_run WHERE calc_id=" + calc_id + ";")
         dt = cursor.fetchone()
         tot_prog=int(dt[0]*60/dt[1]+1)
-        print(tot_prog)
+        # print(tot_prog)
         result = hello_client.service.oil_progress(int(calc_id), token, int(pid), tot_prog)
         # result is in percents !!
     else:

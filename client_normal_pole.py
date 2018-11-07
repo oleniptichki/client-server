@@ -185,7 +185,7 @@ res=cursor.fetchall()
 if len(res)>2 : # not 3 (don't know why, but len(res)<=2 is true and it allows 3 calc to be launched)
 #    print("There is more than 3 calculations launched. In queue")
 #    raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
-    sys.exit(2)
+    sys.exit(1)
 
 
 
@@ -202,7 +202,7 @@ dv=cursor.fetchone()
 if dv[1]!=2:
 #    print("You call wrong script! Check type of the calculation!")
 #    raise Wrong_type_of_calculation_exception()
-    sys.exit(6)
+    sys.exit(1)
 
 calc=Normal_pole_calc(int(calc_id), dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8], dt[9], dv[0])
 # continued calculation - different options!
@@ -215,7 +215,7 @@ if dv[2]>0:
     if dt[0]!='FINISHED':
 #        print("You should load only finished calculations! Check status of the calculation you try to continue!")
 #        raise Wrong_parameters_exception()
-        sys.exit(7)
+        sys.exit(1)
 
 # Check
 # check if there more then 1 calculation of one type/user launched
@@ -224,14 +224,14 @@ res=cursor.fetchall()
 if len(res)>0 : # if there is at least one
 #    print("There is more than 3 calculations launched. In queue")
 #    raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
-    sys.exit(2)
+    sys.exit(1)
 
 # It must be checked and modified if needed before release
 default_start_date=datetime(2007,1,1,0,0,0,0)
 if calc.start_td<default_start_date:
 #    print("Wrong start date")
 #    raise Wrong_parameters_exception()
-    sys.exit(8)
+    sys.exit(1)
 this_day=date.today()
 midnight=time(0,0,0)
 today=datetime.combine(this_day,midnight)
@@ -239,28 +239,28 @@ lbdata_end_date=datetime(2011,1,1,0,0,0,0)
 if calc.end_td>today:
 #    print("Error: Wrong dates")
 #    raise Wrong_parameters_exception()
-    sys.exit(9)
+    sys.exit(1)
 if calc.start_td>calc.end_td:
 #    print("Error: Wrong dates")
 #    raise Wrong_parameters_exception()
-    sys.exit(10)
+    sys.exit(1)
 if calc.dd and calc.assim:
 #    print("Cannot calculate LB+DDM+ASSIM")
 #    raise Wrong_parameters_exception()
-    sys.exit(11)
+    sys.exit(1)
 # limitation of number of days
 if calc.dd and (calc.time_days()>7):
 #    print("Cannot calculate DDM for more then 7 days")
 #    raise Wrong_parameters_exception()
-    sys.exit(14)
+    sys.exit(1)
 if calc.time_days()>30:
 #    print("Heavy simulation: decrease end_time_date")
 #    raise Wrong_parameters_exception()
-    sys.exit(15)
+    sys.exit(1)
 if calc.lb and calc.end_td>lbdata_end_date:
 #    print("Error: no data for LB assimilation")
 #    raise Wrong_parameters_exception()
-    sys.exit(16)
+    sys.exit(1)
 
 assim_str=''
 if calc.assim:
@@ -272,7 +272,7 @@ if calc.assim:
         if assim_end<assim_begin:
 #            print("Error: Assimilation periods wrong")
 #            raise Wrong_parameters_exception()
-            sys.exit(12)
+            sys.exit(1)
         if assim_begin<calc.start_td:
             assim_begin=calc.start_td
         if assim_end>calc.end_td:
@@ -282,7 +282,7 @@ if calc.assim:
             if next_step_begin<assim_end:
 #                print("Wrong assimilation periods")
 #                raise Wrong_parameters_exception()
-                sys.exit(13)
+                sys.exit(1)
         step1=assim_date_to_step(calc.start_td.year, assim_begin, calc.step)
         step2=assim_date_to_step(calc.start_td.year, assim_end, calc.step)
         assim_str=assim_str+str(step1)+' '+str(step2)+'\n'
@@ -298,7 +298,7 @@ try:
 except:
 #    print("error connecting to server")
 #    raise Server_is_overloaded_exception()
-    sys.exit(6)
+    sys.exit(1)
 
 if not continued_from_id: # new calculation
     try:
@@ -316,12 +316,12 @@ if not continued_from_id: # new calculation
 
     except WebFault:
 #        print(traceback.format_exc())
-        sys.exit(3)
+        sys.exit(1)
 
     except Exception as other:
 #        str=traceback.format_exc(limit=1)
 #        print(str)
-        sys.exit(4)
+        sys.exit(1)
 else:   #continued calculation
     try:
         result=hello_client.service.normpole_exstrt_continue(calc.calc_id, calc.token, continued_from_id, assim_str,
@@ -338,12 +338,12 @@ else:   #continued calculation
                       -7: "octask.par writing failed"}
     except WebFault:
 #        print(traceback.format_exc())
-        sys.exit(3)
+        sys.exit(1)
 
     except Exception as other:
 #        str = traceback.format_exc(limit=1)
 #        print(str)
-        sys.exit(4)
+        sys.exit(1)
 
 
 
@@ -368,7 +368,7 @@ else:
     cursor.execute( "INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'normal_pole', '0','" +
                 errors[result] + "') ;")
     conn.commit()
-    sys.exit(5)
+    sys.exit(1)
 
 conn.close()
 
