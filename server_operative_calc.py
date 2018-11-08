@@ -27,6 +27,11 @@ import serverfunc_normal_pole_continue
 from serverfunc_normal_pole_continue import normal_pole_continue
 import serverfunc_draw
 from serverfunc_draw import draw_class
+import serverfunc_oil
+from serverfunc_oil import oil_run
+import serverfunc_oil_draw
+from serverfunc_oil_draw import oil_draw
+
 
 # List of environment variables, server side
 # ICS_BALTIC_DIR_MODEL = /home/ftpuser/model/  -- directory with Baltic Sea model
