@@ -214,7 +214,7 @@ else:
 if calc.spec_dam<=0:
     #raise Wrong_parameters_exception(" oil spills always cause damage, increase special damage")
     sys.exit(1)
-ret=subprocess.call(["python3","lon_lat_checker.py",str(calc.lat),str(calc.lon)])
+ret=subprocess.call(["python3","lon_lat_checker.py",str(calc.lat),str(calc.lon)], stdout = 'latlon.txt')
 if ret>0:
     #raise Wrong_parameters_exception(" oil spill must occur on the sea surface")
     sys.exit(1)
@@ -231,10 +231,7 @@ cursor.execute("UPDATE oil_run SET risk_ndelta=" + str(calc.risk_ndelta) + ", ri
 conn.commit()
 
 
-print(calc.lat, calc.lon, calc.mass, calc.density, calc.viscosity,
-                                             calc.path_to_env_data(), calc.step_rec, duration, calc.t1, calc.t2,
-                                             calc.risk_ndelta, risk_ndeltastep, calc.spec_dam, calc.alpha, calc.tau,
-                                             calc.token, calc_id)
+#print(calc.lat, calc.lon, calc.mass, calc.density, calc.viscosity,calc.path_to_env_data(), calc.step_rec, duration, calc.t1, calc.t2,calc.risk_ndelta, risk_ndeltastep, calc.spec_dam, calc.alpha, calc.tau,calc.token, calc_id)
 
 # connect to server
 # use this if needed:
@@ -264,7 +261,7 @@ try:
                                              calc.token, calc_id)
 
 
-    print(result)
+    #print(result)
     if result < 0:  # in case of errors
         # create dictonary of errors
         errors = {-1: "Error in creation new user",
