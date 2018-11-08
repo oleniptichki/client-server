@@ -132,15 +132,16 @@ calc_id=sys.argv[1]
 error_db_connection=connect_db()
 # if no connection to DB
 if error_db_connection:
-    print("error in DB connection")
-#    sys.exit(1)
+#    print("error in DB connection")
+    sys.exit(1)
 
 # check if there more then 3 calculations launched
 cursor.execute("SELECT calc_id FROM user_calculation WHERE status='STARTED';")
 res=cursor.fetchall()
 if len(res)>2 : # not 3 (don't know why, but len(res)<=2 is true and it allows 3 calc to be launched)
-    print("There is more than 3 calculations launched. In queue")
-    raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
+#    print("There is more than 3 calculations launched. In queue")
+#    raise Server_is_overloaded_exception("number of calculations: "+str(len(res)))
+    sys.exit(1)
 
 
 # extract data from DB
@@ -154,23 +155,26 @@ calc=Oil_run(int(calc_id), dv[0], dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6
 #try for interest:
 #calc=Oil_run(int(calc_id), dv[0], dt, dv[1])
 # extract and check environment calculation data
-print(calc.calc_type)
+#print(calc.calc_type)
 if calc.calc_type=="NormPole":
     cursor.execute("SELECT record, start_time_date, end_time_date FROM normal_pole WHERE calc_id="+str(calc.id_of_calc)+";")
     dt=cursor.fetchone()
     if not dt:
-        raise Missing_env_data_exception()
+        #raise Missing_env_data_exception()
+        sys.exit(1)
     calc.step_rec=dt[0]*60  # convert from hours to minutes
     duration=int(((dt[2]-dt[1]).total_seconds()) / 3600)  # in hours
 elif calc.calc_type=="OPirat":
     cursor.execute("SELECT record, duration FROM operative_calc WHERE calc_id="+str(calc.id_of_calc)+";")
     dt=cursor.fetchone()
     if not dt:
-        raise Missing_env_data_exception()
+        #raise Missing_env_data_exception()
+        sys.exit(1)
     calc.step_rec=dt[0]*60  # convert from hours to minutes
     duration=int((dt[1]+3)*24)   # in hours
 else:
-    raise Wrong_type_of_calculation_exception(" Check environment data ID")
+    #raise Wrong_type_of_calculation_exception(" Check environment data ID")
+    sys.exit(1)
 
 
 
@@ -186,7 +190,8 @@ cursor.execute("SELECT status FROM user_calculation WHERE calc_id="+str(calc.id_
 dt=cursor.fetchone()
 # record must exist
 if dt[0]!="FINISHED":
-    raise Wrong_parameters_exception(" env_data calc has not been completed")
+    #raise Wrong_parameters_exception(" env_data calc has not been completed")
+    sys.exit(1)
 # check duration of environment calculation
 set_t1_t2_flag=True    # set duration - optional - specify it!
 if set_t1_t2_flag:
@@ -197,19 +202,25 @@ if set_t1_t2_flag:
         calc.t2=duration
 else:
     if calc.t1<0 or calc.t2<calc.t1:
-        raise Wrong_parameters_exception(" rude error in t1, t2")
+        #raise Wrong_parameters_exception(" rude error in t1, t2")
+        sys.exit(1)
     if calc.t2>duration:
-        raise Wrong_parameters_exception(" t2 exceed total number of hours in environment calculation")
+        #raise Wrong_parameters_exception(" t2 exceed total number of hours in environment calculation")
+        sys.exit(1)
     if (calc.t2-calc.t1)>336:
-        raise Wrong_parameters_exception(" too broad time period, decrease t2")
+        #raise Wrong_parameters_exception(" too broad time period, decrease t2")
+        sys.exit(1)
 
 if calc.spec_dam<=0:
-    raise Wrong_parameters_exception(" oil spills always cause damage, increase special damage")
+    #raise Wrong_parameters_exception(" oil spills always cause damage, increase special damage")
+    sys.exit(1)
 ret=subprocess.call(["python3","lon_lat_checker.py",str(calc.lat),str(calc.lon)])
 if ret>0:
-    raise Wrong_parameters_exception(" oil spill must occur on the sea surface")
+    #raise Wrong_parameters_exception(" oil spill must occur on the sea surface")
+    sys.exit(1)
 if calc.risk_nd_correct()>0:
-    print("Warning: risk_nDelta was changed to %i" %calc.risk_ndelta)
+    #print("Warning: risk_nDelta was changed to %i" %calc.risk_ndelta)
+    sys.exit(1)
 # ===== End checking of data =======
 
 
@@ -234,9 +245,9 @@ try:
     hello_client.options.cache.clear()
     hello_client = Client(url)
 except:
-    print("error connecting to server")
-    raise Server_is_overloaded_exception()
-#    sys.exit(6)
+#    print("error connecting to server")
+ #   raise Server_is_overloaded_exception()
+    sys.exit(1)
 
 #lat=59.985494 lon=29.582476 mass=180 density=853.6 viscosity=0.0236
 #path_to_env='/home/ftpuser/model/oil/NormPole/11/XYZ/'
@@ -261,13 +272,13 @@ try:
                   -3: "Error in writing input data"}
 
 except WebFault:
-    print(traceback.format_exc())
-    sys.exit(3)
+#    print(traceback.format_exc())
+    sys.exit(1)
 
 except Exception as other:
-    str=traceback.format_exc(limit=1)
-    print(str)
-    #sys.exit(4)
+#    str=traceback.format_exc(limit=1)
+#    print(str)
+    sys.exit(1)
 
 if result > 0:  # modelling is successfully launched
     # set status='STARTED' and launch_time_date
@@ -290,7 +301,7 @@ else:
     cursor.execute( "INSERT INTO process_controller (calc_id, process_name, pid, error_message) VALUES (" + calc_id + ", 'oil_run', '0','" +
                 errors[result] + "') ;")
     conn.commit()
-    #sys.exit(5)
+    sys.exit(1)
 
 conn.close()
 

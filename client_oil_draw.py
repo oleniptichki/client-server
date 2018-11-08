@@ -118,7 +118,7 @@ picture_id=sys.argv[1]
 error_db_connection=connect_db()
 # if no connection to DB
 if error_db_connection:
-    print("error in DB connection")
+#    print("error in DB connection")
     sys.exit(1)
 
 try:
@@ -126,14 +126,14 @@ try:
     cursor.execute("SELECT calc_id, plot_type, app_time, time FROM oil_draw WHERE picture_id=" + picture_id + ";")
     dt=cursor.fetchone()
 except:
-    print("error getting data from DB 1")
+#    print("error getting data from DB 1")
     sys.exit(1)
 
 try:
     cursor.execute("SELECT token FROM user_calculation WHERE calc_id=" + str(dt[0]) + ";")
     dv=cursor.fetchone()
 except:
-    print("error getting data from DB 2")
+#    print("error getting data from DB 2")
     sys.exit(1)
 draw=oil_draw(dt[0], dv[0], dt[1], dt[2], dt[3])
 
@@ -141,16 +141,17 @@ try:
     cursor.execute("SELECT risk_ndelta, risk_ndeltastep, lon, lat FROM oil_run WHERE calc_id=" + str(draw.calc_id) + ";")
     dz = cursor.fetchone()
 except:
-    print("error getting data from DB 3")
+#    print("error getting data from DB 3")
     sys.exit(1)
 
 
 if draw.app_time_checker(dz[0], dz[1])>0:
-    print("Warning: app_time was changed to %i hours" %draw.app_time)
+#    print("Warning: app_time was changed to %i hours" %draw.app_time)
+    pass
 if draw.plot_type=='coordinates':
     draw.lon=dz[2]
     draw.lat=dz[3]
-    print(draw.lon, draw.lat)
+#    print(draw.lon, draw.lat)
 
 # connect to server
 # use this if needed:
@@ -159,22 +160,22 @@ try:
     url = 'http://'+os.environ['ICS_BALTIC_SERVER_IP']+':7889/?wsdl'
     hello_client = Client(url)
 except:
-    print("error connecting to server")
-    raise Server_is_overloaded_exception()
-#    sys.exit(6)
+#    print("error connecting to server")
+#    raise Server_is_overloaded_exception()
+    sys.exit(1)
 
 try:
     # convert app_time in hours to app_time in steps
     time2=hello_client.service.calculation_times((draw.app_time*12), draw.token)
-    print(time2) # in model steps
+#    print(time2) # in model steps
     # convert time2 back to hours
     time2=int(time2/12)
 except WebFault:
-    print(traceback.format_exc())
+#    print(traceback.format_exc())
     sys.exit(1)
 except Exception as other:
-    str=traceback.format_exc(limit=1)
-    print(str)
+#    str=traceback.format_exc(limit=1)
+#    print(str)
     sys.exit(1)
 
 #==========================================================
@@ -187,48 +188,50 @@ if ds[0]==2:  #NormPole
     cursor.execute("SELECT start_time_date FROM normal_pole WHERE calc_id="+str(dx[0])+";")
     dt=cursor.fetchone()
     if not dt:
-        raise Missing_env_data_exception()
+#        raise Missing_env_data_exception()
+        sys.exit(1)
     start_time_date=dt[0]
 elif ds[0]==1:  #OPirat
     cursor.execute("SELECT launch_time_date FROM user_calculation WHERE calc_id="+str(dx[0])+";")
     dt=cursor.fetchone()
     if not dt:
-        raise Missing_env_data_exception()
+#        raise Missing_env_data_exception()
+        sys.exit(1)
     start_time_date=time_machine(hours_to_zero(dt[0]))
 else:
-    raise Wrong_type_of_calculation_exception(" Check environment data ID")
+    #raise Wrong_type_of_calculation_exception(" Check environment data ID")
+    sys.exit(1)
 app_time_date=start_time_date+timedelta(hours=draw.app_time)
 disapp_time_date=start_time_date+timedelta(hours=time2)
-print("oil spill appeared " + app_time_date.isoformat() + " and disappeared " + disapp_time_date.isoformat())
+#print("oil spill appeared " + app_time_date.isoformat() + " and disappeared " + disapp_time_date.isoformat())
 #===========================================================
 
 # check time in case plot_type="coordinates"
 if draw.plot_type == 'coordinates':
     # don't forget that draw.time is in model steps
-    print(draw.time, (draw.app_time*12), (time2*12))
+    # print(draw.time, (draw.app_time*12), (time2*12))
     if (draw.time<(draw.app_time*12)) or (draw.time>(time2*12)):
-        raise Wrong_parameters_exception()
+        #raise Wrong_parameters_exception()
+        sys.exit(1)
 
 #++++++++++++++ MAIN +++++++++++++++++++++++++++++++++++++++
 try:
     result = hello_client.service.oil_plot(draw.calc_id, draw.token, draw.plot_type, draw.app_time, draw.time, draw.lon, draw.lat)
-    print(result)
+    #print(result)
 
 except WebFault:
-    print(traceback.format_exc())
-    sys.exit(3)
+    #print(traceback.format_exc())
+    sys.exit(1)
 
 except Exception as other:
-    str=traceback.format_exc(limit=1)
-    print(str)
-    sys.exit(4)
+    #str=traceback.format_exc(limit=1)
+    #print(str)
+    sys.exit(1)
 
 if result:
     path_name=result.split(' ')
     try:
-        print("here")
         ftp=FTP(os.environ["ICS_BALTIC_FTP_IPADDR"])
-        print(os.environ["ICS_BALTIC_FTP_IPADDR"])
         ftp.login(os.environ["ICS_BALTIC_FTP_LOGIN"],os.environ["ICS_BALTIC_FTP_PASSWD"])
         ftp.cwd("."+path_name[0])
         os.chdir(os.environ['ICS_BALTIC_PNG_PATH'] + 'calcs/')
@@ -237,15 +240,15 @@ if result:
         png_file_local.close()
         #os.chdir("..")
     except:
-        print("ftp connection failed")
-        sys.exit(11)
+        #print("ftp connection failed")
+        sys.exit(1)
 
     cursor.execute("UPDATE oil_draw SET picture='" + str(draw.calc_id)+'_'+path_name[1] + "' WHERE picture_id=" + picture_id + ";")
     conn.commit()
 else:
-    print("plotting finished with error")
-    sys.exit(12)
+    #print("plotting finished with error")
+    sys.exit(1)
 
 
-#sys.exit(0)
+sys.exit(0)
 
