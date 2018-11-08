@@ -229,11 +229,11 @@ if result:
         print(os.environ["ICS_BALTIC_FTP_IPADDR"])
         ftp.login(os.environ["ICS_BALTIC_FTP_LOGIN"],os.environ["ICS_BALTIC_FTP_PASSWD"])
         ftp.cwd("."+path_name[0])
-        os.chdir("PNG")
+        os.chdir(os.environ['ICS_BALTIC_PNG_PATH'] + 'calcs/')
         png_file_local=open(str(draw.calc_id)+'_'+path_name[1],"wb")
         ftp.retrbinary("RETR " + path_name[1], png_file_local.write)
         png_file_local.close()
-        os.chdir("..")
+        #os.chdir("..")
     except:
         print("ftp connection failed")
         sys.exit(11)
