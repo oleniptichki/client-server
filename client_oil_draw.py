@@ -60,7 +60,9 @@ class oil_draw:
         self.plot_type=plot_type
         self.app_time=app_time
         if plot_type=='coordinates':
-            self.time=time
+            self.time=time*12
+            if self.time>0:
+                self.time=self.time-2
         else:
             self.time=0
         self.lat=0
