@@ -216,6 +216,7 @@ if calc.spec_dam<=0:
     sys.exit(1)
 out_file=open('latlon.py','wt')
 ret=subprocess.call(["python3","lon_lat_checker.py",str(calc.lat),str(calc.lon)], stdout = out_file)
+out_file.close()
 if ret>0:
     #raise Wrong_parameters_exception(" oil spill must occur on the sea surface")
     sys.exit(1)
@@ -239,8 +240,6 @@ conn.commit()
 # hello_client.options.cache.clear()
 try:
     url = 'http://'+os.environ['ICS_BALTIC_SERVER_IP']+':7889/?wsdl'
-    hello_client = Client(url)
-    hello_client.options.cache.clear()
     hello_client = Client(url)
 except:
 #    print("error connecting to server")
