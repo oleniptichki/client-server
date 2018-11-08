@@ -214,7 +214,8 @@ else:
 if calc.spec_dam<=0:
     #raise Wrong_parameters_exception(" oil spills always cause damage, increase special damage")
     sys.exit(1)
-ret=subprocess.call(["python3","lon_lat_checker.py",str(calc.lat),str(calc.lon)], stdout = 'latlon.txt')
+out_file=open('latlon.py','wt')
+ret=subprocess.call(["python3","lon_lat_checker.py",str(calc.lat),str(calc.lon)], stdout = out_file)
 if ret>0:
     #raise Wrong_parameters_exception(" oil spill must occur on the sea surface")
     sys.exit(1)
